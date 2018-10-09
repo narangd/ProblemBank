@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "875045166448",
+    "firebase_url": "https://problembank-6c603.firebaseio.com",
+    "project_id": "problembank-6c603",
+    "storage_bucket": "problembank-6c603.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875045166448:android:a8733749eff49e5d",
+        "android_client_info": {
+          "package_name": "person.sykim.problembank"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "875045166448-iqcngvgvbqfn6ipekc7610oa0qr5oqd7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3KeP2qaOQ-dKQpEhflgQv3cFU3Jxlkrw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
