@@ -7,4 +7,20 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="activity_padding">8dp</dimen>
+
+    <dimen name="list_fab_padding">96dp</dimen>
+    <dimen name="list_side_padding">16dp</dimen>
+
+    <dimen name="list_top_padding">8dp</dimen>
+    <dimen name="list_dense_top_padding">4dp</dimen>
+
+    <dimen name="single_line_list_height">48dp</dimen>
+    <dimen name="single_line_list_text_padding">56dp</dimen>
+    <dimen name="single_line_list_text_size">16sp</dimen>
+
+    <dimen name="two_line_list_height">72dp</dimen>
+    <dimen name="two_line_list_dense_height">60dp</dimen>
+
+    <dimen name="two_line_list_font_size">16sp</dimen>
+    <dimen name="two_line_list_dense_font_size">13sp</dimen>
 </resources>

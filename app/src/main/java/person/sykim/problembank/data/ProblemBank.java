@@ -8,6 +8,7 @@ public class ProblemBank {
     public String description;
     public int minPage;
     public int maxPage;
+    public ParseOption normal;
     public String url_host;
     public String url_login;
     public String url_logout;

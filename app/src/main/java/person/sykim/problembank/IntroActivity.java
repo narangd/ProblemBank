@@ -25,7 +25,9 @@ public class IntroActivity extends AppCompatActivity {
     private static final String TAG = "IntroActivity";
 
     MyApplication application;
-    @BindView(R.id.loading_text) TextView loadingText;
+
+    @BindView(R.id.loading_text)
+    TextView loadingText;
 
     private boolean start = true;
 
@@ -53,34 +55,32 @@ public class IntroActivity extends AppCompatActivity {
 
                 application.baekjoon = baekjoon;
 
-                AsyncTask.execute(IntroActivity.this::printList);
+                runOnUiThread(IntroActivity.this::startMain);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e(TAG, "onCancelled: "+databaseError.getMessage() +": "+databaseError.getDetails());
+
+                runOnUiThread(IntroActivity.this::startMain);
             }
         });
 
-//        startMain();
-    }
-
-    public void printList() {
     }
 
     public void startMain() {
-        runOnUiThread(() -> loadingText.setText("Starting ProblemBank..."));
+        loadingText.setText("Starting ProblemBank...");
 
-        if (start) return; //
-
-        new Handler().postDelayed(() -> {
-            if (start) {
-                Intent main = new Intent(IntroActivity.this, MainActivity.class);
-//                    main.set
-                startActivity(main);
+        if (start) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            finish();
-        }, 1000);
+            Intent main = new Intent(IntroActivity.this, MainActivity.class);
+            startActivity(main);
+        }
+        finish();
     }
 
     @Override
