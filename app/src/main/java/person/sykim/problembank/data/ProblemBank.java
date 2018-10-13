@@ -100,8 +100,10 @@ public class ProblemBank {
                 problems.add(problem);
             }
 
-            username = document.select(normal.username).first().text();
-            if (username == null || username.length() <= 0) {
+            Element usernameElement = document.select(normal.username).first();
+            if (usernameElement != null) {
+                username = usernameElement.text();
+            } else {
                 username = null;
             }
 

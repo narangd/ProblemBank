@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+    @BindView(R.id.problem_page_tab)
+    TabLayout pageTabLayout;
 
     ProgressDialog progressDialog;
 
@@ -69,7 +72,15 @@ public class MainActivity extends AppCompatActivity
 
         AsyncTask.execute(() -> {
             List<Problem> list = application.baekjoon.parseProblemList();
-            runOnUiThread(() -> problemRecyclerView.setAdapter(new ProblemAdapter(list)) );
+            runOnUiThread(() -> {
+                for (int page = application.baekjoon.minPage; page <= application.baekjoon.maxPage; page++) {
+                    TabLayout.Tab newTab = pageTabLayout.newTab();
+                    newTab.setText(page+"");
+                    pageTabLayout.addTab(newTab, false);
+                }
+
+                problemRecyclerView.setAdapter(new ProblemAdapter(list));
+            });
         });
     }
 
