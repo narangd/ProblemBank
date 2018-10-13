@@ -12,25 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.gson.Gson;
-
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.adapter.ProblemAdapter;
-import person.sykim.problembank.data.ParseOption;
 import person.sykim.problembank.data.Problem;
 
 public class MainActivity extends AppCompatActivity
@@ -78,86 +67,12 @@ public class MainActivity extends AppCompatActivity
         problemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        AsyncTask.execute(MainActivity.this::printList);
+        AsyncTask.execute(() -> {
+            List<Problem> list = application.baekjoon.parseProblemList();
+            runOnUiThread(() -> problemRecyclerView.setAdapter(new ProblemAdapter(list)) );
+        });
     }
 
-
-
-    public void printList() {
-        // {"code":1000,"ratio":46.434,"solveCount":48723,"status":"none","title":"A+B","totalCount":145316,"url":"/problem/1000"}
-
-        ArrayList<Problem> problems = new ArrayList<>();
-        Document document;
-        ParseOption parseOption = application.baekjoon.normal;
-        try {
-            Log.d(TAG, "printList: url: "+ parseOption.url);
-            Connection connection = Jsoup.connect(parseOption.url)
-                    .timeout(10000);
-
-            switch (parseOption.method) {
-                case "GET":
-                    connection.method(Connection.Method.GET);
-                    break;
-                case "POST":
-                    connection.method(Connection.Method.POST);
-                    break;
-            }
-//                    .cookies( load() )
-            Connection.Response response = connection.execute();
-
-//            save( response.cookies() );
-            Log.d(TAG, "getProblems: done");
-
-            document = response.parse();
-
-            Log.d(TAG, "getProblems: problem");
-
-            Elements trElements = document.select(parseOption.list);
-            for (Element trElement : trElements) {
-                Problem problem = new Problem();
-
-                String code = trElement.select(parseOption.code).first().text();
-                problem.code = Integer.parseInt(code);
-
-                problem.title = trElement.select(parseOption.title).first().text();
-
-                String status = "none";
-                Elements labelElements = trElement.select(parseOption.success);
-                if (labelElements.size() > 0) {
-                    status = "success";
-                }
-                labelElements = trElement.select(parseOption.failure);
-                if (labelElements.size() > 0) {
-                    status = "failure";
-                }
-                problem.status = status;
-
-                String solveCount = trElement.select(parseOption.solveCount).first().text();
-                problem.solveCount = Integer.parseInt(solveCount);
-
-                String totalCount = trElement.select(parseOption.totalCount).first().text();
-                problem.totalCount = Integer.parseInt(totalCount);
-
-                String ratio = trElement.select(parseOption.ratio).first().text().replaceAll("[^\\.|\\d]", "");
-                problem.ratio = Double.parseDouble(ratio);
-
-                problems.add(problem);
-
-                Log.d(TAG, "printList: "+ new Gson().toJson(problem));
-            }
-
-//            updateUserName(document);
-
-//            pageMin = 1;
-//            pageMax = Integer.parseInt(document.select("ul.pagination a").last().text());
-//            updateDate = 0;
-
-            runOnUiThread(() -> problemRecyclerView.setAdapter(new ProblemAdapter(problems)));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onBackPressed() {

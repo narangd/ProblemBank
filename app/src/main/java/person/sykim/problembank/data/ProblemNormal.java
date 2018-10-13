@@ -1,6 +1,6 @@
 package person.sykim.problembank.data;
 
-public class ParseOption {
+public class ProblemNormal {
     public String url;
     public String method;
     public String list;
@@ -11,4 +11,6 @@ public class ParseOption {
     public String solveCount;
     public String totalCount;
     public String ratio;
+    public String page;
+    public String username;
 }

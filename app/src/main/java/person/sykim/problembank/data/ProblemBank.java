@@ -1,19 +1,35 @@
 package person.sykim.problembank.data;
 
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProblemBank {
+    private static final String TAG = "ProblemBank";
+
     public String name;
     public String description;
     public int minPage;
     public int maxPage;
-    public ParseOption normal;
+    public ProblemNormal normal;
     public String url_host;
     public String url_login;
     public String url_logout;
     public String url_normal;
     public String url_detail;
+
+    private String username;
 
     public ProblemBank() {
     }
@@ -21,6 +37,90 @@ public class ProblemBank {
     @Override
     public String toString() {
         return new Gson().toJson(this);
+    }
+
+    public List<Problem> parseProblemList() {
+        // {"code":1000,"ratio":46.434,"solveCount":48723,"status":"none","title":"A+B","totalCount":145316,"url":"/problem/1000"}
+
+        ArrayList<Problem> problems = new ArrayList<>();
+        Document document;
+        try {
+            Log.d(TAG, "printList: url: "+ normal.url);
+            Connection connection = Jsoup.connect(normal.url)
+                    .timeout(10000);
+
+            switch (normal.method) {
+                case "GET":
+                    connection.method(Connection.Method.GET);
+                    break;
+                case "POST":
+                    connection.method(Connection.Method.POST);
+                    break;
+            }
+//                    .cookies( load() )
+            Connection.Response response = connection.execute();
+
+//            save( response.cookies() );
+            Log.d(TAG, "getProblems: done");
+
+            document = response.parse();
+
+            Log.d(TAG, "getProblems: problem");
+
+            Elements trElements = document.select(normal.list);
+            for (Element trElement : trElements) {
+                Problem problem = new Problem();
+
+                String code = trElement.select(normal.code).first().text();
+                problem.code = Integer.parseInt(code);
+
+                problem.title = trElement.select(normal.title).first().text();
+
+                String status = "none";
+                Elements labelElements = trElement.select(normal.success);
+                if (labelElements.size() > 0) {
+                    status = "success";
+                }
+                labelElements = trElement.select(normal.failure);
+                if (labelElements.size() > 0) {
+                    status = "failure";
+                }
+                problem.status = status;
+
+                String solveCount = trElement.select(normal.solveCount).first().text();
+                problem.solveCount = Integer.parseInt(solveCount);
+
+                String totalCount = trElement.select(normal.totalCount).first().text();
+                problem.totalCount = Integer.parseInt(totalCount);
+
+                @SuppressWarnings("RegExpRedundantEscape")
+                String ratio = trElement.select(normal.ratio).first().text().replaceAll("[^\\.|\\d]", "");
+                problem.ratio = Double.parseDouble(ratio);
+
+                problems.add(problem);
+            }
+
+            username = document.select(normal.username).first().text();
+            if (username == null || username.length() <= 0) {
+                username = null;
+            }
+
+//            updateUserName(document);
+
+            minPage = 1;
+            String page = document.select(normal.page).last().text();
+            maxPage = Integer.parseInt(page);
+
+            return problems;
+
+        } catch (IOException e) {
+            Log.e(TAG, "parseProblemList: ", e);
+            return null;
+        }
+    }
+
+    public String getUserName() {
+        return username;
     }
 }
 /*

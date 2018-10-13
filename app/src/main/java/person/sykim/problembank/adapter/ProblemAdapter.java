@@ -2,13 +2,13 @@ package person.sykim.problembank.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -19,21 +19,21 @@ import person.sykim.problembank.data.Problem;
 
 public class ProblemAdapter extends RecyclerView.Adapter {
 
+    private static final String TAG = "ProblemAdapter";
+
     private static final int ViewType_Problem = 0;
     private static final int ViewType_LoadButton = 1;
 
     public static class ProblemHolder extends RecyclerView.ViewHolder {
         View root;
-//        @BindView(R.id.name_text_view)
+        @BindView(R.id.name_text_view)
         TextView titleView;
-//        @BindView(R.id.status_image_view)
+        @BindView(R.id.status_image_view)
         ImageView iconView;
         ProblemHolder(View root) {
             super(root);
-//            ButterKnife.bind(root);
+            ButterKnife.bind(this, root);
             this.root = root;
-            titleView = root.findViewById(R.id.name_text_view);
-            iconView = root.findViewById(R.id.status_image_view);
         }
     }
 //    private static class LoadHolder extends RecyclerView.ViewHolder {
@@ -47,7 +47,7 @@ public class ProblemAdapter extends RecyclerView.Adapter {
 //    }
 
     private List<Problem> problemList;
-//    private OnProblemClickListener onProblemClickListener;
+    private OnProblemClickListener onProblemClickListener;
 //    private OnLoadListener onLoadListener;
 
 
@@ -89,11 +89,11 @@ public class ProblemAdapter extends RecyclerView.Adapter {
                     problemHolder.iconView.setImageResource(R.drawable.ic_full_circle);
                     break;
             }
-//            problemHolder.root.setOnClickListener(v -> {
-//                if (onProblemClickListener != null) {
-//                    onProblemClickListener.onClick(problem);
-//                }
-//            });
+            problemHolder.root.setOnClickListener(v -> {
+                if (onProblemClickListener != null) {
+                    onProblemClickListener.onClick(problem);
+                }
+            });
 //        } else if (holder instanceof LoadHolder) {
 //            LoadHolder loadHolder = (LoadHolder) holder;
 //            loadHolder.loadButton.setOnClickListener((View.OnClickListener) v -> System.out.println("View Load"));
@@ -127,17 +127,17 @@ public class ProblemAdapter extends RecyclerView.Adapter {
 //        notifyItemRangeInserted(prevIndex, problemList.size());
 //    }
 
-//    public void setOnProblemClickListener(OnProblemClickListener onProblemClickListener) {
-//        this.onProblemClickListener = onProblemClickListener;
-//    }
+    public void setOnProblemClickListener(OnProblemClickListener onProblemClickListener) {
+        this.onProblemClickListener = onProblemClickListener;
+    }
 //
 //    public void setOnLoadListener(OnLoadListener onLoadListener) {
 //        this.onLoadListener = onLoadListener;
 //    }
 //
-//    public interface OnProblemClickListener {
-//        void onClick(Problem problem);
-//    }
+    public interface OnProblemClickListener {
+        void onClick(Problem problem);
+    }
 //
 //    public interface OnLoadListener {
 //        void onLoad();
