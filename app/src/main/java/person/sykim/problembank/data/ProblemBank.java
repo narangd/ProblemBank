@@ -12,8 +12,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.CookieManager;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProblemBank {
     private static final String TAG = "ProblemBank";
@@ -30,6 +35,8 @@ public class ProblemBank {
     public String url_detail;
 
     private String username;
+
+    private Map<String, String> cookies = new HashMap<>();
 
     public ProblemBank() {
     }
@@ -57,11 +64,13 @@ public class ProblemBank {
                     connection.method(Connection.Method.POST);
                     break;
             }
-//                    .cookies( load() )
-            Connection.Response response = connection.execute();
+            Connection.Response response = connection
+                    .cookies(cookies)
+                    .execute();
 
-//            save( response.cookies() );
-            Log.d(TAG, "getProblems: done");
+            cookies.putAll( response.cookies() );
+
+            Log.d(TAG, "getProblems: done: "+cookies);
 
             document = response.parse();
 
