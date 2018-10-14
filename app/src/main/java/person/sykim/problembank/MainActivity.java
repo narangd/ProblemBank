@@ -1,6 +1,7 @@
 package person.sykim.problembank;
 
 import android.app.ProgressDialog;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,13 +14,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import person.sykim.problembank.adapter.ProblemAdapter;
 import person.sykim.problembank.data.Problem;
 
@@ -41,6 +48,10 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.problem_page_tab)
     TabLayout pageTabLayout;
 
+    @BindDrawable(R.drawable.ic_add_circle_outline)
+    Drawable addUserDrawable;
+
+    HeaderViewHolder headerViewHolder;
     ProgressDialog progressDialog;
 
 
@@ -58,7 +69,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
-
+        headerViewHolder = new HeaderViewHolder( navigationView.getHeaderView(0) );
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
@@ -66,13 +77,21 @@ public class MainActivity extends AppCompatActivity
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("Loading...");
 
-
         problemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
         AsyncTask.execute(() -> {
             List<Problem> list = application.baekjoon.parseProblemList();
             runOnUiThread(() -> {
+                String username = application.baekjoon.getUserName();
+                if (username != null) {
+                    headerViewHolder.usernameTextView.setText(username);
+                    headerViewHolder.emailTextView.setText("-");
+                } else {
+                    headerViewHolder.usernameTextView.setText("-");
+                    headerViewHolder.emailTextView.setText("-");
+                    headerViewHolder.userImageView.setImageDrawable(addUserDrawable);
+                }
+
                 for (int page = application.baekjoon.minPage; page <= application.baekjoon.maxPage; page++) {
                     TabLayout.Tab newTab = pageTabLayout.newTab();
                     newTab.setText(page+"");
@@ -83,6 +102,7 @@ public class MainActivity extends AppCompatActivity
             });
         });
     }
+
 
 
     @Override
@@ -138,5 +158,23 @@ public class MainActivity extends AppCompatActivity
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    protected class HeaderViewHolder {
+
+        @BindView(R.id.username_text_view)
+        TextView usernameTextView;
+        @BindView(R.id.email_text_view)
+        TextView emailTextView;
+        @BindView(R.id.user_image_view)
+        ImageView userImageView;
+
+        public HeaderViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+
+        @OnClick(R.id.username_layout)
+        public void onOpenSelectAccount() {
+        }
     }
 }

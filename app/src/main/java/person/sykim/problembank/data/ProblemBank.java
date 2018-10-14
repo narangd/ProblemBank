@@ -107,8 +107,6 @@ public class ProblemBank {
                 username = null;
             }
 
-//            updateUserName(document);
-
             minPage = 1;
             String page = document.select(normal.page).last().text();
             maxPage = Integer.parseInt(page);
