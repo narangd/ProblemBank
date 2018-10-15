@@ -12,9 +12,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.CookieManager;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +25,7 @@ public class ProblemBank {
     public int minPage;
     public int maxPage;
     public ProblemNormal normal;
+    public Login login;
     public String url_host;
     public String url_login;
     public String url_logout;
@@ -46,33 +44,34 @@ public class ProblemBank {
         return new Gson().toJson(this);
     }
 
-    public List<Problem> parseProblemList() {
+    public List<Problem> parseProblemList(Document document) {
         // {"code":1000,"ratio":46.434,"solveCount":48723,"status":"none","title":"A+B","totalCount":145316,"url":"/problem/1000"}
 
         ArrayList<Problem> problems = new ArrayList<>();
-        Document document;
         try {
             Log.d(TAG, "printList: url: "+ normal.url);
-            Connection connection = Jsoup.connect(normal.url)
-                    .timeout(10000);
+            if (document == null) {
+                Connection connection = Jsoup.connect(normal.url)
+                        .timeout(10000);
 
-            switch (normal.method) {
-                case "GET":
-                    connection.method(Connection.Method.GET);
-                    break;
-                case "POST":
-                    connection.method(Connection.Method.POST);
-                    break;
+                switch (normal.method) {
+                    case "GET":
+                        connection.method(Connection.Method.GET);
+                        break;
+                    case "POST":
+                        connection.method(Connection.Method.POST);
+                        break;
+                }
+                Connection.Response response = connection
+                        .cookies(cookies)
+                        .execute();
+
+                cookies.putAll(response.cookies());
+
+                Log.d(TAG, "getProblems: done: " + cookies);
+
+                document = response.parse();
             }
-            Connection.Response response = connection
-                    .cookies(cookies)
-                    .execute();
-
-            cookies.putAll( response.cookies() );
-
-            Log.d(TAG, "getProblems: done: "+cookies);
-
-            document = response.parse();
 
             Log.d(TAG, "getProblems: problem");
 
@@ -131,6 +130,33 @@ public class ProblemBank {
     public String getUserName() {
         return username;
     }
+
+    public Document login(String username, String password) {
+        try {
+            Connection connection = Jsoup.connect(login.url)
+                    .timeout(10000)
+                    .data(login.username, username)
+                    .data(login.password, password);
+
+            for (String key : login.data.keySet()) {
+                String value = login.data.get(key);
+                Log.i(TAG, "login: data: "+key+": "+value);
+                connection.data(key, value);
+            }
+
+            Connection.Response response = connection
+                    .cookies(cookies)
+                    .execute();
+
+            cookies.putAll( response.cookies() );
+
+            return response.parse();
+
+        } catch (IOException e) {
+            Log.e(TAG, "login: ", e);
+            return null;
+        }
+    }
 }
 /*
     private static final String URL_ROOT = "https://www.acmicpc.net";
@@ -140,25 +166,6 @@ public class ProblemBank {
     private static final String URL_PROBLEM_DETAIL = URL_ROOT + "/problem/";
     private static final String URL_TUTORIAL = URL_ROOT + "/step";
     private static final String URL_HISTORY = URL_ROOT + "/status";
-
-    private static long updateDate = 0;
-
-//    @Pref
-//    CookiePrefs_ cookiePrefs;
-
-//    @Override
-//    protected CookiePrefs_ getCookiePrefs() {
-//        return cookiePrefs;
-//    }
-
-    @Override
-    public String getHost() {
-        return URL_ROOT;
-    }
-
-    public BaekJoon() {
-        bankName = "BaekJoon";
-    }
 
     @Override
     public boolean tryLogin(String id, String password) {
@@ -203,57 +210,6 @@ public class ProblemBank {
         }
         return !isLogin();
     }
-
-    private void updateUserName(Document document) {
-        Elements elements = document.select("a.username");
-        if (login = elements.size() > 0) {
-            userName = elements.first().text();
-        } else {
-            userName = null;
-        }
-    }
-
-    @Override
-    public void updatePageRange(ProblemType problemType) {
-        switch (problemType) {
-            case TUTORIAL: try {
-                if (updateDate < System.currentTimeMillis() - 1000 * 60 * 60) {
-                    updateDate = System.currentTimeMillis();
-                    Connection.Response pageResponse = Jsoup.connect(URL_TUTORIAL)
-                            .timeout(5000)
-                            .method(Connection.Method.GET)
-                            .cookies( load() )
-                            .execute();
-                    save( pageResponse.cookies() );
-                    pageMin = 1;
-                    Document pageDocument = pageResponse.parse();
-                    String lastPageString = pageDocument.select("table tbody tr").last().children().first().text();
-                    pageMax = Integer.parseInt(lastPageString);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-                break;
-            case NORMAL: try {
-                Connection.Response response = Jsoup.connect(URL_PROBLEM_SET)
-                        .timeout(5000)
-                        .method(Connection.Method.GET)
-                        .cookies( load() )
-                        .execute();
-                save( response.cookies() );
-                Log.d(TAG, "getProblems: done");
-
-                Document document = response.parse();
-                pageMin = 1;
-                pageMax = Integer.parseInt(document.select("ul.pagination a").last().text());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            default:
-                break;
-        }
-    }
-
     @Override
     public List<Problem> getProblems(int page) {
         ArrayList<Problem> problems = new ArrayList<>();

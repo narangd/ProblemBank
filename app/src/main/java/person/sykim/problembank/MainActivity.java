@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         problemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         AsyncTask.execute(() -> {
-            List<Problem> list = application.baekjoon.parseProblemList();
+            List<Problem> list = application.baekjoon.parseProblemList(null);
             runOnUiThread(() -> {
                 String username = application.baekjoon.getUserName();
                 if (username != null) {
@@ -175,6 +175,11 @@ public class MainActivity extends AppCompatActivity
 
         @OnClick(R.id.username_layout)
         public void onOpenSelectAccount() {
+//            application.baekjoon.
+        }
+
+        @OnClick(R.id.user_image_view)
+        public void onAddAccount() {
         }
     }
 }
