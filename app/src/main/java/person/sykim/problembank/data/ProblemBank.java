@@ -135,6 +135,7 @@ public class ProblemBank {
         try {
             Connection connection = Jsoup.connect(login.url)
                     .timeout(10000)
+                    .method(Connection.Method.POST)
                     .data(login.username, username)
                     .data(login.password, password);
 
@@ -150,7 +151,14 @@ public class ProblemBank {
 
             cookies.putAll( response.cookies() );
 
-            return response.parse();
+            Document document = response.parse();
+
+            Element usernameElement = document.select(login.check).first();
+            if (usernameElement == null || usernameElement.text().length() <= 0) {
+                return null;
+            }
+
+            return document;
 
         } catch (IOException e) {
             Log.e(TAG, "login: ", e);

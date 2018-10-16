@@ -186,8 +186,12 @@ public class MainActivity extends AppCompatActivity
                     .setPositiveButton((username, password) -> {
                         AsyncTask.execute(() -> {
                             Document document = application.baekjoon.login(username, password);
+                            System.out.println(document);
                             List<Problem> list = application.baekjoon.parseProblemList(document);
-                            runOnUiThread(() -> applyProblemList(list));
+                            runOnUiThread(() -> {
+                                drawer.closeDrawer(GravityCompat.START);
+                                applyProblemList(list);
+                            });
                         });
                     })
                     .show();
