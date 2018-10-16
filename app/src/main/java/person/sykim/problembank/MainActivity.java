@@ -14,12 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.jsoup.nodes.Document;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import person.sykim.problembank.adapter.ProblemAdapter;
 import person.sykim.problembank.data.Problem;
+import person.sykim.problembank.dialog.LoginDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -81,29 +83,29 @@ public class MainActivity extends AppCompatActivity
 
         AsyncTask.execute(() -> {
             List<Problem> list = application.baekjoon.parseProblemList(null);
-            runOnUiThread(() -> {
-                String username = application.baekjoon.getUserName();
-                if (username != null) {
-                    headerViewHolder.usernameTextView.setText(username);
-                    headerViewHolder.emailTextView.setText("-");
-                } else {
-                    headerViewHolder.usernameTextView.setText("-");
-                    headerViewHolder.emailTextView.setText("-");
-                    headerViewHolder.userImageView.setImageDrawable(addUserDrawable);
-                }
-
-                for (int page = application.baekjoon.minPage; page <= application.baekjoon.maxPage; page++) {
-                    TabLayout.Tab newTab = pageTabLayout.newTab();
-                    newTab.setText(page+"");
-                    pageTabLayout.addTab(newTab, false);
-                }
-
-                problemRecyclerView.setAdapter(new ProblemAdapter(list));
-            });
+            runOnUiThread(() -> applyProblemList(list));
         });
     }
 
+    public void applyProblemList(List<Problem> list) {
+        String username = application.baekjoon.getUserName();
+        if (username != null) {
+            headerViewHolder.usernameTextView.setText(username);
+            headerViewHolder.emailTextView.setText("-");
+        } else {
+            headerViewHolder.usernameTextView.setText("-");
+            headerViewHolder.emailTextView.setText("-");
+            headerViewHolder.userImageView.setImageDrawable(addUserDrawable);
+        }
 
+        for (int page = application.baekjoon.minPage; page <= application.baekjoon.maxPage; page++) {
+            TabLayout.Tab newTab = pageTabLayout.newTab();
+            newTab.setText(page+"");
+            pageTabLayout.addTab(newTab, false);
+        }
+
+        problemRecyclerView.setAdapter(new ProblemAdapter(list));
+    }
 
     @Override
     public void onBackPressed() {
@@ -180,6 +182,15 @@ public class MainActivity extends AppCompatActivity
 
         @OnClick(R.id.user_image_view)
         public void onAddAccount() {
+            new LoginDialog(MainActivity.this)
+                    .setPositiveButton((username, password) -> {
+                        AsyncTask.execute(() -> {
+                            Document document = application.baekjoon.login(username, password);
+                            List<Problem> list = application.baekjoon.parseProblemList(document);
+                            runOnUiThread(() -> applyProblemList(list));
+                        });
+                    })
+                    .show();
         }
     }
 }
