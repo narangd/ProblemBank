@@ -4,6 +4,8 @@ package person.sykim.problembank.data;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -12,6 +14,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,12 +39,19 @@ public class ProblemBank {
 
     private Map<String, String> cookies = new HashMap<>();
 
-    public ProblemBank() {
-    }
-
     @Override
     public String toString() {
         return new Gson().toJson(this);
+    }
+
+    private void save(Map<String, String> cookies) {
+        this.cookies.putAll(cookies);
+        Prefs.putString("cookie-"+name, new Gson().toJson(this.cookies));
+    }
+
+    private Map<String, String> load() {
+        Type type = new TypeToken<Map<String, String>>(){}.getType();
+        return new Gson().fromJson(Prefs.getString("cookie-"+name, "{}"), type);
     }
 
     public List<Problem> parseProblemList(Document document) {
@@ -63,10 +73,10 @@ public class ProblemBank {
                         break;
                 }
                 Connection.Response response = connection
-                        .cookies(cookies)
+                        .cookies(load())
                         .execute();
 
-                cookies.putAll(response.cookies());
+                save(response.cookies());
 
                 Log.d(TAG, "getProblems: done: " + cookies);
 
@@ -146,10 +156,10 @@ public class ProblemBank {
             }
 
             Connection.Response response = connection
-                    .cookies(cookies)
+                    .cookies(load())
                     .execute();
 
-            cookies.putAll( response.cookies() );
+            save(response.cookies());
 
             Document document = response.parse();
 
