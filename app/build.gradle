@@ -57,6 +57,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.4'
     implementation 'com.google.firebase:firebase-database:16.0.3'
     implementation 'com.google.firebase:firebase-config:16.0.1'
+    implementation 'com.google.firebase:firebase-auth:16.0.4'
+
+    // Firebase-UI
+    implementation 'com.firebaseui:firebase-ui-auth:4.0.0'
+
+    // Google
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
 
     // BindView
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
