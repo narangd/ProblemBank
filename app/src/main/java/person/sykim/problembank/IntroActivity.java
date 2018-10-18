@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseUiException;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.data.ProblemBank;
+import person.sykim.problembank.data.User;
 
 public class IntroActivity extends AppCompatActivity {
 
@@ -98,6 +100,9 @@ public class IntroActivity extends AppCompatActivity {
                 runOnUiThread(IntroActivity.this::startMain);
             }
         });
+        User u = new User();
+        reference.child("users").child(auth.getCurrentUser().getUid()).setValue(u);
+        Log.i(TAG, "initFirebase: "+u);
 
     }
 

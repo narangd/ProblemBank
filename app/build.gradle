@@ -42,6 +42,8 @@ android {
     }
 }
 
+def versionLombok = '1.16.20' // fixed. for bugs.
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -68,6 +70,10 @@ dependencies {
     // BindView
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.jakewharton:butterknife:8.8.1'
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok:$versionLombok"
+    annotationProcessor "org.projectlombok:lombok:$versionLombok"
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.jsoup:jsoup:1.11.3'
