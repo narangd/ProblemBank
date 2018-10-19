@@ -101,8 +101,21 @@ public class IntroActivity extends AppCompatActivity {
             }
         });
         User u = new User();
+        u.setName(auth.getCurrentUser().getDisplayName());
         reference.child("users").child(auth.getCurrentUser().getUid()).setValue(u);
-        Log.i(TAG, "initFirebase: "+u);
+//        reference.child("users").child(auth.getCurrentUser().getUid())
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        Log.e(TAG, "onDataChange: "+dataSnapshot.getValue());
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//                        Log.e(TAG, "onCancelled: "+databaseError);
+//                    }
+//                });
+//        Log.i(TAG, "initFirebase: "+u);
 
     }
 
