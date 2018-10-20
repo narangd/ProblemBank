@@ -22,7 +22,9 @@ import android.widget.TextView;
 
 import org.jsoup.nodes.Document;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import butterknife.BindDrawable;
 import butterknife.BindView;
@@ -56,6 +58,8 @@ public class MainActivity extends AppCompatActivity
     HeaderViewHolder headerViewHolder;
     ProgressDialog progressDialog;
 
+    ProblemAdapter problemAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,13 +85,20 @@ public class MainActivity extends AppCompatActivity
 
         problemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        List<Problem> problemList = new ArrayList<>();
+        for (int i=1; i<=10; i++) problemList.add(null);
+        problemRecyclerView.setAdapter(problemAdapter = new ProblemAdapter(problemList));
+
         AsyncTask.execute(() -> {
             List<Problem> list = application.baekjoon.parseProblemList(null);
-            runOnUiThread(() -> applyProblemList(list));
+            runOnUiThread(() -> {
+                applyProblemList();
+                problemAdapter.reset(list);
+            });
         });
     }
 
-    public void applyProblemList(List<Problem> list) {
+    void applyProblemList() {
         String username = application.baekjoon.getUserName();
         if (username != null) {
             headerViewHolder.usernameTextView.setText(username);
@@ -103,8 +114,6 @@ public class MainActivity extends AppCompatActivity
             newTab.setText(page+"");
             pageTabLayout.addTab(newTab, false);
         }
-
-        problemRecyclerView.setAdapter(new ProblemAdapter(list));
     }
 
     @Override
@@ -162,8 +171,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    protected class HeaderViewHolder {
-
+    class HeaderViewHolder {
         @BindView(R.id.username_text_view)
         TextView usernameTextView;
         @BindView(R.id.email_text_view)
@@ -171,29 +179,27 @@ public class MainActivity extends AppCompatActivity
         @BindView(R.id.user_image_view)
         ImageView userImageView;
 
-        public HeaderViewHolder(View view) {
+        HeaderViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
 
         @OnClick(R.id.username_layout)
-        public void onOpenSelectAccount() {
+        void onOpenSelectAccount() {
 //            application.baekjoon.
         }
 
         @OnClick(R.id.user_image_view)
-        public void onAddAccount() {
+        void onAddAccount() {
             new LoginDialog(MainActivity.this)
-                    .setPositiveButton((username, password) -> {
-                        AsyncTask.execute(() -> {
-                            Document document = application.baekjoon.login(username, password);
-                            System.out.println(document);
-                            List<Problem> list = application.baekjoon.parseProblemList(document);
-                            runOnUiThread(() -> {
-                                drawer.closeDrawer(GravityCompat.START);
-                                applyProblemList(list);
-                            });
+                    .setPositiveButton((username, password) -> AsyncTask.execute(() -> {
+                        Document document = application.baekjoon.login(username, password);
+                        System.out.println(document);
+                        List<Problem> list = application.baekjoon.parseProblemList(document);
+                        runOnUiThread(() -> {
+                            drawer.closeDrawer(GravityCompat.START);
+                            problemAdapter.reset(list);
                         });
-                    })
+                    }))
                     .show();
         }
     }

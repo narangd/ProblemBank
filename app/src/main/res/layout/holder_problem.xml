@@ -4,6 +4,7 @@
     android:layout_height="@dimen/single_line_list_height"
     android:paddingLeft="@dimen/list_side_padding"
     android:paddingRight="@dimen/list_side_padding"
+    android:gravity="center_vertical"
     android:foreground="?android:attr/selectableItemBackground"
     android:background="@color/android_default_background">
 
@@ -11,16 +12,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/status_image_view"
-        android:src="@drawable/ic_full_circle"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="12dp"/>
+        android:layout_gravity="center_vertical"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="192dp"
         android:id="@+id/name_text_view"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="@dimen/single_line_list_text_padding"
+        android:layout_marginStart="@dimen/single_line_list_text_padding"
         android:textSize="@dimen/single_line_list_text_size"/>
 
 </FrameLayout>

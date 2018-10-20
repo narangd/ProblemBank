@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.R;
@@ -30,6 +32,8 @@ public class ProblemAdapter extends RecyclerView.Adapter {
         TextView titleView;
         @BindView(R.id.status_image_view)
         ImageView iconView;
+        @BindColor(R.color.gray_300)
+        int gray;
         ProblemHolder(View root) {
             super(root);
             ButterKnife.bind(this, root);
@@ -46,13 +50,18 @@ public class ProblemAdapter extends RecyclerView.Adapter {
 //        }
 //    }
 
-    private List<Problem> problemList;
+    private List<Problem> problemList = new ArrayList<>();
     private OnProblemClickListener onProblemClickListener;
 //    private OnLoadListener onLoadListener;
 
-
     public ProblemAdapter(List<Problem> problemList) {
-        this.problemList = problemList;
+        this.problemList.addAll(problemList);
+    }
+
+    public void reset(List<Problem> problemList) {
+        this.problemList.clear();
+        this.problemList.addAll(problemList);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -62,7 +71,10 @@ public class ProblemAdapter extends RecyclerView.Adapter {
 //        if (viewType == ViewType_Problem) {
         root = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.holder_problem, parent, false);
-        return new ProblemHolder(root);
+        ProblemHolder holder = new ProblemHolder(root);
+        holder.iconView.setBackgroundColor(holder.gray);
+        holder.titleView.setBackgroundColor(holder.gray);
+        return holder;
 
 //        } else {
 //            root = LayoutInflater.from(parent.getContext())
@@ -75,9 +87,12 @@ public class ProblemAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 //        if (holder instanceof ProblemHolder) {
             final Problem problem = problemList.get(position);
+            if (problem == null) return;
             ProblemHolder problemHolder = (ProblemHolder) holder;
             String text = problem.code + " : " + problem.title;
             problemHolder.titleView.setText(text);
+            problemHolder.titleView.setBackground(null);
+            problemHolder.iconView.setBackground(null);
             switch (problem.status) {
                 case "success":
                     problemHolder.iconView.setImageResource(R.drawable.ic_check_circle);

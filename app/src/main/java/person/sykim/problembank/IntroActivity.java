@@ -166,6 +166,7 @@ public class IntroActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             Intent main = new Intent(IntroActivity.this, MainActivity.class);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             startActivity(main);
         }
         finish();
