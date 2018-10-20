@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/activity_padding"
             android:id="@+id/loading_text"
-            android:text="Loading..."
+            android:text="로그인중입니다..."
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
