@@ -6,10 +6,12 @@ import android.content.ContextWrapper;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import person.sykim.problembank.data.ProblemBank;
+import person.sykim.problembank.data.User;
 
 public class MyApplication extends Application {
 //    List<ProblemBank>
     public ProblemBank baekjoon;
+    public User user;
 
     @Override
     public void onCreate() {

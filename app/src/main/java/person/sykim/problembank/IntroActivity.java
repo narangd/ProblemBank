@@ -100,22 +100,29 @@ public class IntroActivity extends AppCompatActivity {
                 runOnUiThread(IntroActivity.this::startMain);
             }
         });
-        User u = new User();
-        u.setName(auth.getCurrentUser().getDisplayName());
-        reference.child("users").child(auth.getCurrentUser().getUid()).setValue(u);
-//        reference.child("users").child(auth.getCurrentUser().getUid())
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        Log.e(TAG, "onDataChange: "+dataSnapshot.getValue());
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//                        Log.e(TAG, "onCancelled: "+databaseError);
-//                    }
-//                });
-//        Log.i(TAG, "initFirebase: "+u);
+        reference.child("users").child(auth.getCurrentUser().getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        User u = dataSnapshot.getValue(User.class);
+                        Log.d(TAG, "onDataChange: "+u);
+                        application.user = u;
+                        if (u == null) {
+                            Log.d(TAG, "onDataChange: user is null");
+                            dataSnapshot.getRef().child("name").setValue(auth.getCurrentUser().getDisplayName());
+                        } else {
+                            Log.d(TAG, "onDataChange: user found");
+                            if (u.getKey() != null) {
+                                dataSnapshot.getRef().removeEventListener(this);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e(TAG, "onCancelled: "+databaseError);
+                    }
+                });
 
     }
 
