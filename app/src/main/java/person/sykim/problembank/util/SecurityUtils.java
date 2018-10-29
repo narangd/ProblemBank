@@ -1,9 +1,12 @@
 package person.sykim.problembank.util;
 
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.UUID;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -14,29 +17,42 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 public class SecurityUtils {
-    public static String encrypt(String seed, String cleartext) throws Exception {
-        byte[] rawKey = getRawKey(seed.getBytes());
-        byte[] result = encrypt(rawKey, cleartext.getBytes());
+    private static final String TAG = SecurityUtils.class.getSimpleName();
+
+    public static String encrypt(String key, String cleartext) throws Exception {
+//        byte[] rawKey = getRawKey(seed.getBytes());
+//        System.out.println("encrypt: "+toHex(rawKey));
+        byte[] result = encrypt(key.getBytes(), cleartext.getBytes());
         return toHex(result);
     }
 
-    public static String decrypt(String seed, String encrypted) throws Exception {
-        byte[] rawKey = getRawKey(seed.getBytes());
+    public static String decrypt(String key, String encrypted) throws Exception {
+//        byte[] rawKey = getRawKey(seed.getBytes());
+//        System.out.println("encrypt: "+toHex(rawKey));
         byte[] enc = toByte(encrypted);
-        byte[] result = decrypt(rawKey, enc);
+        byte[] result = decrypt(key.getBytes(), enc);
         return new String(result);
     }
 
     private static byte[] getRawKey(byte[] seed) throws Exception {
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
-//        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG","BC"/*"Crypto"*/);
-        SecureRandom sr = new SecureRandom(seed);
-//        sr.setSeed(seed);
+        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+//        SecureRandom sr = new SecureRandom(seed);
+        sr.setSeed(seed);
         kgen.init(128, sr); // 192 and 256 bits may not be available
         SecretKey skey = kgen.generateKey();
         return skey.getEncoded();
     }
 
+    public static String generateKey() {
+        try {
+            byte[] bytes = getRawKey(UUID.randomUUID().toString().getBytes());
+            return toHex(bytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 
     private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
@@ -80,4 +96,17 @@ public class SecurityUtils {
     private static void appendHex(StringBuffer sb, byte b) {
         sb.append(HEX.charAt((b>>4)&0x0f)).append(HEX.charAt(b&0x0f));
     }
+
+    public static void main(String[] args) throws Exception {
+        String key = generateKey();
+        String encrypted = encrypt(key, "ZDVc+6501645");
+        System.out.println(encrypted);
+        encrypted = encrypt(key, "ZDVc+6501645");
+        System.out.println(encrypted);
+        encrypted = encrypt(key, "ZDVc+6501645");
+        System.out.println(encrypted);
+        System.out.println(decrypt(key, encrypted));
+//        System.out.println(decrypt(key, "31CD9A711302552720EE49588BD7AF96"));
+    }
+    // 4988908906BD008E95D680632731BD00
 }

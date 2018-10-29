@@ -137,6 +137,10 @@ public class ProblemBank {
         }
     }
 
+    /**
+     * 웹페이지에 한번이라도 접속을 하게되면 유저이름에 대한 정보가 들어간다
+     * @return
+     */
     public String getUserName() {
         return username;
     }

@@ -29,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.data.ProblemBank;
 import person.sykim.problembank.data.User;
+import person.sykim.problembank.util.SecurityUtils;
 
 public class IntroActivity extends AppCompatActivity {
 
@@ -75,6 +76,7 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     void initFirebase() {
+
 
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
@@ -131,11 +133,14 @@ public class IntroActivity extends AppCompatActivity {
                         application.user = u;
                         if (u == null) {
                             Log.d(TAG, "onDataChange: user is null");
-                            dataSnapshot.getRef().child("name").setValue(auth.getCurrentUser().getDisplayName());
+                            u = new User();
+                            u.setName(auth.getCurrentUser().getDisplayName());
+                            dataSnapshot.getRef().setValue(u);
                         } else {
                             Log.d(TAG, "onDataChange: user found");
                             if (u.getKey() != null) {
                                 dataSnapshot.getRef().removeEventListener(this);
+
 
                                 Runnable runnable = queue.poll();
                                 if (runnable != null) {
@@ -160,11 +165,11 @@ public class IntroActivity extends AppCompatActivity {
         loadingText.setText("앱을 시작합니다");
 
         if (start) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             Intent main = new Intent(IntroActivity.this, MainActivity.class);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             startActivity(main);

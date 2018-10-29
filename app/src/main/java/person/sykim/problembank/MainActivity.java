@@ -14,11 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.pixplicity.easyprefs.library.Prefs;
 
 import org.jsoup.nodes.Document;
 
@@ -32,7 +35,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import person.sykim.problembank.adapter.ProblemAdapter;
 import person.sykim.problembank.data.Problem;
+import person.sykim.problembank.data.ProblemBank;
+import person.sykim.problembank.data.User;
 import person.sykim.problembank.dialog.LoginDialog;
+import person.sykim.problembank.util.SecurityUtils;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,6 +46,8 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
 
     MyApplication application;
+    ProblemBank bank;
+    User user;
 
     @BindView(R.id.problem_recycler_view)
     RecyclerView problemRecyclerView;
@@ -67,6 +75,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         application = (MyApplication) getApplication();
+        bank = application.baekjoon;
+        user = application.user;
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -90,16 +100,40 @@ public class MainActivity extends AppCompatActivity
         problemRecyclerView.setAdapter(problemAdapter = new ProblemAdapter(problemList));
 
         AsyncTask.execute(() -> {
-            List<Problem> list = application.baekjoon.parseProblemList(null);
-            runOnUiThread(() -> {
-                applyProblemList();
-                problemAdapter.reset(list);
-            });
+            String username = Prefs.getString(bank.name+"-username", "");
+            String encrypted = Prefs.getString(bank.name+"-password", "");
+            String password = "";
+            try {
+                if (encrypted.length() > 0) {
+                    Log.i(TAG, "onCreate: "+user.getKey()+","+encrypted);
+                    password = SecurityUtils.decrypt(user.getKey(), encrypted);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "onCreate: decrypt", e);
+                password = "";
+            }
+            tryLogin(username, password);
+        });
+        Log.d(TAG, "onCreate: 완료");
+    }
+
+    void tryLogin(String username, String password) {
+        Document document = null;
+        if (username.length() > 0 && password.length() > 0) {
+            Log.i(TAG, "tryLogin: login using pref");
+            document = bank.login(username, password);
+        }
+        Log.i(TAG, "tryLogin: get problemList");
+        List<Problem> list = bank.parseProblemList(document);
+        runOnUiThread(() -> {
+            drawer.closeDrawer(GravityCompat.START);
+            applyProblemList();
+            problemAdapter.reset(list);
         });
     }
 
     void applyProblemList() {
-        String username = application.baekjoon.getUserName();
+        String username = bank.getUserName();
         if (username != null) {
             headerViewHolder.usernameTextView.setText(username);
             headerViewHolder.emailTextView.setText("-");
@@ -109,10 +143,13 @@ public class MainActivity extends AppCompatActivity
             headerViewHolder.userImageView.setImageDrawable(addUserDrawable);
         }
 
-        for (int page = application.baekjoon.minPage; page <= application.baekjoon.maxPage; page++) {
+        if (pageTabLayout.getTabCount() > 0) {
+            pageTabLayout.removeAllTabs();
+        }
+        for (int page = bank.minPage; page <= bank.maxPage; page++) {
             TabLayout.Tab newTab = pageTabLayout.newTab();
             newTab.setText(page+"");
-            pageTabLayout.addTab(newTab, false);
+            pageTabLayout.addTab(newTab, page == 1);
         }
     }
 
@@ -185,20 +222,24 @@ public class MainActivity extends AppCompatActivity
 
         @OnClick(R.id.username_layout)
         void onOpenSelectAccount() {
-//            application.baekjoon.
+//            bank.
         }
 
         @OnClick(R.id.user_image_view)
         void onAddAccount() {
             new LoginDialog(MainActivity.this)
                     .setPositiveButton((username, password) -> AsyncTask.execute(() -> {
-                        Document document = application.baekjoon.login(username, password);
-                        System.out.println(document);
-                        List<Problem> list = application.baekjoon.parseProblemList(document);
-                        runOnUiThread(() -> {
-                            drawer.closeDrawer(GravityCompat.START);
-                            problemAdapter.reset(list);
-                        });
+                        try {
+                            Log.d(TAG, "onAddAccount: "+user.getKey()+","+password);
+                            String encrypted = SecurityUtils.encrypt(user.getKey(), password);
+                            Log.d(TAG, "onAddAccount: "+encrypted);
+                            Prefs.putString(bank.name+"-password", encrypted);
+                        } catch (Exception e) {
+                            Log.e(TAG, "tryLogin: encrypt", e);
+                        }
+                        Prefs.putString(bank.name+"-username", username);
+
+                        tryLogin(username, password);
                     }))
                     .show();
         }
