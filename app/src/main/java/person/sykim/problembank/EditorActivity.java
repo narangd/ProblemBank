@@ -18,6 +18,7 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.adapter.EditorAdapter;
+import person.sykim.problembank.data.editor.Source;
 
 public class EditorActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,9 +49,9 @@ public class EditorActivity extends AppCompatActivity
 
         editorRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         editorRecyclerView.setAdapter(adapter = new EditorAdapter());
-        Log.d(TAG, "onCreate: "+adapter.source);
-        Log.d(TAG, "onCreate: "+Arrays.toString(adapter.lines));
-        Log.d(TAG, "onCreate: "+adapter.getItemCount());
+
+        Source source = new Source();
+        adapter.setSource(source);
     }
 
     @Override

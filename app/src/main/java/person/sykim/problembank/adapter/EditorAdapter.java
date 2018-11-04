@@ -11,6 +11,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.R;
+import person.sykim.problembank.data.editor.Source;
 
 
 /**
@@ -28,14 +29,13 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static final int ViewType_Scanner = 40;
     public static final int ViewType_Calculate = 50;
 
-    public String source = "public class Source {\n" +
-            "    public static void main(String[] args) {\n" +
-            "        System.out.println(\"Hello World\");\n" +
-            "    }\n" +
-            "}";
-    public String[] lines = source.split("\n");
-
-
+//    public String source = "public class Source {\n" +
+//            "    public static void main(String[] args) {\n" +
+//            "        System.out.println(\"Hello World\");\n" +
+//            "    }\n" +
+//            "}";
+//    String[] lines = source.split("\n");
+    Source source;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -64,6 +64,10 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public int getItemCount() {
         return lines.length;
+    }
+
+    public void setSource(Source source) {
+        this.source = source;
     }
 
 //    public interface OnVariableClickListener {
