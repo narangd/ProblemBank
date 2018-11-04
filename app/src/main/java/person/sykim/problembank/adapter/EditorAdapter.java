@@ -8,10 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.R;
+import person.sykim.problembank.data.adapter.LanguageConverter;
+import person.sykim.problembank.data.adapter.SourceLineList;
 import person.sykim.problembank.data.editor.Source;
+import person.sykim.problembank.data.editor.SourceLine;
 
 
 /**
@@ -35,7 +40,7 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 //            "    }\n" +
 //            "}";
 //    String[] lines = source.split("\n");
-    Source source;
+    SourceLineList lines = new SourceLineList();
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,8 +58,8 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         LineHolder lineHolder = (LineHolder) holder;
-        String line = lines[position];
-        lineHolder.lineTextView.setText(line);
+        SourceLine line = lines.get(position);
+        lineHolder.lineTextView.setText(line.toString());
         lineHolder.setOnClickListener((view) -> {});
         Log.i(TAG, "onBindViewHolder line["+position+":"+line);
 //        if (holder instanceof LineHolder) {
@@ -63,11 +68,11 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return lines.length;
+        return lines.size();
     }
 
     public void setSource(Source source) {
-        this.source = source;
+        this.lines = new LanguageConverter().toJavaSource(source);
     }
 
 //    public interface OnVariableClickListener {
