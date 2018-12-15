@@ -1,7 +1,6 @@
 package person.sykim.problembank.data.adapter.java;
 
-import java.util.List;
-
+import person.sykim.problembank.data.adapter.SourceLineList;
 import person.sykim.problembank.data.editor.Function;
 import person.sykim.problembank.data.editor.SourceLine;
 
@@ -12,7 +11,7 @@ public class JavaMainConverter extends JavaFunctionConverter {
     }
 
     @Override
-    public SourceLine body(Function function, List<SourceLine> list) {
+    public SourceLine body(Function function, SourceLineList list) {
         return null;
     }
 

@@ -1,11 +1,15 @@
 package person.sykim.problembank.data.adapter;
 
-import java.util.List;
-
 import person.sykim.problembank.data.editor.SourceLine;
 
-public interface LanguageAdapter<T> {
-    SourceLine begin(T t);
-    SourceLine body(T t, List<SourceLine> lines);
-    SourceLine end(T t);
+public abstract class LanguageAdapter<T> {
+    public abstract SourceLine begin(T t);
+    public abstract SourceLine body(T t, SourceLineList lines);
+    public abstract SourceLine end(T t);
+
+    public void run(SourceLineList list, T t) {
+        list.add(begin(t));
+        list.add(body(t, list));
+        list.add(end(t));
+    }
 }

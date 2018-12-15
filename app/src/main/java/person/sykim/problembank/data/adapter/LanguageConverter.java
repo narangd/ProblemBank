@@ -6,10 +6,7 @@ import person.sykim.problembank.data.editor.Source;
 public class LanguageConverter {
     public SourceLineList toJavaSource(Source source) {
         SourceLineList list = new SourceLineList();
-        JavaSourceConverter converter = new JavaSourceConverter();
-        list.add(converter.begin(source));
-        list.add(converter.body(source, list));
-        list.add(converter.end(source));
+        new JavaSourceConverter().run(list, source);
         return list;
     }
 }

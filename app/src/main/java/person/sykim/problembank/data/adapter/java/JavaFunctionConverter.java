@@ -6,7 +6,7 @@ import person.sykim.problembank.data.adapter.LanguageAdapter;
 import person.sykim.problembank.data.editor.Function;
 import person.sykim.problembank.data.editor.SourceLine;
 
-public class JavaFunctionConverter implements LanguageAdapter<Function> {
+public class JavaFunctionConverter extends LanguageAdapter<Function> {
     @Override
     public SourceLine begin(Function function) {
         return new SourceLine("  void test() {");

@@ -8,10 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import person.sykim.problembank.R;
 import person.sykim.problembank.data.adapter.LanguageConverter;
 import person.sykim.problembank.data.adapter.SourceLineList;
@@ -34,13 +30,7 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static final int ViewType_Scanner = 40;
     public static final int ViewType_Calculate = 50;
 
-//    public String source = "public class Source {\n" +
-//            "    public static void main(String[] args) {\n" +
-//            "        System.out.println(\"Hello World\");\n" +
-//            "    }\n" +
-//            "}";
-//    String[] lines = source.split("\n");
-    SourceLineList lines = new SourceLineList();
+    private SourceLineList lines = new SourceLineList();
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
