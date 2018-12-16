@@ -8,5 +8,5 @@ import lombok.Data;
 @Data
 public class Source {
     List<Group> groups = new ArrayList<>();
-    Function main = new Function();
+    Function main = new Function("main");
 }

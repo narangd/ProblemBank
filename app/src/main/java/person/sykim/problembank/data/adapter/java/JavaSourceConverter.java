@@ -7,6 +7,9 @@ import person.sykim.problembank.data.editor.Source;
 import person.sykim.problembank.data.editor.SourceLine;
 
 public class JavaSourceConverter extends LanguageAdapter<Source> {
+    private JavaMainConverter mainConverter = new JavaMainConverter();
+    private JavaGroupConverter groupConverter = new JavaGroupConverter();
+
     @Override
     public SourceLine begin(Source source) {
         return new SourceLine("public class Main {");
@@ -14,10 +17,10 @@ public class JavaSourceConverter extends LanguageAdapter<Source> {
 
     @Override
     public SourceLine body(Source source, SourceLineList list) {
-        new JavaMainConverter().run(list, source.getMain());
+        mainConverter.run(list, source.getMain());
 
         for (Group group : source.getGroups()) {
-            new JavaGroupConverter().run(list, group);
+            groupConverter.run(list, group);
         }
         return null;
     }

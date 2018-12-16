@@ -1,6 +1,7 @@
 package person.sykim.problembank.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,8 +33,9 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private SourceLineList lines = new SourceLineList();
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final Context context = parent.getContext();
         View view = LayoutInflater.from(context)
                 .inflate(R.layout.holder_source_line, parent, false);
@@ -46,7 +48,7 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         LineHolder lineHolder = (LineHolder) holder;
         SourceLine line = lines.get(position);
         lineHolder.lineTextView.setText(line.toString());

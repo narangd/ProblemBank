@@ -8,7 +8,7 @@ import person.sykim.problembank.data.editor.SourceLine;
 class JavaGroupConverter extends LanguageAdapter<Group> {
     @Override
     public SourceLine begin(Group group) {
-        return null;
+        return new SourceLine("  private static class "+group.getName()+" {");
     }
 
     @Override
@@ -18,6 +18,6 @@ class JavaGroupConverter extends LanguageAdapter<Group> {
 
     @Override
     public SourceLine end(Group group) {
-        return null;
+        return new SourceLine("  }");
     }
 }
