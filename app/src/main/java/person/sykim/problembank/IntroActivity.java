@@ -3,15 +3,16 @@ package person.sykim.problembank;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseUiException;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +30,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.data.ProblemBank;
 import person.sykim.problembank.data.User;
-import person.sykim.problembank.util.SecurityUtils;
 
 public class IntroActivity extends AppCompatActivity {
 
@@ -37,9 +37,8 @@ public class IntroActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
 
     MyApplication application;
-    FirebaseAuth auth = FirebaseAuth.getInstance();
-    DatabaseReference reference = FirebaseDatabase.getInstance()
-            .getReference();
+    FirebaseAuth auth;
+    DatabaseReference reference;
 
     @BindView(R.id.loading_text)
     TextView loadingText;
@@ -53,6 +52,9 @@ public class IntroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_intro);
         ButterKnife.bind(this);
         application = (MyApplication) getApplication();
+        auth = FirebaseAuth.getInstance();
+        reference = FirebaseDatabase.getInstance()
+                .getReference();
 
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {

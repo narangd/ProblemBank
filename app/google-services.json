@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "875045166448-i7fvgnna87lt2b62q3nhapk0blad13et.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "person.sykim.problembank",
+            "certificate_hash": "48a7104b6a1f5f88c8827c314b8a139c8699dc0c"
+          }
+        },
+        {
           "client_id": "875045166448-iqcngvgvbqfn6ipekc7610oa0qr5oqd7.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "875045166448-iqcngvgvbqfn6ipekc7610oa0qr5oqd7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

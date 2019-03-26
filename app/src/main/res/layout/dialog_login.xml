@@ -18,7 +18,7 @@
             android:orientation="vertical"
             android:padding="@dimen/form_spacing">
             
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 
@@ -30,9 +30,9 @@
                     android:inputType="textEmailAddress"
                     tools:ignore="HardcodedText" />
                 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -44,7 +44,7 @@
                     android:inputType="textPassword"
                     tools:ignore="HardcodedText" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
