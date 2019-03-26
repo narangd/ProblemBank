@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         application = (MyApplication) getApplication();
-        bank = application.baekjoon;
+        bank = application.bank.get("baekjoon");
         user = application.user;
 
         setSupportActionBar(toolbar);
@@ -94,9 +94,7 @@ public class MainActivity extends AppCompatActivity
 
         problemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<Problem> problemList = new ArrayList<>();
-        for (int i=1; i<=10; i++) problemList.add(null);
-        problemRecyclerView.setAdapter(problemAdapter = new ProblemAdapter(problemList));
+        problemRecyclerView.setAdapter(problemAdapter = new ProblemAdapter());
 
         AsyncTask.execute(() -> {
             String username = Prefs.getString(bank.name+"-username", "");

@@ -105,7 +105,11 @@ public class IntroActivity extends AppCompatActivity {
                 ProblemBank baekjoon = dataSnapshot.getValue(ProblemBank.class);
                 Log.e(TAG, "onDataChange: "+ baekjoon);
 
-                application.baekjoon = baekjoon;
+                if (baekjoon != null) {
+                    application.bank.put("baekjoon", baekjoon);
+                } else {
+                    Log.e(TAG, "onDataChange: baekjoon 은행을 로드하지 못했습니다");
+                }
 
                 Runnable runnable = queue.poll();
                 if (runnable != null) {

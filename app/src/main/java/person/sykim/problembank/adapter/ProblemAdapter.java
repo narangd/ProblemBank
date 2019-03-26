@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -54,7 +56,9 @@ public class ProblemAdapter extends RecyclerView.Adapter {
     private OnProblemClickListener onProblemClickListener;
 //    private OnLoadListener onLoadListener;
 
-    public ProblemAdapter(List<Problem> problemList) {
+    public ProblemAdapter() {
+        List<Problem> problemList = new ArrayList<>();
+        for (int i=1; i<=10; i++) problemList.add(null);
         this.problemList.addAll(problemList);
     }
 
