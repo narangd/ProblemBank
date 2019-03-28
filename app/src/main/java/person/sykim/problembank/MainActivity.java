@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pixplicity.easyprefs.library.Prefs;
 
@@ -62,6 +63,8 @@ public class MainActivity extends AppCompatActivity
     @BindDrawable(R.drawable.ic_add_circle_outline)
     Drawable addUserDrawable;
 
+
+
     HeaderViewHolder headerViewHolder;
     ProgressDialog progressDialog;
 
@@ -83,6 +86,8 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+
+
         navigationView.setNavigationItemSelectedListener(this);
         headerViewHolder = new HeaderViewHolder( navigationView.getHeaderView(0) );
 
@@ -95,8 +100,18 @@ public class MainActivity extends AppCompatActivity
         problemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         problemRecyclerView.setAdapter(problemAdapter = new ProblemAdapter());
+        Log.d(TAG, "onCreate: 완료");
+
+        initList();
+    }
+
+    void initList() {
 
         AsyncTask.execute(() -> {
+            if (bank == null) {
+                Toast.makeText(this, "은행이 없어 목록을 로드하지 못했습니다", Toast.LENGTH_SHORT).show();
+                return;
+            }
             String username = Prefs.getString(bank.name+"-username", "");
             String encrypted = Prefs.getString(bank.name+"-password", "");
             String password = "";
@@ -111,7 +126,6 @@ public class MainActivity extends AppCompatActivity
             }
             tryLogin(username, password);
         });
-        Log.d(TAG, "onCreate: 완료");
     }
 
     void tryLogin(String username, String password) {
