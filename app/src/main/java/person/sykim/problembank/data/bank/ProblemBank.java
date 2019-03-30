@@ -87,7 +87,8 @@ public class ProblemBank {
             for (Element trElement : trElements) {
                 Problem problem = new Problem();
 
-                String code = trElement.select(normal.code).first().text();
+                String code = trElement.select(normal.code.select).first().text();
+                code = code.replaceAll(normal.code.replace, "");
                 problem.code = Integer.parseInt(code);
 
                 problem.title = trElement.select(normal.title).first().text();
@@ -124,7 +125,8 @@ public class ProblemBank {
             }
 
             minPage = 1;
-            String page = document.select(normal.page).last().text();
+            String page = document.select(normal.page.select).last().text();
+            page = page.replaceAll(normal.page.replace, "");
             maxPage = Integer.parseInt(page);
 
             return problems;
