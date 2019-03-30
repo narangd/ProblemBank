@@ -40,6 +40,9 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 def versionLombok = '1.16.20' // fixed. for bugs.

@@ -80,8 +80,6 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     void initFirebase() {
-
-
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
             Log.i(TAG, "initFirebase: id: " + user.getUid());

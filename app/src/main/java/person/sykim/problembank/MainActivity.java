@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -18,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,14 +37,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import person.sykim.problembank.adapter.ProblemAdapter;
+import person.sykim.problembank.data.Preference;
 import person.sykim.problembank.data.Problem;
 import person.sykim.problembank.data.ProblemBank;
 import person.sykim.problembank.data.User;
 import person.sykim.problembank.dialog.LoginDialog;
 import person.sykim.problembank.util.SecurityUtils;
+import person.sykim.problembank.view.dialog.ProblemBankDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private MainActivity THIS = this;
 
     private static final String TAG = "MainActivity";
 
@@ -77,7 +83,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         application = (MyApplication) getApplication();
-        bank = application.bank.get("baekjoon");
         user = application.user;
 
         setSupportActionBar(toolbar);
@@ -102,11 +107,22 @@ public class MainActivity extends AppCompatActivity
         problemRecyclerView.setAdapter(problemAdapter = new ProblemAdapter());
         Log.d(TAG, "onCreate: 완료");
 
-        initList();
+        String bankKey = Preference.BANK.string();
+        if (bankKey != null) {
+            THIS.bank = application.bank.get(bankKey);
+            initList();
+        } else {
+            new ProblemBankDialog(this)
+                    .setProblemBanks(application, key -> {
+                        THIS.bank = application.bank.get(key);
+                        Preference.BANK.save(key);
+                        initList();
+                    })
+                    .show();
+        }
     }
 
     void initList() {
-
         AsyncTask.execute(() -> {
             if (bank == null) {
                 Toast.makeText(this, "은행이 없어 목록을 로드하지 못했습니다", Toast.LENGTH_SHORT).show();
