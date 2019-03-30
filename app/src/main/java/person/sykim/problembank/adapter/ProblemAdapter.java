@@ -10,15 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.R;
-import person.sykim.problembank.data.Problem;
+import person.sykim.problembank.data.bank.Problem;
 
 
 public class ProblemAdapter extends RecyclerView.Adapter {

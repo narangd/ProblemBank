@@ -1,4 +1,4 @@
-package person.sykim.problembank.data;
+package person.sykim.problembank.data.bank;
 
 public class Problem {
     public String status;

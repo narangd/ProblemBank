@@ -1,4 +1,4 @@
-package person.sykim.problembank.data;
+package person.sykim.problembank.data.bank;
 
 
 import android.util.Log;
@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class ProblemBank {
     private static final String TAG = "ProblemBank";
-
+    public String key;
     public String name;
     public String description;
     public int minPage;
@@ -46,17 +46,15 @@ public class ProblemBank {
 
     private void save(Map<String, String> cookies) {
         this.cookies.putAll(cookies);
-        Prefs.putString("cookie-"+name, new Gson().toJson(this.cookies));
+        Prefs.putString("cookie-"+key, new Gson().toJson(this.cookies));
     }
 
     private Map<String, String> load() {
         Type type = new TypeToken<Map<String, String>>(){}.getType();
-        return new Gson().fromJson(Prefs.getString("cookie-"+name, "{}"), type);
+        return new Gson().fromJson(Prefs.getString("cookie-"+key, "{}"), type);
     }
 
     public List<Problem> parseProblemList(Document document) {
-        // {"code":1000,"ratio":46.434,"solveCount":48723,"status":"none","title":"A+B","totalCount":145316,"url":"/problem/1000"}
-
         ArrayList<Problem> problems = new ArrayList<>();
         try {
             Log.d(TAG, "printList: url: "+ normal.url);
@@ -190,29 +188,6 @@ public class ProblemBank {
     private static final String URL_HISTORY = URL_ROOT + "/status";
 
     @Override
-    public boolean tryLogin(String id, String password) {
-        try {
-            Connection connection = Jsoup.connect(URL_LOGIN);
-            Connection.Response response = connection
-                    .cookies( load() )
-//                    .cookie("__cfduid", "d155ef887cb34dcc7cf4a9e83bf89d3b41502803318")
-//                    .cookie("OnlineJudge", "ejs9c3siga6ne63boa135btob2")
-                    .method(Connection.Method.POST)
-                    .data("next", "/")
-                    .data("login_user_id", id)
-                    .data("login_password", password)
-                    .execute();
-            save( response.cookies() );
-            Document document = response.parse();
-            updateUserName(document);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return login;
-    }
-
-    @Override
     public boolean logout() {
         try {
             Connection connection = Jsoup.connect(URL_LOGOUT);
@@ -231,79 +206,6 @@ public class ProblemBank {
             e.printStackTrace();
         }
         return !isLogin();
-    }
-    @Override
-    public List<Problem> getProblems(int page) {
-        ArrayList<Problem> problems = new ArrayList<>();
-        Document document;
-        try {
-            String url = String.format(Locale.KOREAN, "%s/%d", URL_PROBLEM_SET, page);
-            Connection.Response response = Jsoup.connect(url)
-                    .timeout(5000)
-                    .method(Connection.Method.GET)
-                    .cookies( load() )
-                    .execute();
-            save( response.cookies() );
-            Log.d(TAG, "getProblems: done");
-
-            document = response.parse();
-
-            String responseText = document.text();
-
-//            System.out.println(responseText);
-            Log.d(TAG, "getProblems: problem");
-
-            Element tableElement = document.select("#problemset").first();
-            Elements trElements = tableElement.select("tbody>tr");
-            for (Element trElement : trElements) {
-                Problem problem = new Problem();
-
-                Elements tdElements = trElement.select("td");
-
-                String code = tdElements.get(0).text();
-                problem.setCode(Integer.parseInt(code));
-
-                String title = tdElements.get(1).text();
-                problem.setTitle(title);
-
-                String status = "none";
-                Elements labelElements = tdElements.get(2).select("span.label-success");
-                if (labelElements.size() > 0) {
-                    status = "success";
-                }
-                labelElements = tdElements.get(2).select("span.label-danger");
-                if (labelElements.size() > 0) {
-                    status = "failure";
-                }
-                problem.setStatus(status);
-
-                String solveCount = tdElements.get(3).text();
-                problem.setSolveCount(Integer.parseInt(solveCount));
-
-                String totalCount = tdElements.get(4).text();
-                problem.setTotalCount(Integer.parseInt(totalCount));
-
-                String ratio = tdElements.get(5).text().replace("%","");
-                problem.setRatio(Double.parseDouble(ratio));
-
-                Element urlElement = tdElements.get(1).select("a").first();
-                problem.setUrl(urlElement.attr("href"));
-//                System.out.println("tr:"+ new Gson().toJson(problem));
-
-                problems.add(problem);
-            }
-
-            updateUserName(document);
-
-//            pageMin = 1;
-//            pageMax = Integer.parseInt(document.select("ul.pagination a").last().text());
-            updateDate = 0;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return problems;
     }
 
     @Override

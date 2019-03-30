@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -20,7 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +27,6 @@ import com.pixplicity.easyprefs.library.Prefs;
 
 import org.jsoup.nodes.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindDrawable;
@@ -38,8 +35,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import person.sykim.problembank.adapter.ProblemAdapter;
 import person.sykim.problembank.data.Preference;
-import person.sykim.problembank.data.Problem;
-import person.sykim.problembank.data.ProblemBank;
+import person.sykim.problembank.data.bank.Problem;
+import person.sykim.problembank.data.bank.ProblemBank;
 import person.sykim.problembank.data.User;
 import person.sykim.problembank.dialog.LoginDialog;
 import person.sykim.problembank.util.SecurityUtils;
@@ -91,8 +88,6 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-
-
         navigationView.setNavigationItemSelectedListener(this);
         headerViewHolder = new HeaderViewHolder( navigationView.getHeaderView(0) );
 
@@ -128,8 +123,8 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, "은행이 없어 목록을 로드하지 못했습니다", Toast.LENGTH_SHORT).show();
                 return;
             }
-            String username = Prefs.getString(bank.name+"-username", "");
-            String encrypted = Prefs.getString(bank.name+"-password", "");
+            String username = Prefs.getString(bank.key+"-username", "");
+            String encrypted = Prefs.getString(bank.key+"-password", "");
             String password = "";
             try {
                 if (encrypted.length() > 0) {
@@ -260,11 +255,11 @@ public class MainActivity extends AppCompatActivity
                             Log.d(TAG, "onAddAccount: "+user.getKey()+","+password);
                             String encrypted = SecurityUtils.encrypt(user.getKey(), password);
                             Log.d(TAG, "onAddAccount: "+encrypted);
-                            Prefs.putString(bank.name+"-password", encrypted);
+                            Prefs.putString(bank.key+"-password", encrypted);
                         } catch (Exception e) {
                             Log.e(TAG, "tryLogin: encrypt", e);
                         }
-                        Prefs.putString(bank.name+"-username", username);
+                        Prefs.putString(bank.key+"-username", username);
 
                         tryLogin(username, password);
                     }))

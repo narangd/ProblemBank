@@ -1,4 +1,4 @@
-package person.sykim.problembank.data;
+package person.sykim.problembank.data.bank;
 
 public class ProblemNormal {
     public String url;

@@ -1,4 +1,4 @@
-package person.sykim.problembank.data;
+package person.sykim.problembank.data.editor;
 
 import person.sykim.problembank.data.editor.Execute;
 import person.sykim.problembank.data.editor.Function;

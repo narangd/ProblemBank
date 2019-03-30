@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseUiException;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,13 +21,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import person.sykim.problembank.data.ProblemBank;
+import person.sykim.problembank.data.bank.ProblemBank;
 import person.sykim.problembank.data.User;
 
 public class IntroActivity extends AppCompatActivity {
@@ -40,13 +38,10 @@ public class IntroActivity extends AppCompatActivity {
     FirebaseAuth auth;
     DatabaseReference reference;
 
-    private ValueEventListener banksListener;
-
     @BindView(R.id.loading_text)
     TextView loadingText;
 
     private boolean start = true;
-    private ArrayDeque<Runnable> queue = new ArrayDeque<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,11 +57,11 @@ public class IntroActivity extends AppCompatActivity {
         if (user != null) {
             AsyncTask.execute(this::initFirebase);
         } else {
-            openFirebaseLogin();
+            signinFirebase();
         }
     }
 
-    void openFirebaseLogin() {
+    void signinFirebase() {
         List<AuthUI.IdpConfig> providers = Collections.singletonList(
                 new AuthUI.IdpConfig.GoogleBuilder().build()
         );
@@ -85,21 +80,15 @@ public class IntroActivity extends AppCompatActivity {
             Log.i(TAG, "initFirebase: id: " + user.getUid());
         }
 
-        queue.add(syncBanks);
-        queue.add(syncUser);
-        queue.add(startMain);
-
-        Runnable runnable = queue.poll();
-        if (runnable != null) {
-            AsyncTask.execute(runnable);
-        }
-
+        syncBanks.run();
     }
 
 
     Runnable syncBanks = () -> {
         runOnUiThread(() -> loadingText.setText("동기화 1단계 진행중..."));
-        banksListener = reference.child("banks").addValueEventListener(new ValueEventListener() {
+        reference.child("banks")
+                .addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot bankSnapshot : dataSnapshot.getChildren()) {
@@ -108,68 +97,56 @@ public class IntroActivity extends AppCompatActivity {
                     Log.i(TAG, "banks onDataChange: "+ key+", "+problemBank);
 
                     if (key != null && problemBank != null) {
+                        problemBank.key = key;
                         application.bank.put(key, problemBank);
                     } else {
                         Log.e(TAG, "banks onDataChange: baekjoon 은행을 로드하지 못했습니다");
                         Log.e(TAG, "banks onDataChange: "+key);
                         Log.e(TAG, "banks onDataChange: "+problemBank);
                     }
-
-                    Runnable runnable = queue.poll();
-                    if (runnable != null) {
-                        runOnUiThread(runnable);
-                    }
                 }
                 dataSnapshot.getRef().removeEventListener(this);
+
+                syncUser.run();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e(TAG, "banks onCancelled: "+databaseError.getMessage() +": "+databaseError.getDetails());
 
-                Runnable runnable = queue.poll();
-                if (runnable != null) {
-                    runOnUiThread(runnable);
-                }
+                syncUser.run();
             }
         });
     };
     Runnable syncUser = () -> {
         runOnUiThread(() -> loadingText.setText("동기화 2단계 진행중..."));
-        reference.child("users").child(auth.getCurrentUser().getUid())
+        reference.child("users")
+                .child(auth.getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
+
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        User u = dataSnapshot.getValue(User.class);
-                        Log.d(TAG, "users onDataChange: "+u);
-                        application.user = u;
-                        if (u == null) {
+                        User user = dataSnapshot.getValue(User.class);
+                        Log.d(TAG, "users onDataChange: "+user);
+                        application.user = user;
+                        if (user == null) {
                             Log.d(TAG, "users onDataChange: user is null");
-                            u = new User();
-                            u.setName(auth.getCurrentUser().getDisplayName());
-                            dataSnapshot.getRef().setValue(u);
+                            user = new User();
+                            user.setName(auth.getCurrentUser().getDisplayName());
+                            dataSnapshot.getRef().setValue(user);
                         } else {
                             Log.d(TAG, "users onDataChange: user found");
-                            if (u.getKey() != null) {
-                                dataSnapshot.getRef().removeEventListener(this);
-
-
-                                Runnable runnable = queue.poll();
-                                if (runnable != null) {
-                                    runOnUiThread(runnable);
-                                }
-                            }
                         }
+                        dataSnapshot.getRef().removeEventListener(this);
+
+                        startMain.run();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         Log.e(TAG, "users onCancelled: "+databaseError);
 
-                        Runnable runnable = queue.poll();
-                        if (runnable != null) {
-                            runOnUiThread(runnable);
-                        }
+                        startMain.run();
                     }
                 });
     };
@@ -177,11 +154,6 @@ public class IntroActivity extends AppCompatActivity {
         loadingText.setText("앱을 시작합니다");
 
         if (start) {
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
             Intent main = new Intent(IntroActivity.this, MainActivity.class);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             startActivity(main);
@@ -204,15 +176,9 @@ public class IntroActivity extends AppCompatActivity {
                     FirebaseAnalytics.getInstance(this)
                             .setUserProperty("FirebaseUI Login Error", exception.getMessage()+":"+exception.getErrorCode());
                 }
-                openFirebaseLogin();
+                signinFirebase();
             }
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        reference.removeEventListener(banksListener);
     }
 
     @Override
