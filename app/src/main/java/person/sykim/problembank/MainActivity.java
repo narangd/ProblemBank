@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -29,6 +30,7 @@ import org.jsoup.nodes.Document;
 
 import java.util.List;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity
     ProblemBank bank;
     User user;
 
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
     @BindView(R.id.problem_recycler_view)
     RecyclerView problemRecyclerView;
     @BindView(R.id.toolbar)
@@ -97,8 +101,10 @@ public class MainActivity extends AppCompatActivity
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("Loading...");
 
-        problemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
+        refreshLayout.setOnRefreshListener(this::initList);
 
+        problemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         problemRecyclerView.setAdapter(problemAdapter = new ProblemAdapter());
         Log.d(TAG, "onCreate: 완료");
 
@@ -118,6 +124,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     void initList() {
+        refreshLayout.setRefreshing(true);
         AsyncTask.execute(() -> {
             if (bank == null) {
                 Toast.makeText(this, "은행이 없어 목록을 로드하지 못했습니다", Toast.LENGTH_SHORT).show();
@@ -151,6 +158,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
             applyProblemList();
             problemAdapter.reset(list);
+            refreshLayout.setRefreshing(false);
         });
     }
 
@@ -212,20 +220,16 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_other_bank) {
+            new ProblemBankDialog(this)
+                    .setProblemBanks(application, key -> {
+                        THIS.bank = application.bank.get(key);
+                        Preference.BANK.save(key);
+                        initList();
+                    })
+                    .cancelable()
+                    .show();
         }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

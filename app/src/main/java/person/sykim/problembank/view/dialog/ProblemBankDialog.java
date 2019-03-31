@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import person.sykim.problembank.MyApplication;
+import person.sykim.problembank.dialog.LoginDialog;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProblemBankDialog {
@@ -36,6 +37,11 @@ public class ProblemBankDialog {
 
     public AlertDialog show() {
         return builder.show();
+    }
+
+    public ProblemBankDialog cancelable() {
+        builder.setCancelable(true);
+        return this;
     }
 
     public interface OnClickListener {
