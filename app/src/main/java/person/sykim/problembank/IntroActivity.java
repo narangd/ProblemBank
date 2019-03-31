@@ -3,9 +3,6 @@ package person.sykim.problembank;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -24,10 +21,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import person.sykim.problembank.data.bank.ProblemBank;
 import person.sykim.problembank.data.User;
+import person.sykim.problembank.data.bank.ProblemBank;
 
 public class IntroActivity extends AppCompatActivity {
 

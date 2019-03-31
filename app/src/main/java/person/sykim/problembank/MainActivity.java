@@ -4,18 +4,6 @@ import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,12 +12,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import org.jsoup.nodes.Document;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindDrawable;
 import butterknife.BindView;
@@ -37,9 +36,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import person.sykim.problembank.adapter.ProblemAdapter;
 import person.sykim.problembank.data.Preference;
+import person.sykim.problembank.data.User;
 import person.sykim.problembank.data.bank.Problem;
 import person.sykim.problembank.data.bank.ProblemBank;
-import person.sykim.problembank.data.User;
 import person.sykim.problembank.dialog.LoginDialog;
 import person.sykim.problembank.util.SecurityUtils;
 import person.sykim.problembank.view.dialog.ProblemBankDialog;
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity
         progressDialog.setMessage("Loading...");
 
         refreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent));
-        refreshLayout.setOnRefreshListener(this::initList);
+        refreshLayout.setOnRefreshListener(this::loadList);
 
         problemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         problemRecyclerView.setAdapter(problemAdapter = new ProblemAdapter());
@@ -124,63 +123,71 @@ public class MainActivity extends AppCompatActivity
     }
 
     void initList() {
-        refreshLayout.setRefreshing(true);
-        AsyncTask.execute(() -> {
-            if (bank == null) {
-                Toast.makeText(this, "은행이 없어 목록을 로드하지 못했습니다", Toast.LENGTH_SHORT).show();
-                return;
+        if (bank == null) {
+            Toast.makeText(this, "은행이 없어 목록을 로드하지 못했습니다", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String username = Prefs.getString(bank.key+"-username", "");
+        String encrypted = Prefs.getString(bank.key+"-password", "");
+        String password = "";
+        try {
+            if (encrypted.length() > 0) {
+                Log.i(TAG, "onCreate: "+user.getKey()+","+encrypted);
+                password = SecurityUtils.decrypt(user.getKey(), encrypted);
             }
-            String username = Prefs.getString(bank.key+"-username", "");
-            String encrypted = Prefs.getString(bank.key+"-password", "");
-            String password = "";
-            try {
-                if (encrypted.length() > 0) {
-                    Log.i(TAG, "onCreate: "+user.getKey()+","+encrypted);
-                    password = SecurityUtils.decrypt(user.getKey(), encrypted);
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "onCreate: decrypt", e);
-                password = "";
-            }
-            tryLogin(username, password);
-        });
+        } catch (Exception e) {
+            Log.e(TAG, "onCreate: decrypt", e);
+            password = "";
+        }
+        tryLogin(username, password);
     }
 
     void tryLogin(String username, String password) {
-        Document document = null;
-        if (username.length() > 0 && password.length() > 0) {
-            Log.i(TAG, "tryLogin: login using pref");
-            document = bank.login(username, password);
-        }
-        Log.i(TAG, "tryLogin: get problemList");
-        List<Problem> list = bank.parseProblemList(document);
-        runOnUiThread(() -> {
-            drawer.closeDrawer(GravityCompat.START);
-            applyProblemList();
-            problemAdapter.reset(list);
-            refreshLayout.setRefreshing(false);
+        refreshLayout.setRefreshing(true);
+        AsyncTask.execute(() -> {
+            Document document;
+            if (username.length() > 0 && password.length() > 0) {
+                Log.i(TAG, "tryLogin: login using pref");
+                document = bank.login(username, password);
+            } else {
+                document = bank.loadProblemList();
+            }
+            Log.i(TAG, "tryLogin: get problemList");
+            applyProblemList(bank.parseProblemList(document));
         });
     }
 
-    void applyProblemList() {
-        String username = bank.getUserName();
-        if (username != null) {
-            headerViewHolder.usernameTextView.setText(username);
-            headerViewHolder.emailTextView.setText("-");
-        } else {
-            headerViewHolder.usernameTextView.setText("-");
-            headerViewHolder.emailTextView.setText("-");
-            headerViewHolder.userImageView.setImageDrawable(addUserDrawable);
-        }
+    void loadList() {
+        AsyncTask.execute(() -> {
+            Document document = bank.loadProblemList();
+            applyProblemList(bank.parseProblemList(document));
+        });
+    }
 
-        if (pageTabLayout.getTabCount() > 0) {
-            pageTabLayout.removeAllTabs();
-        }
-        for (int page = bank.minPage; page <= bank.maxPage; page++) {
-            TabLayout.Tab newTab = pageTabLayout.newTab();
-            newTab.setText(page+"");
-            pageTabLayout.addTab(newTab, page == 1);
-        }
+    void applyProblemList(List<Problem> list) {
+        runOnUiThread(() -> {
+            drawer.closeDrawer(GravityCompat.START);
+            problemAdapter.reset(list);
+            String username = bank.getUserName();
+            if (username != null) {
+                headerViewHolder.usernameTextView.setText(username);
+                headerViewHolder.emailTextView.setText("-");
+            } else {
+                headerViewHolder.usernameTextView.setText("-");
+                headerViewHolder.emailTextView.setText("-");
+                headerViewHolder.userImageView.setImageDrawable(addUserDrawable);
+            }
+
+            if (pageTabLayout.getTabCount() > 0) {
+                pageTabLayout.removeAllTabs();
+            }
+            for (int page = bank.minPage; page <= bank.maxPage; page++) {
+                TabLayout.Tab newTab = pageTabLayout.newTab();
+                newTab.setText(page+"");
+                pageTabLayout.addTab(newTab, page == 1);
+            }
+            refreshLayout.setRefreshing(false);
+        });
     }
 
     @Override
@@ -225,7 +232,7 @@ public class MainActivity extends AppCompatActivity
                     .setProblemBanks(application, key -> {
                         THIS.bank = application.bank.get(key);
                         Preference.BANK.save(key);
-                        initList();
+                        loadList();
                     })
                     .cancelable()
                     .show();

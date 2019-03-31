@@ -54,55 +54,64 @@ public class ProblemBank {
         return new Gson().fromJson(Prefs.getString("cookie-"+key, "{}"), type);
     }
 
+    public Document loadProblemList() {
+        try {
+            Connection connection = Jsoup.connect(normal.url)
+                    .timeout(10000);
+
+            switch (normal.method) {
+                case "POST":
+                    connection.method(Connection.Method.POST);
+                    break;
+                case "GET":
+                default:
+                    connection.method(Connection.Method.GET);
+                    break;
+            }
+            Connection.Response response = connection
+                    .cookies(load())
+                    .execute();
+
+            save(response.cookies());
+
+            Log.d(TAG, "getProblems: done: " + cookies);
+
+            return response.parse();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public List<Problem> parseProblemList(Document document) {
         ArrayList<Problem> problems = new ArrayList<>();
-        try {
-            Log.d(TAG, "printList: url: "+ normal.url);
-            if (document == null) {
-                Connection connection = Jsoup.connect(normal.url)
-                        .timeout(10000);
+        Log.d(TAG, "printList: url: "+ normal.url);
+        if (document == null) {
+            Log.e(TAG, "parseProblemList: document is null");
+            return problems;
+        }
 
-                switch (normal.method) {
-                    case "POST":
-                        connection.method(Connection.Method.POST);
-                        break;
-                    case "GET":
-                    default:
-                        connection.method(Connection.Method.GET);
-                        break;
-                }
-                Connection.Response response = connection
-                        .cookies(load())
-                        .execute();
+        Log.d(TAG, "getProblems: problem");
 
-                save(response.cookies());
+        Elements trElements = document.select(normal.list);
+        for (Element trElement : trElements) {
+            Problem problem = new Problem();
 
-                Log.d(TAG, "getProblems: done: " + cookies);
+            String code = normal.code.get(trElement);
+            problem.code = Integer.parseInt(code);
 
-                document = response.parse();
+            problem.title = trElement.select(normal.title).first().text();
+
+            String status = "none";
+            Elements labelElements = trElement.select(normal.success);
+            if (labelElements.size() > 0) {
+                status = "success";
             }
-
-            Log.d(TAG, "getProblems: problem");
-
-            Elements trElements = document.select(normal.list);
-            for (Element trElement : trElements) {
-                Problem problem = new Problem();
-
-                String code = normal.code.get(trElement);
-                problem.code = Integer.parseInt(code);
-
-                problem.title = trElement.select(normal.title).first().text();
-
-                String status = "none";
-                Elements labelElements = trElement.select(normal.success);
-                if (labelElements.size() > 0) {
-                    status = "success";
-                }
-                labelElements = trElement.select(normal.failure);
-                if (labelElements.size() > 0) {
-                    status = "failure";
-                }
-                problem.status = status;
+            labelElements = trElement.select(normal.failure);
+            if (labelElements.size() > 0) {
+                status = "failure";
+            }
+            problem.status = status;
 
 //                String solveCount = trElement.select(normal.solveCount).first().text();
 //                problem.solveCount = Integer.parseInt(solveCount);
@@ -114,26 +123,22 @@ public class ProblemBank {
 //                String ratio = trElement.select(normal.ratio).first().text().replaceAll("[^\\.|\\d]", "");
 //                problem.ratio = Double.parseDouble(ratio);
 
-                problems.add(problem);
-            }
-
-            Element usernameElement = document.select(normal.username).first();
-            if (usernameElement != null) {
-                username = usernameElement.text();
-            } else {
-                username = null;
-            }
-
-            minPage = 1;
-            String page = normal.page.get(document);
-            maxPage = Integer.parseInt(page);
-
-            return problems;
-
-        } catch (IOException e) {
-            Log.e(TAG, "parseProblemList: ", e);
-            return null;
+            problems.add(problem);
         }
+
+        Element usernameElement = document.select(normal.username).first();
+        if (usernameElement != null) {
+            username = usernameElement.text();
+        } else {
+            username = null;
+        }
+
+        minPage = 1;
+        String page = normal.page.get(document);
+        maxPage = Integer.parseInt(page);
+
+        return problems;
+
     }
 
     /**

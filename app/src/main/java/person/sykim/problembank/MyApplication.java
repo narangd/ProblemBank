@@ -8,8 +8,8 @@ import com.pixplicity.easyprefs.library.Prefs;
 import java.util.HashMap;
 import java.util.Map;
 
-import person.sykim.problembank.data.bank.ProblemBank;
 import person.sykim.problembank.data.User;
+import person.sykim.problembank.data.bank.ProblemBank;
 
 public class MyApplication extends Application {
     public Map<String, ProblemBank> bank = new HashMap<>();
