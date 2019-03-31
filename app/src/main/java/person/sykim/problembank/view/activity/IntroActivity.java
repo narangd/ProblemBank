@@ -1,4 +1,4 @@
-package person.sykim.problembank;
+package person.sykim.problembank.view.activity;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -26,6 +26,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import person.sykim.problembank.MyApplication;
+import person.sykim.problembank.R;
 import person.sykim.problembank.data.User;
 import person.sykim.problembank.data.bank.ProblemBank;
 

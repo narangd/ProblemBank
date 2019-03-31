@@ -1,4 +1,4 @@
-package person.sykim.problembank;
+package person.sykim.problembank.view.activity;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import person.sykim.problembank.R;
 import person.sykim.problembank.adapter.EditorAdapter;
 import person.sykim.problembank.data.editor.Source;
 

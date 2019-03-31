@@ -1,4 +1,4 @@
-package person.sykim.problembank;
+package person.sykim.problembank.view.activity;
 
 import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
@@ -34,6 +34,8 @@ import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import person.sykim.problembank.MyApplication;
+import person.sykim.problembank.R;
 import person.sykim.problembank.adapter.ProblemAdapter;
 import person.sykim.problembank.data.Preference;
 import person.sykim.problembank.data.User;
