@@ -63,11 +63,12 @@ public class ProblemBank {
                         .timeout(10000);
 
                 switch (normal.method) {
-                    case "GET":
-                        connection.method(Connection.Method.GET);
-                        break;
                     case "POST":
                         connection.method(Connection.Method.POST);
+                        break;
+                    case "GET":
+                    default:
+                        connection.method(Connection.Method.GET);
                         break;
                 }
                 Connection.Response response = connection
@@ -87,8 +88,7 @@ public class ProblemBank {
             for (Element trElement : trElements) {
                 Problem problem = new Problem();
 
-                String code = trElement.select(normal.code.select).first().text();
-                code = code.replaceAll(normal.code.replace, "");
+                String code = normal.code.get(trElement);
                 problem.code = Integer.parseInt(code);
 
                 problem.title = trElement.select(normal.title).first().text();
@@ -104,15 +104,15 @@ public class ProblemBank {
                 }
                 problem.status = status;
 
-                String solveCount = trElement.select(normal.solveCount).first().text();
-                problem.solveCount = Integer.parseInt(solveCount);
+//                String solveCount = trElement.select(normal.solveCount).first().text();
+//                problem.solveCount = Integer.parseInt(solveCount);
 
-                String totalCount = trElement.select(normal.totalCount).first().text();
-                problem.totalCount = Integer.parseInt(totalCount);
+//                String totalCount = trElement.select(normal.totalCount).first().text();
+//                problem.totalCount = Integer.parseInt(totalCount);
 
-                @SuppressWarnings("RegExpRedundantEscape")
-                String ratio = trElement.select(normal.ratio).first().text().replaceAll("[^\\.|\\d]", "");
-                problem.ratio = Double.parseDouble(ratio);
+//                @SuppressWarnings("RegExpRedundantEscape")
+//                String ratio = trElement.select(normal.ratio).first().text().replaceAll("[^\\.|\\d]", "");
+//                problem.ratio = Double.parseDouble(ratio);
 
                 problems.add(problem);
             }
@@ -125,8 +125,7 @@ public class ProblemBank {
             }
 
             minPage = 1;
-            String page = document.select(normal.page.select).last().text();
-            page = page.replaceAll(normal.page.replace, "");
+            String page = normal.page.get(document);
             maxPage = Integer.parseInt(page);
 
             return problems;

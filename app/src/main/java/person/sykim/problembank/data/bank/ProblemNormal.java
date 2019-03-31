@@ -1,8 +1,9 @@
 package person.sykim.problembank.data.bank;
 
 public class ProblemNormal {
+    public TextReplace id;
     public String url;
-    public String method;
+    public String method = "";
     public String list;
     public TextReplace code;
     public String title;
