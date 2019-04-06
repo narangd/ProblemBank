@@ -129,13 +129,18 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "은행이 없어 목록을 로드하지 못했습니다", Toast.LENGTH_SHORT).show();
             return;
         }
+        refreshLayout.setRefreshing(true);
         String username = Prefs.getString(bank.key+"-username", "");
         String encrypted = Prefs.getString(bank.key+"-password", "");
         String password = "";
         try {
-            if (encrypted.length() > 0) {
-                Log.i(TAG, "onCreate: "+user.getKey()+","+encrypted);
-                password = SecurityUtils.decrypt(user.getKey(), encrypted);
+            if (user != null) {
+                if (encrypted.length() > 0) {
+                    password = SecurityUtils.decrypt(user.getKey(), encrypted);
+                }
+            } else {
+                String key = Preference.UUID.string();
+                password = SecurityUtils.decrypt(key, encrypted);
             }
         } catch (Exception e) {
             Log.e(TAG, "onCreate: decrypt", e);
@@ -145,7 +150,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     void tryLogin(String username, String password) {
-        refreshLayout.setRefreshing(true);
         AsyncTask.execute(() -> {
             Document document;
             if (username.length() > 0 && password.length() > 0) {
@@ -264,9 +268,15 @@ public class MainActivity extends AppCompatActivity
         void onAddAccount() {
             new LoginDialog(MainActivity.this)
                     .setPositiveButton((username, password) -> AsyncTask.execute(() -> {
+                        runOnUiThread(() -> refreshLayout.setRefreshing(true));
                         try {
-                            Log.d(TAG, "onAddAccount: "+user.getKey()+","+password);
-                            String encrypted = SecurityUtils.encrypt(user.getKey(), password);
+                            String encrypted;
+                            if (user != null) {
+                                encrypted = SecurityUtils.encrypt(user.getKey(), password);
+                            } else {
+                                String key = Preference.UUID.string();
+                                encrypted = SecurityUtils.encrypt(key, password);
+                            }
                             Log.d(TAG, "onAddAccount: "+encrypted);
                             Prefs.putString(bank.key+"-password", encrypted);
                         } catch (Exception e) {
