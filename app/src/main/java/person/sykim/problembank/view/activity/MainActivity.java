@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity
         String bankKey = Preference.BANK.string();
         if (bankKey != null) {
             THIS.bank = application.bank.get(bankKey);
+
             initList();
         } else {
             new ProblemBankDialog(this)
@@ -247,9 +248,11 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.tutorial:
                 initProblemType(true);
+                loadList();
                 break;
             case R.id.total:
                 initProblemType(false);
+                loadList();
                 break;
         }
 

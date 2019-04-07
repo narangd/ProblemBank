@@ -27,7 +27,8 @@ public class ProblemBank {
     public String description;
     public int minPage;
     public int maxPage;
-    public ProblemNormal normal;
+    public ProblemTemplate normal;
+    public ProblemTemplate tutorial;
     public Login login;
     public String url_host;
     public String url_login;
@@ -57,7 +58,7 @@ public class ProblemBank {
     public List<Problem> loadProblemList() {
         boolean tutorial = Prefs.getBoolean(key+"-tutorial", false);
         if (tutorial) {
-            return null;
+            return loadTutorialList();
         } else {
             return loadNormalList();
         }
@@ -150,10 +151,10 @@ public class ProblemBank {
 
     public List<Problem> loadTutorialList() {
         try {
-            Connection connection = Jsoup.connect(normal.url)
+            Connection connection = Jsoup.connect(tutorial.url)
                     .timeout(10000);
 
-            switch (normal.method) {
+            switch (tutorial.method) {
                 case "POST":
                     connection.method(Connection.Method.POST);
                     break;
@@ -174,7 +175,7 @@ public class ProblemBank {
             Document document = response.parse();
 
             ArrayList<Problem> problems = new ArrayList<>();
-            Log.d(TAG, "printList: url: "+ normal.url);
+            Log.d(TAG, "printList: url: "+ tutorial.url);
             if (document == null) {
                 Log.e(TAG, "parseProblemList: document is null");
                 return problems;
@@ -182,21 +183,21 @@ public class ProblemBank {
 
             Log.d(TAG, "getProblems: problem");
 
-            Elements trElements = document.select(normal.list);
+            Elements trElements = document.select(tutorial.list);
             for (Element trElement : trElements) {
                 Problem problem = new Problem();
 
-                String code = normal.code.get(trElement);
+                String code = tutorial.code.get(trElement);
                 problem.code = Integer.parseInt(code);
 
-                problem.title = trElement.select(normal.title).first().text();
+                problem.title = trElement.select(tutorial.title).first().text();
 
                 String status = "none";
-                Elements labelElements = trElement.select(normal.success);
+                Elements labelElements = trElement.select(tutorial.success);
                 if (labelElements.size() > 0) {
                     status = "success";
                 }
-                labelElements = trElement.select(normal.failure);
+                labelElements = trElement.select(tutorial.failure);
                 if (labelElements.size() > 0) {
                     status = "failure";
                 }
@@ -215,7 +216,7 @@ public class ProblemBank {
                 problems.add(problem);
             }
 
-            Element usernameElement = document.select(normal.username).first();
+            Element usernameElement = document.select(tutorial.username).first();
             if (usernameElement != null) {
                 username = usernameElement.text();
             } else {
@@ -223,8 +224,8 @@ public class ProblemBank {
             }
 
             minPage = 1;
-            String page = normal.page.get(document);
-            maxPage = Integer.parseInt(page);
+//            String page = tutorial.page.get(document);
+//            maxPage = Integer.parseInt(page);
 
             return problems;
         } catch (IOException e) {
