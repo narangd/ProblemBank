@@ -9,10 +9,10 @@ public enum Preference {
     ;
 
     public void save(String value) {
-        Prefs.edit().putString(name(), value).commit();
+        Prefs.putString(name(), value);
     }
     public void save(boolean value) {
-        Prefs.edit().putBoolean(name(), value).commit();
+        Prefs.putBoolean(name(), value);
     }
 
     public String string() {

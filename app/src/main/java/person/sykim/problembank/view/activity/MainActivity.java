@@ -16,8 +16,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.pixplicity.easyprefs.library.Prefs;
 
-import org.jsoup.nodes.Document;
-
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity
     @BindDrawable(R.drawable.ic_add_circle_outline)
     Drawable addUserDrawable;
 
-
+    Menu navigationMenu;
 
     HeaderViewHolder headerViewHolder;
     ProgressDialog progressDialog;
@@ -94,6 +92,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+        navigationMenu = navigationView.getMenu();
         headerViewHolder = new HeaderViewHolder( navigationView.getHeaderView(0) );
 
         progressDialog = new ProgressDialog(this);
@@ -124,7 +123,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    void initProblemType(boolean tutorial) {
+        navigationMenu.findItem(R.id.tutorial).setChecked(tutorial);
+        navigationMenu.findItem(R.id.total).setChecked(!tutorial);
+        Prefs.putBoolean(bank.key+"-tutorial", tutorial);
+    }
+
     void initList() {
+        initProblemType(Prefs.getBoolean(bank.key+"-tutorial", false));
         if (bank == null) {
             Toast.makeText(this, "은행이 없어 목록을 로드하지 못했습니다", Toast.LENGTH_SHORT).show();
             return;
@@ -151,22 +157,19 @@ public class MainActivity extends AppCompatActivity
 
     void tryLogin(String username, String password) {
         AsyncTask.execute(() -> {
-            Document document;
             if (username.length() > 0 && password.length() > 0) {
                 Log.i(TAG, "tryLogin: login using pref");
-                document = bank.login(username, password);
-            } else {
-                document = bank.loadProblemList();
+                bank.login(username, password);
             }
+
             Log.i(TAG, "tryLogin: get problemList");
-            applyProblemList(bank.parseProblemList(document));
+            applyProblemList(bank.loadProblemList());
         });
     }
 
     void loadList() {
         AsyncTask.execute(() -> {
-            Document document = bank.loadProblemList();
-            applyProblemList(bank.parseProblemList(document));
+            applyProblemList(bank.loadProblemList());
         });
     }
 
@@ -231,18 +234,25 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_other_bank) {
-            new ProblemBankDialog(this)
-                    .setProblemBanks(application, key -> {
-                        THIS.bank = application.bank.get(key);
-                        Preference.BANK.save(key);
-                        loadList();
-                    })
-                    .cancelable()
-                    .show();
+        switch (item.getItemId()) {
+            case R.id.nav_other_bank:
+                new ProblemBankDialog(this)
+                        .setProblemBanks(application, key -> {
+                            THIS.bank = application.bank.get(key);
+                            Preference.BANK.save(key);
+                            loadList();
+                        })
+                        .cancelable()
+                        .show();
+                break;
+            case R.id.tutorial:
+                initProblemType(true);
+                break;
+            case R.id.total:
+                initProblemType(false);
+                break;
         }
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
