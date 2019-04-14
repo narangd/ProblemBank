@@ -224,8 +224,8 @@ public class ProblemBank {
             }
 
             minPage = 1;
-//            String page = tutorial.page.get(document);
-//            maxPage = Integer.parseInt(page);
+            String page = tutorial.page.get(document);
+            maxPage = Integer.parseInt(page);
 
             return problems;
         } catch (IOException e) {
