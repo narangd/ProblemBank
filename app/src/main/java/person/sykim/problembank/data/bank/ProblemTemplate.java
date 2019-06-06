@@ -1,6 +1,6 @@
 package person.sykim.problembank.data.bank;
 
-public class ProblemNormal {
+public class ProblemTemplate {
     public TextReplace id;
     public String url;
     public String method = "";

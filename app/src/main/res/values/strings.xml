@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">ProblemBank</string>
+
+    <string name="default_web_client_id" translatable="false">875045166448-stmrcej921cj0vpvv03culogo8gne3l7.apps.googleusercontent.com</string>
+
+
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

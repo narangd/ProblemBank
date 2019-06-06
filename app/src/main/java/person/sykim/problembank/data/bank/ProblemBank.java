@@ -27,7 +27,8 @@ public class ProblemBank {
     public String description;
     public int minPage;
     public int maxPage;
-    public ProblemNormal normal;
+    public ProblemTemplate normal;
+    public ProblemTemplate tutorial;
     public Login login;
     public String url_host;
     public String url_login;
@@ -54,7 +55,16 @@ public class ProblemBank {
         return new Gson().fromJson(Prefs.getString("cookie-"+key, "{}"), type);
     }
 
-    public Document loadProblemList() {
+    public List<Problem> loadProblemList() {
+        boolean tutorial = Prefs.getBoolean(key+"-tutorial", false);
+        if (tutorial) {
+            return loadTutorialList();
+        } else {
+            return loadNormalList();
+        }
+    }
+
+    public List<Problem> loadNormalList() {
         try {
             Connection connection = Jsoup.connect(normal.url)
                     .timeout(10000);
@@ -76,42 +86,37 @@ public class ProblemBank {
 
             Log.d(TAG, "getProblems: done: " + cookies);
 
-            return response.parse();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+            // parse problem list html....
+            Document document = response.parse();
 
-    public List<Problem> parseProblemList(Document document) {
-        ArrayList<Problem> problems = new ArrayList<>();
-        Log.d(TAG, "printList: url: "+ normal.url);
-        if (document == null) {
-            Log.e(TAG, "parseProblemList: document is null");
-            return problems;
-        }
-
-        Log.d(TAG, "getProblems: problem");
-
-        Elements trElements = document.select(normal.list);
-        for (Element trElement : trElements) {
-            Problem problem = new Problem();
-
-            String code = normal.code.get(trElement);
-            problem.code = Integer.parseInt(code);
-
-            problem.title = trElement.select(normal.title).first().text();
-
-            String status = "none";
-            Elements labelElements = trElement.select(normal.success);
-            if (labelElements.size() > 0) {
-                status = "success";
+            ArrayList<Problem> problems = new ArrayList<>();
+            Log.d(TAG, "printList: url: "+ normal.url);
+            if (document == null) {
+                Log.e(TAG, "parseProblemList: document is null");
+                return problems;
             }
-            labelElements = trElement.select(normal.failure);
-            if (labelElements.size() > 0) {
-                status = "failure";
-            }
-            problem.status = status;
+
+            Log.d(TAG, "getProblems: problem");
+
+            Elements trElements = document.select(normal.list);
+            for (Element trElement : trElements) {
+                Problem problem = new Problem();
+
+                String code = normal.code.get(trElement);
+                problem.code = Integer.parseInt(code);
+
+                problem.title = trElement.select(normal.title).first().text();
+
+                String status = "none";
+                Elements labelElements = trElement.select(normal.success);
+                if (labelElements.size() > 0) {
+                    status = "success";
+                }
+                labelElements = trElement.select(normal.failure);
+                if (labelElements.size() > 0) {
+                    status = "failure";
+                }
+                problem.status = status;
 
 //                String solveCount = trElement.select(normal.solveCount).first().text();
 //                problem.solveCount = Integer.parseInt(solveCount);
@@ -123,23 +128,112 @@ public class ProblemBank {
 //                String ratio = trElement.select(normal.ratio).first().text().replaceAll("[^\\.|\\d]", "");
 //                problem.ratio = Double.parseDouble(ratio);
 
-            problems.add(problem);
+                problems.add(problem);
+            }
+
+            Element usernameElement = document.select(normal.username).first();
+            if (usernameElement != null) {
+                username = usernameElement.text();
+            } else {
+                username = null;
+            }
+
+            minPage = 1;
+            String page = normal.page.get(document);
+            maxPage = Integer.parseInt(page);
+
+            return problems;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-
-        Element usernameElement = document.select(normal.username).first();
-        if (usernameElement != null) {
-            username = usernameElement.text();
-        } else {
-            username = null;
-        }
-
-        minPage = 1;
-        String page = normal.page.get(document);
-        maxPage = Integer.parseInt(page);
-
-        return problems;
-
     }
+
+    public List<Problem> loadTutorialList() {
+        try {
+            Connection connection = Jsoup.connect(tutorial.url)
+                    .timeout(10000);
+
+            switch (tutorial.method) {
+                case "POST":
+                    connection.method(Connection.Method.POST);
+                    break;
+                case "GET":
+                default:
+                    connection.method(Connection.Method.GET);
+                    break;
+            }
+            Connection.Response response = connection
+                    .cookies(load())
+                    .execute();
+
+            save(response.cookies());
+
+            Log.d(TAG, "getProblems: done: " + cookies);
+
+            // parse problem list html....
+            Document document = response.parse();
+
+            ArrayList<Problem> problems = new ArrayList<>();
+            Log.d(TAG, "printList: url: "+ tutorial.url);
+            if (document == null) {
+                Log.e(TAG, "parseProblemList: document is null");
+                return problems;
+            }
+
+            Log.d(TAG, "getProblems: problem");
+
+            Elements trElements = document.select(tutorial.list);
+            for (Element trElement : trElements) {
+                Problem problem = new Problem();
+
+                String code = tutorial.code.get(trElement);
+                problem.code = Integer.parseInt(code);
+
+                problem.title = trElement.select(tutorial.title).first().text();
+
+                String status = "none";
+                Elements labelElements = trElement.select(tutorial.success);
+                if (labelElements.size() > 0) {
+                    status = "success";
+                }
+                labelElements = trElement.select(tutorial.failure);
+                if (labelElements.size() > 0) {
+                    status = "failure";
+                }
+                problem.status = status;
+
+//                String solveCount = trElement.select(normal.solveCount).first().text();
+//                problem.solveCount = Integer.parseInt(solveCount);
+
+//                String totalCount = trElement.select(normal.totalCount).first().text();
+//                problem.totalCount = Integer.parseInt(totalCount);
+
+//                @SuppressWarnings("RegExpRedundantEscape")
+//                String ratio = trElement.select(normal.ratio).first().text().replaceAll("[^\\.|\\d]", "");
+//                problem.ratio = Double.parseDouble(ratio);
+
+                problems.add(problem);
+            }
+
+            Element usernameElement = document.select(tutorial.username).first();
+            if (usernameElement != null) {
+                username = usernameElement.text();
+            } else {
+                username = null;
+            }
+
+            minPage = 1;
+//            String page = tutorial.page.get(document);
+//            maxPage = Integer.parseInt(page);
+
+            return problems;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     /**
      * 웹페이지에 한번이라도 접속을 하게되면 유저이름에 대한 정보가 들어간다
@@ -149,7 +243,7 @@ public class ProblemBank {
         return username;
     }
 
-    public Document login(String username, String password) {
+    public boolean login(String username, String password) {
         try {
             Connection connection = Jsoup.connect(login.url)
                     .timeout(10000)
@@ -173,15 +267,13 @@ public class ProblemBank {
 
             Element usernameElement = document.select(login.check).first();
             if (usernameElement == null || usernameElement.text().length() <= 0) {
-                return null;
+                return true;
             }
-
-            return document;
 
         } catch (IOException e) {
             Log.e(TAG, "login: ", e);
-            return null;
         }
+        return false;
     }
 }
 /*

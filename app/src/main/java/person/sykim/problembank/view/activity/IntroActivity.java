@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseUiException;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.MyApplication;
 import person.sykim.problembank.R;
+import person.sykim.problembank.data.Preference;
 import person.sykim.problembank.data.User;
 import person.sykim.problembank.data.bank.ProblemBank;
 
@@ -55,15 +58,25 @@ public class IntroActivity extends AppCompatActivity {
         reference = FirebaseDatabase.getInstance()
                 .getReference();
 
-        FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
+        if (Preference.TRY_LOGIN.bool()) {
             AsyncTask.execute(this::initFirebase);
         } else {
-            signinFirebase();
+            FirebaseUser user = auth.getCurrentUser();
+            if (user != null) {
+                AsyncTask.execute(this::initFirebase);
+            } else {
+                signinFirebase();
+            }
+            Preference.TRY_LOGIN.save(true);
+            Preference.UUID.save(UUID.randomUUID().toString());
         }
     }
 
     void signinFirebase() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
         List<AuthUI.IdpConfig> providers = Collections.singletonList(
                 new AuthUI.IdpConfig.GoogleBuilder().build()
         );
@@ -82,48 +95,53 @@ public class IntroActivity extends AppCompatActivity {
             Log.i(TAG, "initFirebase: id: " + user.getUid());
         }
 
-        syncBanks.run();
+        syncBanks();
     }
 
-
-    Runnable syncBanks = () -> {
+    void syncBanks() {
         runOnUiThread(() -> loadingText.setText("동기화 1단계 진행중..."));
         reference.child("banks")
                 .addValueEventListener(new ValueEventListener() {
 
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot bankSnapshot : dataSnapshot.getChildren()) {
-                    String key = bankSnapshot.getKey();
-                    ProblemBank problemBank = bankSnapshot.getValue(ProblemBank.class);
-                    Log.i(TAG, "banks onDataChange: "+ key+", "+problemBank);
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot bankSnapshot : dataSnapshot.getChildren()) {
+                            String key = bankSnapshot.getKey();
+                            ProblemBank problemBank = bankSnapshot.getValue(ProblemBank.class);
+                            Log.i(TAG, "banks onDataChange: "+ key+", "+problemBank);
 
-                    if (key != null && problemBank != null) {
-                        problemBank.key = key;
-                        application.bank.put(key, problemBank);
-                    } else {
-                        Log.e(TAG, "banks onDataChange: baekjoon 은행을 로드하지 못했습니다");
-                        Log.e(TAG, "banks onDataChange: "+key);
-                        Log.e(TAG, "banks onDataChange: "+problemBank);
+                            if (key != null && problemBank != null) {
+                                problemBank.key = key;
+                                application.bank.put(key, problemBank);
+                            } else {
+                                Log.e(TAG, "banks onDataChange: baekjoon 은행을 로드하지 못했습니다");
+                                Log.e(TAG, "banks onDataChange: "+key);
+                                Log.e(TAG, "banks onDataChange: "+problemBank);
+                            }
+                        }
+                        dataSnapshot.getRef().removeEventListener(this);
+
+                        syncUser();
                     }
-                }
-                dataSnapshot.getRef().removeEventListener(this);
 
-                syncUser.run();
-            }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e(TAG, "banks onCancelled: "+databaseError.getMessage() +": "+databaseError.getDetails());
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "banks onCancelled: "+databaseError.getMessage() +": "+databaseError.getDetails());
+                        syncUser();
+                    }
+                });
+    }
 
-                syncUser.run();
-            }
-        });
-    };
-    Runnable syncUser = () -> {
+    void syncUser() {
         runOnUiThread(() -> loadingText.setText("동기화 2단계 진행중..."));
+        FirebaseUser user;
+        if ((user = auth.getCurrentUser()) == null) {
+            startMain();
+            return;
+        }
         reference.child("users")
-                .child(auth.getCurrentUser().getUid())
+                .child(user.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
 
                     @Override
@@ -141,18 +159,19 @@ public class IntroActivity extends AppCompatActivity {
                         }
                         dataSnapshot.getRef().removeEventListener(this);
 
-                        startMain.run();
+                        startMain();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         Log.e(TAG, "users onCancelled: "+databaseError);
 
-                        startMain.run();
+                        startMain();
                     }
                 });
-    };
-    Runnable startMain = () -> {
+    }
+
+    void startMain() {
         loadingText.setText("앱을 시작합니다");
 
         if (start) {
@@ -161,7 +180,7 @@ public class IntroActivity extends AppCompatActivity {
             startActivity(main);
         }
         finish();
-    };
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -178,7 +197,8 @@ public class IntroActivity extends AppCompatActivity {
                     FirebaseAnalytics.getInstance(this)
                             .setUserProperty("FirebaseUI Login Error", exception.getMessage()+":"+exception.getErrorCode());
                 }
-                signinFirebase();
+//                signinFirebase();
+                initFirebase();
             }
         }
     }
