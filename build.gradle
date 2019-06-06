@@ -15,6 +15,7 @@ buildscript {
 
         classpath 'com.google.gms:google-services:4.2.0' // google-services plugin
 //        classpath 'com.jakewharton:butterknife-gradle-plugin:10.1.0'
+
     }
 }
 
@@ -22,6 +23,9 @@ allprojects {
     repositories {
         jcenter()
         google() // Google's Maven repository
+        maven {
+            url "https://jitpack.io"
+        }
     }
 }
 

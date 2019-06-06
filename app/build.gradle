@@ -50,6 +50,7 @@ def versionLombok = '1.16.20' // fixed. for bugs.
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha02'
@@ -84,6 +85,8 @@ dependencies {
 
     // Preference
     implementation 'com.pixplicity.easyprefs:library:1.9.0'
+
+    implementation 'com.github.mcginty:material-colors:1.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

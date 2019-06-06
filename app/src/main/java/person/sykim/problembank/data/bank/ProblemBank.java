@@ -224,8 +224,11 @@ public class ProblemBank {
             }
 
             minPage = 1;
-//            String page = tutorial.page.get(document);
-//            maxPage = Integer.parseInt(page);
+            // todo: 페이지의 표시 숫자와 값이 달라 수정이 필요함
+            // display: 10
+            // value: a0
+            String page = tutorial.page.get(document);
+            maxPage = Integer.parseInt(page);
 
             return problems;
         } catch (IOException e) {
@@ -277,127 +280,7 @@ public class ProblemBank {
     }
 }
 /*
-    private static final String URL_ROOT = "https://www.acmicpc.net";
-    private static final String URL_LOGIN = URL_ROOT + "/signin";
-    private static final String URL_LOGOUT = URL_ROOT + "/logout";
-    private static final String URL_PROBLEM_SET = URL_ROOT + "/problemset";
-    private static final String URL_PROBLEM_DETAIL = URL_ROOT + "/problem/";
-    private static final String URL_TUTORIAL = URL_ROOT + "/step";
-    private static final String URL_HISTORY = URL_ROOT + "/status";
 
-    @Override
-    public boolean logout() {
-        try {
-            Connection connection = Jsoup.connect(URL_LOGOUT);
-            Connection.Response response = connection
-                    .cookies( load() )
-                    .method(Connection.Method.POST)
-                    .data("next", "/")
-                    .execute();
-            save( response.cookies() );
-            Document document = response.parse();
-            updateUserName(document);
-            return login = document.select("a.username").size() > 0;
-
-//            $('.glyphicon-globe')
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return !isLogin();
-    }
-
-    @Override
-    public List<Problem> getTutorialProblems(int page) {
-        ArrayList<Problem> problems = new ArrayList<>();
-        Document document;
-        try {
-            String url = String.format(Locale.KOREAN, "%s/%d", URL_TUTORIAL, page);
-            Connection.Response response = Jsoup.connect(url)
-                    .timeout(5000)
-                    .method(Connection.Method.GET)
-                    .cookies( load() )
-                    .execute();
-            save( response.cookies() );
-            Log.d(TAG, "getProblems: done");
-
-            document = response.parse();
-
-            String responseText = document.text();
-
-//            System.out.println(responseText);
-            Log.d(TAG, "getProblems: problem");
-
-            Element tableElement = document.select("#problemset").first();
-            Elements trElements = tableElement.select("tbody>tr:nth-child(2n+1)");
-            for (Element trElement : trElements) {
-                Problem problem = new Problem();
-
-                Elements tdElements = trElement.select("td");
-
-                if (tdElements.size() <= 1) {
-                    continue;
-                }
-
-                String code = tdElements.get(1).text();
-                problem.setCode(Integer.parseInt(code));
-
-                String title = tdElements.get(2).text();
-                problem.setTitle(title);
-
-                String status = "none";
-                Elements labelElements = tdElements.get(3).select("span.label-success");
-                if (labelElements.size() > 0) {
-                    status = "success";
-                }
-                labelElements = tdElements.get(3).select("span.label-danger");
-                if (labelElements.size() > 0) {
-                    status = "failure";
-                }
-                problem.setStatus(status);
-
-                String solveCount = tdElements.get(4).text();
-                problem.setSolveCount(Integer.parseInt(solveCount));
-
-                String totalCount = tdElements.get(5).text();
-                problem.setTotalCount(Integer.parseInt(totalCount));
-
-                String ratio = tdElements.get(6).text().replace("%","");
-                problem.setRatio(Double.parseDouble(ratio));
-
-                Element urlElement = tdElements.get(2).select("a").first();
-                problem.setUrl(urlElement.attr("href"));
-//                System.out.println("tr:"+ new Gson().toJson(problem));
-
-                problems.add(problem);
-            }
-
-            updateUserName(document);
-
-//            if (updateDate < System.currentTimeMillis() - 1000 * 60 * 60) {
-//                updateDate = System.currentTimeMillis();
-//                Connection.Response pageResponse = Jsoup.connect(URL_TUTORIAL)
-//                        .timeout(5000)
-//                        .method(Connection.Method.GET)
-//                        .cookies( load() )
-//                        .execute();
-//                save( pageResponse.cookies() );
-//                pageMin = 1;
-//                Document pageDocument = pageResponse.parse();
-//                String lastPageString = pageDocument.select("table tbody tr").last().children().first().text();
-//                pageMax = Integer.parseInt(lastPageString);
-//            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return problems;
-    }
-
-    @Override
-    public ProblemDetail getProblemDetail(Problem problem) {
-        return getProblemDetail(problem.getCode());
-    }
 
     public ProblemDetail getProblemDetail(int code) {
         try {
