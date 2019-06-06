@@ -9,4 +9,5 @@ import lombok.Data;
 public class Source {
     List<Group> groups = new ArrayList<>();
     Function main = new Function("main");
+    String prev;
 }

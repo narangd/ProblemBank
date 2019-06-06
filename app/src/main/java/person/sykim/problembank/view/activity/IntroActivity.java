@@ -175,7 +175,7 @@ public class IntroActivity extends AppCompatActivity {
         loadingText.setText("앱을 시작합니다");
 
         if (start) {
-            Intent main = new Intent(IntroActivity.this, MainActivity.class);
+            Intent main = new Intent(IntroActivity.this, BoardActivity.class);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             startActivity(main);
         }

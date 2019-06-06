@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity
 
     ProblemAdapter problemAdapter;
 
+    // todo Model-View-Presenter 패턴 적용
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
