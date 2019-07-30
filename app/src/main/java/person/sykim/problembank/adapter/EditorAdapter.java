@@ -1,22 +1,24 @@
 package person.sykim.problembank.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import person.sykim.problembank.R;
-import person.sykim.problembank.data.adapter.LanguageConverter;
-import person.sykim.problembank.data.adapter.SourceLineList;
-import person.sykim.problembank.data.editor.Source;
-import person.sykim.problembank.data.editor.SourceLine;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+
+import person.sykim.problembank.R;
+import person.sykim.problembank.data.editor.Display;
+import person.sykim.problembank.data.editor.ExecuteListener;
+import person.sykim.problembank.data.editor.Source;
 
 /**
+ * ExecuteListener List
  * Created by jobs on 2017. 6. 7..
  */
 
@@ -31,7 +33,8 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static final int ViewType_Scanner = 40;
     public static final int ViewType_Calculate = 50;
 
-    private SourceLineList lines = new SourceLineList();
+//    private SourceLineList lines = new SourceLineList();
+    ArrayList<ExecuteListener> list = new ArrayList<>();
 
     @NonNull
     @Override
@@ -50,21 +53,23 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         LineHolder lineHolder = (LineHolder) holder;
-        SourceLine line = lines.get(position);
-        lineHolder.lineTextView.setText(line.toString());
+        ExecuteListener listener = list.get(position);
+        lineHolder.lineTextView.setText(listener.toString());
         lineHolder.setOnClickListener((view) -> {});
-        Log.i(TAG, "onBindViewHolder line["+position+":"+line);
+        Log.i(TAG, "onBindViewHolder line["+position+":"+listener);
 //        if (holder instanceof LineHolder) {
 //        }
     }
 
     @Override
     public int getItemCount() {
-        return lines.size();
+        return list.size();
     }
 
     public void setSource(Source source) {
-        this.lines = new LanguageConverter().toJavaSource(source);
+        list.add(Display.builder()
+                .build());
+//        this.list = new LanguageConverter().toJavaSource(source);
     }
 
 //    public interface OnVariableClickListener {

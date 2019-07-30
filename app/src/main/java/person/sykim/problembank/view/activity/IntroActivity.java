@@ -38,6 +38,7 @@ public class IntroActivity extends AppCompatActivity {
 
     private static final String TAG = "IntroActivity";
     private static final int RC_SIGN_IN = 123;
+    private static final Class<?> MAIN_ACTIVITY = EditorActivity.class; // BoardActivity.class;
 
     MyApplication application;
     FirebaseAuth auth;
@@ -58,18 +59,20 @@ public class IntroActivity extends AppCompatActivity {
         reference = FirebaseDatabase.getInstance()
                 .getReference();
 
-        if (Preference.TRY_LOGIN.bool()) {
-            AsyncTask.execute(this::initFirebase);
-        } else {
-            FirebaseUser user = auth.getCurrentUser();
-            if (user != null) {
-                AsyncTask.execute(this::initFirebase);
-            } else {
-                signinFirebase();
-            }
-            Preference.TRY_LOGIN.save(true);
-            Preference.UUID.save(UUID.randomUUID().toString());
-        }
+        startMain();
+
+//        if (Preference.TRY_LOGIN.bool()) {
+//            AsyncTask.execute(this::initFirebase);
+//        } else {
+//            FirebaseUser user = auth.getCurrentUser();
+//            if (user != null) {
+//                AsyncTask.execute(this::initFirebase);
+//            } else {
+//                signinFirebase();
+//            }
+//            Preference.TRY_LOGIN.save(true);
+//            Preference.UUID.save(UUID.randomUUID().toString());
+//        }
     }
 
     void signinFirebase() {
@@ -175,7 +178,7 @@ public class IntroActivity extends AppCompatActivity {
         loadingText.setText("앱을 시작합니다");
 
         if (start) {
-            Intent main = new Intent(IntroActivity.this, BoardActivity.class);
+            Intent main = new Intent(IntroActivity.this, MAIN_ACTIVITY);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             startActivity(main);
         }

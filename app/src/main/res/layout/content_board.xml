@@ -8,10 +8,15 @@
     tools:context=".view.activity.BoardActivity"
     tools:showIn="@layout/app_bar_board">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <!--<androidx.recyclerview.widget.RecyclerView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical"-->
+        <!--android:id="@+id/source_recycler_view"/>-->
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:id="@+id/source_recycler_view"/>
+        android:id="@+id/source_list_view"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

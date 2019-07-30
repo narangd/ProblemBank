@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 public class Source {
     List<Group> groups = new ArrayList<>();
-    Function main = new Function("main");
+    Function main = new Function();
     String prev;
 }

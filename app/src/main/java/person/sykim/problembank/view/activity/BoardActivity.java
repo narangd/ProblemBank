@@ -1,8 +1,14 @@
 package person.sykim.problembank.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -15,6 +21,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Collections;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.R;
@@ -33,8 +42,10 @@ public class BoardActivity extends AppCompatActivity
 
     @BindView(R.id.fab)
     FloatingActionButton fab;
-    @BindView(R.id.source_recycler_view)
-    RecyclerView sourceRecyclerView;
+//    @BindView(R.id.source_recycler_view)
+//    RecyclerView sourceRecyclerView;
+    @BindView(R.id.source_list_view)
+    ListView sourceListView;
 
     SourceAdapter sourceAdapter;
 
@@ -61,8 +72,18 @@ public class BoardActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        sourceRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        sourceRecyclerView.setAdapter(sourceAdapter = new SourceAdapter());
+
+//        sourceRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        sourceRecyclerView.setAdapter(sourceAdapter = new SourceAdapter());
+        sourceListView.setAdapter(new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_list_item_1,
+                Collections.singletonList("Single item 1")
+        ));
+        sourceListView.setOnItemClickListener((adapterView, view, i, l) -> {
+            Intent main = new Intent(BoardActivity.this, EditorActivity.class);
+            startActivity(main);
+        });
 
         // end init
     }
