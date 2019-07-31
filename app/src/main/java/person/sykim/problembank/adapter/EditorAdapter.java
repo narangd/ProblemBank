@@ -1,20 +1,17 @@
 package person.sykim.problembank.adapter;
 
-import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import person.sykim.problembank.R;
-import person.sykim.problembank.data.editor.Display;
+import person.sykim.problembank.data.editor.AbstractHolder;
 import person.sykim.problembank.data.editor.ExecuteListener;
+import person.sykim.problembank.data.editor.PrintConsole;
 import person.sykim.problembank.data.editor.Source;
 
 /**
@@ -29,7 +26,7 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static final int ViewType_Footer = 100;
     public static final int ViewType_Variable = 10;
     public static final int ViewType_Function = 20;
-    public static final int ViewType_Display = 30;
+    public static final int ViewType_Console = 30;
     public static final int ViewType_Scanner = 40;
     public static final int ViewType_Calculate = 50;
 
@@ -39,23 +36,25 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final Context context = parent.getContext();
-        View view = LayoutInflater.from(context)
-                .inflate(R.layout.holder_source_line, parent, false);
-        return new LineHolder(view);
+        switch (viewType) {
+            case ViewType_Console:
+                return new PrintConsole.View(parent);
+        }
+        throw new Resources.NotFoundException();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+        return ViewType_Console;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        LineHolder lineHolder = (LineHolder) holder;
+        @SuppressWarnings("unchecked")
+        AbstractHolder<ExecuteListener> adapter = (AbstractHolder) holder;
         ExecuteListener listener = list.get(position);
-        lineHolder.lineTextView.setText(listener.toString());
-        lineHolder.setOnClickListener((view) -> {});
+        adapter.bind(listener);
+
         Log.i(TAG, "onBindViewHolder line["+position+":"+listener);
 //        if (holder instanceof LineHolder) {
 //        }
@@ -67,25 +66,8 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public void setSource(Source source) {
-        list.add(Display.builder()
+        list.add(PrintConsole.builder()
                 .build());
 //        this.list = new LanguageConverter().toJavaSource(source);
-    }
-
-//    public interface OnVariableClickListener {
-//        void onClick(Variable variable, int position);
-//    }
-
-    static class LineHolder extends RecyclerView.ViewHolder {
-        TextView lineTextView;
-
-        LineHolder(View root) {
-            super(root);
-            this.lineTextView = (TextView) root;
-        }
-
-        void setOnClickListener(View.OnClickListener onClickListener) {
-            lineTextView.setOnClickListener(onClickListener);
-        }
     }
 }

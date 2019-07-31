@@ -12,6 +12,11 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="AppBorderless" parent="AppTheme">
+        <item name="android:colorControlHighlight">#42ffffff</item>
+    </style>
+
+    출처: https://duzi077.tistory.com/179 [개발하는 두더지]
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
