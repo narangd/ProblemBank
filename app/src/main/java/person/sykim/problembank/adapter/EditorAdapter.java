@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import person.sykim.problembank.data.editor.AbstractHolder;
-import person.sykim.problembank.data.editor.ExecuteListener;
-import person.sykim.problembank.data.editor.PrintConsole;
+import person.sykim.problembank.data.editor.execute.ExecuteListener;
+import person.sykim.problembank.data.editor.execute.PrintConsole;
 import person.sykim.problembank.data.editor.Source;
 
 /**

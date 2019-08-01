@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class AbstractHolder<T> extends RecyclerView.ViewHolder
         implements View.OnClickListener {
+
     public AbstractHolder(@NonNull ViewGroup parent, int resource) {
         super(LayoutInflater.from(parent.getContext())
                 .inflate(resource, parent, false));
