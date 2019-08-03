@@ -8,24 +8,30 @@ import androidx.annotation.NonNull;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import person.sykim.problembank.R;
 import person.sykim.problembank.data.editor.AbstractHolder;
 import person.sykim.problembank.data.editor.constant.ConstantText;
 
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+//@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@NoArgsConstructor
-@AllArgsConstructor
-public class PrintConsole implements ExecuteListener {
+public class PrintConsole extends Execute {
 
-    @Builder.Default
-    ConstantText text = new ConstantText("test");
+//    @Builder.Default
+    ConstantText text = new ConstantText("");
+
+    public PrintConsole() {
+        super(ExecuteType.PRINT_CONSOLE);
+    }
+
+    public PrintConsole(ConstantText text) {
+        this();
+        this.text = text;
+    }
 
     @Override
     public void onExecute() {
@@ -35,10 +41,6 @@ public class PrintConsole implements ExecuteListener {
 
     String makePrintText() {
         return text.getValue();
-    }
-
-    public void setText(ConstantText text) {
-        this.text = text;
     }
 
     public static class View extends AbstractHolder<PrintConsole> {

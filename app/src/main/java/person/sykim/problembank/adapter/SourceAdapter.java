@@ -7,17 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.R;
-import person.sykim.problembank.data.adapter.LanguageConverter;
-import person.sykim.problembank.data.adapter.SourceLineList;
 import person.sykim.problembank.data.editor.Source;
-import person.sykim.problembank.data.editor.SourceLine;
 
 
 /**
@@ -30,11 +28,11 @@ public class SourceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public SourceAdapter () {
         Source source = new Source();
-        source.setPrev("public class Test {\n" +
-                "  public static void main(String[] args) {\n" +
-                "    System.out.println(\"Hello Programing World\");\n" +
-                "  }\n" +
-                "}\n");
+//        source.setPrev("public class Test {\n" +
+//                "  public static void main(String[] args) {\n" +
+//                "    System.out.println(\"Hello Programing World\");\n" +
+//                "  }\n" +
+//                "}\n");
         sources.add(source);
         sources.add(source);
         sources.add(source);
@@ -58,7 +56,7 @@ public class SourceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         SourceHolder sourceHolder  = (SourceHolder) holder;
         Source source = sources.get(position);
-        sourceHolder.sourcePreviewTextView.setText(source.getPrev());
+//        sourceHolder.sourcePreviewTextView.setText(source.getPrev());
         sourceHolder.setOnClickListener((view) -> {});
         Log.i(TAG, "onBindViewHolder "+position);
 //        if (holder instanceof SourceHolder) {

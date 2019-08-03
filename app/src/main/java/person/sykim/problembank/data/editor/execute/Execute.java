@@ -1,4 +1,4 @@
-package person.sykim.problembank.data.editor.constant;
+package person.sykim.problembank.data.editor.execute;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,8 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public abstract class Constant {
-    ConstantType type;
-
-    public abstract String getValue();
+public abstract class Execute {
+    ExecuteType type;
+    public abstract void onExecute();
 }

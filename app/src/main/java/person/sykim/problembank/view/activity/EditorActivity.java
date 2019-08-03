@@ -20,6 +20,10 @@ import butterknife.ButterKnife;
 import person.sykim.problembank.R;
 import person.sykim.problembank.adapter.EditorAdapter;
 import person.sykim.problembank.data.editor.Source;
+import person.sykim.problembank.data.editor.constant.ConstantText;
+import person.sykim.problembank.data.editor.constant.ConstantType;
+import person.sykim.problembank.data.editor.execute.MakeVariable;
+import person.sykim.problembank.data.editor.execute.PrintConsole;
 
 public class EditorActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -53,6 +57,8 @@ public class EditorActivity extends AppCompatActivity
         editorRecyclerView.setAdapter(adapter = new EditorAdapter());
 
         Source source = new Source();
+        source.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
+        source.add(new PrintConsole(new ConstantText("console test text")));
         adapter.setSource(source);
     }
 

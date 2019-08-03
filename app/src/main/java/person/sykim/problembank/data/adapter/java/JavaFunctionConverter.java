@@ -14,7 +14,7 @@ package person.sykim.problembank.data.adapter.java;
 //        for (Variable variable : function.getVariables()) {
 //            variableConverter.run(list, variable);
 //        }
-//        for (ExecuteListener execute : function.getExecutes()) {
+//        for (Execute execute : function.getExecutes()) {
 //            executeConverter.run(list, execute);
 //        }
 //        return null;
