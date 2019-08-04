@@ -14,4 +14,6 @@
     <string name="title_activity_editor">EditorActivity</string>
     <string name="default_notification_channel_id">ProblemChannel</string>
     <string name="title_activity_board">BoardActivity</string>
+    <string name="action_run">Run</string>
+    <string name="action_save">Save</string>
 </resources>
