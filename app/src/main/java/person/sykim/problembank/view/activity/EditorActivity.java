@@ -60,6 +60,8 @@ public class EditorActivity extends AppCompatActivity
         source.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
         source.add(new PrintConsole(new ConstantText("console test text")));
         adapter.setSource(source);
+
+
     }
 
     @Override

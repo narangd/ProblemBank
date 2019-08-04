@@ -2,6 +2,7 @@ package person.sykim.problembank.data.editor;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.orm.SugarRecord;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +21,7 @@ import person.sykim.problembank.data.editor.json.ExecuteSerializer;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Source {
+public class Source extends SugarRecord<Source> {
 //    List<Group> groups = new ArrayList<>();
     String name;
 //    @Builder.Default

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="person.sykim.problembank">
 
     <application
@@ -8,7 +9,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:icon">
+        <meta-data android:name="DATABASE" android:value="problembank.db" />
+        <meta-data android:name="VERSION" android:value="4" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="person.sykim.problembank" />
         <!-- intro -->
         <activity
             android:name=".view.activity.IntroActivity"
