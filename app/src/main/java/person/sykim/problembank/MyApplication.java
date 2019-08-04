@@ -1,9 +1,9 @@
 package person.sykim.problembank;
 
+import android.app.Application;
 import android.content.ContextWrapper;
 import android.util.Log;
 
-import com.orm.SugarApp;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.HashMap;
@@ -18,7 +18,7 @@ import person.sykim.problembank.data.editor.constant.ConstantType;
 import person.sykim.problembank.data.editor.execute.MakeVariable;
 import person.sykim.problembank.data.editor.execute.PrintConsole;
 
-public class MyApplication extends SugarApp {
+public class MyApplication extends Application {
     private static final String TAG = MyApplication.class.getSimpleName();
     public Map<String, ProblemBank> bank = new HashMap<>();
     public User user;
