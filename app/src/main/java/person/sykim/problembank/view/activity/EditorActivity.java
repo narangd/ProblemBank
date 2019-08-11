@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -14,6 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,11 +60,8 @@ public class EditorActivity extends AppCompatActivity
         editorRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         editorRecyclerView.setAdapter(adapter = new EditorAdapter());
 
-        Source source = new Source();
-        source.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
-        source.add(new PrintConsole(new ConstantText("console test text")));
-        adapter.setSource(source);
-
+        adapter.getList().add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
+        adapter.getList().add(new PrintConsole(new ConstantText("console test text")));
 
     }
 
@@ -90,6 +91,25 @@ public class EditorActivity extends AppCompatActivity
             case R.id.action_run:
                 return true;
             case R.id.action_save:
+                Source source = new Source();
+                source.setName("Preview");
+                String json = Source.getGsonPretty().toJson(adapter.getFunction());
+                source.setJson(json);
+                new AlertDialog.Builder(this)
+                        .setTitle("Save source?")
+                        .setMessage(json)
+                        .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+                            List<Source> list = Source.find(Source.class, "name = ?", source.getName());
+                            if (list.size() <= 0) {
+                                source.save();
+                            } else {
+                                Source dbSource = list.get(0);
+                                dbSource.setUpdateTime(new Date());
+                                dbSource.setJson(json);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
                 return true;
             case R.id.action_settings:
                 return true;

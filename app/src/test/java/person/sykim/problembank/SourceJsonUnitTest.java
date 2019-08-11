@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import org.junit.Test;
 
+import person.sykim.problembank.data.editor.Function;
 import person.sykim.problembank.data.editor.Source;
 import person.sykim.problembank.data.editor.constant.ConstantText;
 import person.sykim.problembank.data.editor.constant.ConstantType;
@@ -17,17 +18,17 @@ public class SourceJsonUnitTest {
 
     @Test
     public void source() {
-        Source source = new Source();
-        source.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
-        source.add(new PrintConsole(new ConstantText("console test text")));
+        Function function = new Function();
+        function.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
+        function.add(new PrintConsole(new ConstantText("console test text")));
 
         Gson gson = Source.getGson();
-        String json = gson.toJson(source);
+        String json = gson.toJson(function);
 
-        Source parsedSource = gson.fromJson(json, Source.class);
+        Function parsedFunction = gson.fromJson(json, Function.class);
 
-        System.out.println(source);
+        System.out.println(function);
         System.out.println(json);
-        assertEquals("Source Serialize Test", source, parsedSource);
+        assertEquals("Function Serialize Test", function, parsedFunction);
     }
 }

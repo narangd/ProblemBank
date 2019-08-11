@@ -33,4 +33,8 @@ public class Function {
     public void onExecute() {
 
     }
+
+    public void add(Execute execute) {
+        list.add(execute);
+    }
 }

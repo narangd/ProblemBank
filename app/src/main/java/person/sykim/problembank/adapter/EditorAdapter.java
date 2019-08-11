@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import person.sykim.problembank.data.editor.AbstractHolder;
+import person.sykim.problembank.data.editor.Function;
 import person.sykim.problembank.data.editor.Source;
 import person.sykim.problembank.data.editor.execute.Execute;
 import person.sykim.problembank.data.editor.execute.MakeVariable;
@@ -79,6 +80,12 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public void setSource(Source source) {
-        list.addAll(source.getMain().getList());
+//        list.addAll();
+    }
+
+    public Function getFunction() {
+        Function function = new Function();
+        function.getList().addAll(list);
+        return function;
     }
 }
