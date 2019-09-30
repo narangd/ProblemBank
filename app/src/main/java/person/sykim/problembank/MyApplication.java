@@ -28,14 +28,15 @@ public class MyApplication extends SugarApp {
     public void onCreate() {
         super.onCreate();
 
-
-
         Function function = new Function();
         function.getList().add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
         function.getList().add(new PrintConsole(new ConstantText("console test text")));
         Log.d(TAG, "create json "+Source.getGson().toJson(function));
         List<Source> list = Source.listAll(Source.class);
         Log.d(TAG, "saved sources "+list);
+        /*
+        no table 에러시 instance run 설정이 켜져있지 않는지 확인해야함.
+         */
 
         // Initialize the Prefs class
         new Prefs.Builder()

@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 public class SourceJsonUnitTest {
 
     @Test
-    public void source() {
+    public void sourceParse() {
         Function function = new Function();
         function.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
         function.add(new PrintConsole(new ConstantText("console test text")));

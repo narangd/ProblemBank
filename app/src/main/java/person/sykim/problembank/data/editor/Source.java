@@ -22,7 +22,7 @@ import person.sykim.problembank.data.editor.json.ExecuteSerializer;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 //@AllArgsConstructor
-public class Source extends SugarRecord<Source> {
+public class Source extends SugarRecord {
 //    List<Group> groups = new ArrayList<>();
     String name;
 //    @Builder.Default
