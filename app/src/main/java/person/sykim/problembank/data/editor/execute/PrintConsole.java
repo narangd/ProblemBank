@@ -5,6 +5,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.AccessLevel;
@@ -14,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 import person.sykim.problembank.R;
 import person.sykim.problembank.data.editor.AbstractHolder;
 import person.sykim.problembank.data.editor.constant.ConstantText;
+import person.sykim.problembank.data.editor.constant.Textable;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -21,8 +24,7 @@ import person.sykim.problembank.data.editor.constant.ConstantText;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PrintConsole extends Execute {
 
-//    @Builder.Default
-    ConstantText text = new ConstantText("");
+    ArrayList<Textable> textableList = new ArrayList<>();
 
     public PrintConsole() {
         super(ExecuteType.PRINT_CONSOLE);
@@ -30,7 +32,7 @@ public class PrintConsole extends Execute {
 
     public PrintConsole(ConstantText text) {
         this();
-        this.text = text;
+        textableList.add(text);
     }
 
     @Override
@@ -39,8 +41,12 @@ public class PrintConsole extends Execute {
         //
     }
 
-    String makePrintText() {
-        return text.getValue();
+    public String makePrintText() {
+        StringBuilder builder = new StringBuilder();
+        for (Textable textable : textableList) {
+            builder.append(textable.getText());
+        }
+        return builder.toString();
     }
 
     public static class View extends AbstractHolder<PrintConsole> {

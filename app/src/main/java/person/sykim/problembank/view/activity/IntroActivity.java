@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseUiException;
 import com.firebase.ui.auth.IdpResponse;
@@ -21,16 +25,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.MyApplication;
 import person.sykim.problembank.R;
-import person.sykim.problembank.data.Preference;
 import person.sykim.problembank.data.User;
 import person.sykim.problembank.data.bank.ProblemBank;
 
@@ -75,6 +74,11 @@ public class IntroActivity extends AppCompatActivity {
 //        }
     }
 
+    /**
+     * 소셜로그인 도입 소셜로그인 유저 키를 기준으로 유저를 구분함.
+     * 1. 소셜로그인을 기준으로 유저를 구분.
+     * *. 다른 소셜이면 다른 유저로 판단.
+     */
     void signinFirebase() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -102,6 +106,13 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     void syncBanks() {
+
+        // TODO RealtimeDatabase -> RemoteConfig
+        // banks [baekjoon,jungol]
+        // bank_baekjoon {....}
+        // bank_jungol {....}
+        // 최대 bank까지만 표시시
+
         runOnUiThread(() -> loadingText.setText("동기화 1단계 진행중..."));
         reference.child("banks")
                 .addValueEventListener(new ValueEventListener() {

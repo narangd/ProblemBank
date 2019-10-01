@@ -59,7 +59,7 @@ public class MakeVariable extends Execute {
         @Override
         public void bind(MakeVariable makeVariable) {
             nameTextView.setText(makeVariable.name);
-            valueTextView.setText(makeVariable.constant.getValue());
+            valueTextView.setText(makeVariable.constant.getText());
         }
     }
 }

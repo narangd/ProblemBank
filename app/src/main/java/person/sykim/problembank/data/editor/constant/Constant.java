@@ -8,8 +8,6 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public abstract class Constant {
+public abstract class Constant implements Textable {
     ConstantType type;
-
-    public abstract String getValue();
 }

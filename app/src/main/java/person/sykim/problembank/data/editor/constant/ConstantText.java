@@ -11,14 +11,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConstantText extends Constant {
 
-    String value;
+    String text;
 
     public ConstantText(String text) throws IllegalArgumentException {
         super(ConstantType.TEXT);
         if (text == null) {
             text = "";
         }
-        value = text;
-
+        this.text = text;
     }
 }
