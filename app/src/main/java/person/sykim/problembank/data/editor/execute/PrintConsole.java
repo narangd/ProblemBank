@@ -5,8 +5,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.AccessLevel;
@@ -15,6 +13,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import person.sykim.problembank.R;
 import person.sykim.problembank.data.editor.AbstractHolder;
+import person.sykim.problembank.data.editor.constant.Constant;
 import person.sykim.problembank.data.editor.constant.ConstantText;
 import person.sykim.problembank.data.editor.constant.Textable;
 
@@ -22,9 +21,9 @@ import person.sykim.problembank.data.editor.constant.Textable;
 @EqualsAndHashCode(callSuper = true)
 //@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PrintConsole extends Execute {
+public class PrintConsole extends ExecuteList<Constant> {
 
-    ArrayList<Textable> textableList = new ArrayList<>();
+    private boolean newLine = false;
 
     public PrintConsole() {
         super(ExecuteType.PRINT_CONSOLE);
@@ -32,7 +31,7 @@ public class PrintConsole extends Execute {
 
     public PrintConsole(ConstantText text) {
         this();
-        textableList.add(text);
+        add(text);
     }
 
     @Override
@@ -41,9 +40,12 @@ public class PrintConsole extends Execute {
         //
     }
 
+    // todo 데이터 조회시 Variable 처리
+    //  Constant는 그대로 가져와도 되나,
+    //  Variable은 VariableManager에서 조회하여 반환하여야함.
     public String makePrintText() {
         StringBuilder builder = new StringBuilder();
-        for (Textable textable : textableList) {
+        for (Textable textable : this) {
             builder.append(textable.getText());
         }
         return builder.toString();

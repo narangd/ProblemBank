@@ -9,15 +9,15 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-import person.sykim.problembank.data.editor.execute.Execute;
+import person.sykim.problembank.data.editor.execute.Executable;
 import person.sykim.problembank.data.editor.execute.ExecuteType;
 import person.sykim.problembank.data.editor.execute.MakeVariable;
 import person.sykim.problembank.data.editor.execute.PrintConsole;
 
-public class ExecuteSerializer implements JsonDeserializer<Execute>, JsonSerializer<Execute> {
+public class ExecuteSerializer implements JsonDeserializer<Executable>, JsonSerializer<Executable> {
 
     @Override
-    public Execute deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public Executable deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         String typeString = json.getAsJsonObject().get("type").getAsString();
         ExecuteType executeType = ExecuteType.parse(typeString);
         if (executeType == null) {
@@ -35,7 +35,7 @@ public class ExecuteSerializer implements JsonDeserializer<Execute>, JsonSeriali
     }
 
     @Override
-    public JsonElement serialize(Execute src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(Executable src, Type typeOfSrc, JsonSerializationContext context) {
         return context.serialize(src);
     }
 }

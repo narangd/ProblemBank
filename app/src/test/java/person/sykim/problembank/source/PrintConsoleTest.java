@@ -13,7 +13,8 @@ public class PrintConsoleTest {
     public void printTest() {
         ConstantText text = new ConstantText("Jack");
         PrintConsole console = new PrintConsole(text);
+        console.add(new ConstantText(" is awesome"));
 
-        assertEquals(console.makePrintText(), "Jack");
+        assertEquals(console.makePrintText(), "Jack is awesome");
     }
 }

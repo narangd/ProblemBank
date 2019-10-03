@@ -22,13 +22,14 @@ public class SourceJsonUnitTest {
         function.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
         function.add(new PrintConsole(new ConstantText("console test text")));
 
-        Gson gson = Source.getGson();
+        Gson gson = Source.getGsonPretty();
         String json = gson.toJson(function);
+        System.out.println(function);
+        System.out.println(json);
 
         Function parsedFunction = gson.fromJson(json, Function.class);
 
-        System.out.println(function);
-        System.out.println(json);
+        System.out.println(parsedFunction);
         assertEquals("Function Serialize Test", function, parsedFunction);
     }
 }

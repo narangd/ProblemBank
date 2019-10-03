@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import person.sykim.problembank.data.editor.constant.Constant;
-import person.sykim.problembank.data.editor.execute.Execute;
+import person.sykim.problembank.data.editor.execute.Executable;
 import person.sykim.problembank.data.editor.json.ConstantSerializer;
 import person.sykim.problembank.data.editor.json.ExecuteSerializer;
 
@@ -33,14 +33,14 @@ public class Source extends SugarRecord {
     public static Gson getGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(Constant.class, new ConstantSerializer())
-                .registerTypeAdapter(Execute.class, new ExecuteSerializer())
+                .registerTypeAdapter(Executable.class, new ExecuteSerializer())
                 .create();
     }
 
     public static Gson getGsonPretty() {
         return new GsonBuilder()
                 .registerTypeAdapter(Constant.class, new ConstantSerializer())
-                .registerTypeAdapter(Execute.class, new ExecuteSerializer())
+                .registerTypeAdapter(Executable.class, new ExecuteSerializer())
                 .setPrettyPrinting()
                 .create();
     }

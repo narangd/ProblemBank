@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import person.sykim.problembank.data.editor.execute.Execute;
+import person.sykim.problembank.data.editor.execute.Executable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -19,7 +19,7 @@ import person.sykim.problembank.data.editor.execute.Execute;
 public class Function {
     String name;
 //    @Builder.Default
-    ArrayList<Execute> list = new ArrayList<>();
+    ArrayList<Executable> list = new ArrayList<>();
     // parameter
 //    String returnType = "void";
 //    @Builder.Default
@@ -34,7 +34,7 @@ public class Function {
 
     }
 
-    public void add(Execute execute) {
+    public void add(Executable execute) {
         list.add(execute);
     }
 }

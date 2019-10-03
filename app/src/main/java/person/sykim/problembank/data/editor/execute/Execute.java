@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public abstract class Execute {
+public abstract class Execute implements Executable {
     ExecuteType type;
-    public abstract void onExecute();
 }

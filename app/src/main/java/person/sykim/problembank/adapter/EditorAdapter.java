@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 import person.sykim.problembank.data.editor.AbstractHolder;
 import person.sykim.problembank.data.editor.Function;
 import person.sykim.problembank.data.editor.Source;
-import person.sykim.problembank.data.editor.execute.Execute;
+import person.sykim.problembank.data.editor.execute.Executable;
 import person.sykim.problembank.data.editor.execute.MakeVariable;
 import person.sykim.problembank.data.editor.execute.PrintConsole;
 
@@ -39,7 +39,7 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 //    public static final int ViewType_Calculate = 50;
 
 //    private SourceLineList lines = new SourceLineList();
-    ArrayList<Execute> list = new ArrayList<>();
+    ArrayList<Executable> list = new ArrayList<>();
 
     @NonNull
     @Override
@@ -55,10 +55,10 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        Execute listener = list.get(position);
-        if (listener instanceof PrintConsole) {
+        Executable executable = list.get(position);
+        if (executable instanceof PrintConsole) {
             return ViewType_PrintConsole;
-        } else if (listener instanceof MakeVariable) {
+        } else if (executable instanceof MakeVariable) {
             return ViewType_MakeVariable;
         }
         return 0;
@@ -67,11 +67,11 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         @SuppressWarnings("unchecked")
-        AbstractHolder<Execute> holder = (AbstractHolder) viewHolder;
-        Execute listener = list.get(position);
-        holder.bind(listener);
+        AbstractHolder<Executable> holder = (AbstractHolder) viewHolder;
+        Executable executable = list.get(position);
+        holder.bind(executable);
 
-        Log.i(TAG, "onBindViewHolder line["+position+"]:"+listener);
+        Log.i(TAG, "onBindViewHolder line["+position+"]:"+executable);
     }
 
     @Override
