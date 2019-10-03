@@ -13,6 +13,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import person.sykim.problembank.R;
 import person.sykim.problembank.data.editor.AbstractHolder;
+import person.sykim.problembank.data.editor.Program;
+import person.sykim.problembank.data.editor.Variable;
 import person.sykim.problembank.data.editor.constant.Constant;
 import person.sykim.problembank.data.editor.constant.ConstantType;
 
@@ -22,14 +24,12 @@ import person.sykim.problembank.data.editor.constant.ConstantType;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class MakeVariable extends Execute {
 
-    String name;
-    Constant constant;
+    Variable variable;
 
     public MakeVariable(ConstantType type, String name, String value) {
         super(ExecuteType.MAKE_VARIABLE);
-        constant = type.make(value);
-//        this.name = nameValidation(name);
-        this.name = name;
+        Constant constant = type.make(value);
+        variable = new Variable(name, constant);
     }
 
     private String nameValidation(String name) {
@@ -42,6 +42,7 @@ public class MakeVariable extends Execute {
     @Override
     public void onExecute() {
         // add variable to memory
+        Program.getInstance().memory.add(variable);
     }
 
     public static class View extends AbstractHolder<MakeVariable> {
@@ -58,8 +59,9 @@ public class MakeVariable extends Execute {
 
         @Override
         public void bind(MakeVariable makeVariable) {
-            nameTextView.setText(makeVariable.name);
-            valueTextView.setText(makeVariable.constant.getText());
+            Variable variable = makeVariable.variable;
+            nameTextView.setText(variable.getName());
+            valueTextView.setText(variable.getText());
         }
     }
 }

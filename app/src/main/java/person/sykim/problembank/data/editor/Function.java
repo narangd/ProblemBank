@@ -31,7 +31,6 @@ public class Function {
 
 //    @Override
     public void onExecute() {
-
     }
 
     public void add(Executable execute) {

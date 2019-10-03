@@ -82,8 +82,8 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.1.0'
 
     // Lombok
-    compileOnly "org.projectlombok:lombok:$versionLombok"
-    annotationProcessor "org.projectlombok:lombok:$versionLombok"
+    compileOnly "org.projectlombok:lombok:1.18.10"
+    annotationProcessor "org.projectlombok:lombok:1.18.10"
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.jsoup:jsoup:1.11.3'

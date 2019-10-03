@@ -7,14 +7,18 @@ import lombok.experimental.FieldDefaults;
 
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ConstantText extends Constant {
 
     String text;
 
-    public ConstantText(String text) throws IllegalArgumentException {
+    public ConstantText() {
         super(ConstantType.TEXT);
+    }
+
+    public ConstantText(String text) throws IllegalArgumentException {
+        this();
         if (text == null) {
             text = "";
         }
