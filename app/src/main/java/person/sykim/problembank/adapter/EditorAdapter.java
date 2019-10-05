@@ -13,12 +13,12 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
-import person.sykim.problembank.data.editor.AbstractHolder;
-import person.sykim.problembank.data.editor.Function;
-import person.sykim.problembank.data.editor.Source;
-import person.sykim.problembank.data.editor.execute.Executable;
-import person.sykim.problembank.data.editor.execute.MakeVariable;
-import person.sykim.problembank.data.editor.execute.PrintConsole;
+import sykim.person.editor.AbstractHolder;
+import sykim.person.editor.Function;
+import sykim.person.editor.Source;
+import sykim.person.editor.execute.Executable;
+import sykim.person.editor.execute.MakeVariable;
+import sykim.person.editor.execute.PrintConsole;
 
 /**
  * Execute List

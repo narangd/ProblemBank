@@ -2,8 +2,8 @@ package person.sykim.problembank.data.adapter.java;
 
 import person.sykim.problembank.data.adapter.LanguageAdapter;
 import person.sykim.problembank.data.adapter.SourceLineList;
-import person.sykim.problembank.data.editor.Source;
-import person.sykim.problembank.data.editor.SourceLine;
+import sykim.person.editor.Source;
+import sykim.person.editor.SourceLine;
 
 public class JavaSourceConverter extends LanguageAdapter<Source> {
 //    private JavaMainConverter mainConverter = new JavaMainConverter();

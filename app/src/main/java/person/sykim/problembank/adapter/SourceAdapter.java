@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.R;
-import person.sykim.problembank.data.editor.Source;
+import sykim.person.editor.Source;
 
 
 /**

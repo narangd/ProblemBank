@@ -1,6 +1,6 @@
 package person.sykim.problembank.data.adapter;
 
-import person.sykim.problembank.data.editor.SourceLine;
+import sykim.person.editor.SourceLine;
 
 public abstract class LanguageAdapter<T> {
     public abstract SourceLine begin(T t);

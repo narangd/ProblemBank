@@ -2,8 +2,8 @@ package person.sykim.problembank.data.adapter.java;
 
 import person.sykim.problembank.data.adapter.LanguageAdapter;
 import person.sykim.problembank.data.adapter.SourceLineList;
-import person.sykim.problembank.data.editor.SourceLine;
-import person.sykim.problembank.data.editor.Variable;
+import sykim.person.editor.SourceLine;
+import sykim.person.editor.Variable;
 
 public class JavaVariableConverter extends LanguageAdapter<Variable> {
     @Override

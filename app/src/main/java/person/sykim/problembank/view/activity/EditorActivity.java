@@ -1,8 +1,11 @@
 package person.sykim.problembank.view.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -14,23 +17,25 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-
-import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnFocusChange;
+import butterknife.OnLongClick;
+import butterknife.OnTouch;
 import person.sykim.problembank.R;
 import person.sykim.problembank.adapter.EditorAdapter;
-import person.sykim.problembank.data.editor.Source;
-import person.sykim.problembank.data.editor.constant.ConstantText;
-import person.sykim.problembank.data.editor.constant.ConstantType;
-import person.sykim.problembank.data.editor.execute.MakeVariable;
-import person.sykim.problembank.data.editor.execute.PrintConsole;
+import sykim.person.editor.Source;
+import sykim.person.editor.constant.ConstantText;
+import sykim.person.editor.constant.ConstantType;
+import sykim.person.editor.execute.MakeVariable;
+import sykim.person.editor.execute.PrintConsole;
 
 public class EditorActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
     private static final String TAG = EditorActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
@@ -41,6 +46,8 @@ public class EditorActivity extends AppCompatActivity
     NavigationView navigationView;
     @BindView(R.id.editor_recycler_view)
     RecyclerView editorRecyclerView;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
     EditorAdapter adapter;
 
@@ -63,6 +70,12 @@ public class EditorActivity extends AppCompatActivity
         adapter.getList().add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
         adapter.getList().add(new PrintConsole(new ConstantText("console test text")));
 
+
+        fab.setOnDragListener((view, dragEvent) -> {
+            Log.d(TAG, "onDrag: "+view+", event:"+dragEvent);
+//            dragEvent.get
+            return false;
+        });
     }
 
     @Override
@@ -99,14 +112,14 @@ public class EditorActivity extends AppCompatActivity
                         .setTitle("Save source?")
                         .setMessage(json)
                         .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                            List<Source> list = Source.find(Source.class, "name = ?", source.getName());
-                            if (list.size() <= 0) {
-                                source.save();
-                            } else {
-                                Source dbSource = list.get(0);
-                                dbSource.setUpdateTime(new Date());
-                                dbSource.setJson(json);
-                            }
+//                            List<Source> list = Source.find(Source.class, "name = ?", source.getName());
+//                            if (list.size() <= 0) {
+//                                source.save();
+//                            } else {
+//                                Source dbSource = list.get(0);
+//                                dbSource.setUpdateTime(new Date());
+//                                dbSource.setJson(json);
+//                            }
                         })
                         .setNegativeButton(android.R.string.cancel, null)
                         .show();
@@ -141,4 +154,32 @@ public class EditorActivity extends AppCompatActivity
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    // click event
+
+    @OnClick(R.id.fab)
+    public void onFab() {
+        Log.d(TAG, "onFab: ");
+    }
+
+    @OnLongClick(R.id.fab)
+    public void onLongFab(View fab) {
+        Log.d(TAG, "onLongFab: "+fab);
+//        fab.startDragAndDrop(null, new View.DragShadowBuilder(fab), null, DragEvent.ACTION_DRAG_STARTED);
+        fab.startDrag(null, new View.DragShadowBuilder(fab), null, 0);
+//        fab.setOnKeyListener((view, i, keyEvent) -> {
+//            keyEvent.getAction() == KeyEvent.ACTION_DOWN
+//        });
+    }
+
+    @OnTouch(R.id.fab)
+    public void onTouchFab(View fab, MotionEvent event) {
+        Log.d(TAG, "onTouchFab: "+event.getAction());
+    }
+
+    @OnFocusChange(R.id.fab)
+    public void onFocusChangeFab(boolean hasFocus) {
+        Log.d(TAG, "onFocusChangeFab: "+hasFocus);
+    }
+
 }
