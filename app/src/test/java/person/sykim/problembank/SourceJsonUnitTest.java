@@ -4,12 +4,12 @@ import com.google.gson.Gson;
 
 import org.junit.Test;
 
-import person.sykim.problembank.data.editor.Function;
-import person.sykim.problembank.data.editor.Source;
-import person.sykim.problembank.data.editor.constant.ConstantText;
-import person.sykim.problembank.data.editor.constant.ConstantType;
-import person.sykim.problembank.data.editor.execute.MakeVariable;
-import person.sykim.problembank.data.editor.execute.PrintConsole;
+import sykim.person.editor.Function;
+import sykim.person.editor.Source;
+import sykim.person.editor.constant.ConstantText;
+import sykim.person.editor.constant.ConstantType;
+import sykim.person.editor.execute.MakeVariable;
+import sykim.person.editor.execute.PrintConsole;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,18 +18,20 @@ public class SourceJsonUnitTest {
 
     @Test
     public void sourceParse() {
-        Function function = new Function();
+        Function function = new Function("main");
         function.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
         function.add(new PrintConsole(new ConstantText("console test text")));
 
         Gson gson = Source.getGsonPretty();
         String json = gson.toJson(function);
-        System.out.println(function);
+        System.out.println(function.toString());
         System.out.println(json);
 
         Function parsedFunction = gson.fromJson(json, Function.class);
+        String parsedJson = gson.toJson(parsedFunction);
+        System.out.println(parsedFunction.toString());
 
-        System.out.println(parsedFunction);
-        assertEquals("Function Serialize Test", function, parsedFunction);
+        assertEquals(parsedJson, json, parsedJson);
+        assertEquals(parsedJson, function, parsedFunction);
     }
 }

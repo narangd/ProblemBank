@@ -27,7 +27,7 @@ public class MyApplication extends SugarApp {
     public void onCreate() {
         super.onCreate();
 
-        Function function = new Function();
+        Function function = new Function("main");
         function.getList().add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
         function.getList().add(new PrintConsole(new ConstantText("console test text")));
         Log.d(TAG, "create json "+ Source.getGson().toJson(function));

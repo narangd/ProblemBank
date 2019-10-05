@@ -3,6 +3,7 @@ package sykim.person.editor;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import sykim.person.editor.constant.Constant;
 import sykim.person.editor.constant.Textable;
@@ -22,7 +23,7 @@ public class Variable implements Textable {
 
     @Override
     public String getText() {
-        return constant.getText();
+        return Program.getInstance().memory.getVariable(name).getText();
     }
 
 }

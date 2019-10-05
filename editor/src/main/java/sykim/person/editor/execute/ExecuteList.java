@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 public abstract class ExecuteList<T> implements Executable/*, List<T>*/, Iterable<T> {
     // List<T>를 사용시 Gson에서 {}가 아닌 []로 인식하는 문제가 발생.
     ExecuteType type;
-    protected ArrayList<T> list = new ArrayList<>();
+    ArrayList<T> list = new ArrayList<>();
 
     public ExecuteList(ExecuteType type) {
         this.type = type;

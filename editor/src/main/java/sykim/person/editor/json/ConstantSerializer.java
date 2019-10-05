@@ -3,16 +3,24 @@ package sykim.person.editor.json;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 
+import sykim.person.editor.Variable;
 import sykim.person.editor.constant.Constant;
 import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.ConstantType;
+import sykim.person.editor.constant.Textable;
 
+/**
+ * 텍스트, 숫자, 실수, 불린 에 대한
+ */
 public class ConstantSerializer implements JsonDeserializer<Constant>, JsonSerializer<Constant> {
 
     @Override

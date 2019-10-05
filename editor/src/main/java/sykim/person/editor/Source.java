@@ -11,9 +11,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import sykim.person.editor.constant.Constant;
+import sykim.person.editor.constant.Textable;
 import sykim.person.editor.execute.Executable;
 import sykim.person.editor.json.ConstantSerializer;
 import sykim.person.editor.json.ExecuteSerializer;
+import sykim.person.editor.json.TextableSerializer;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -32,6 +34,7 @@ public class Source {
     public static Gson getGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(Constant.class, new ConstantSerializer())
+                .registerTypeAdapter(Textable.class, new TextableSerializer())
                 .registerTypeAdapter(Executable.class, new ExecuteSerializer())
                 .create();
     }
@@ -39,6 +42,7 @@ public class Source {
     public static Gson getGsonPretty() {
         return new GsonBuilder()
                 .registerTypeAdapter(Constant.class, new ConstantSerializer())
+                .registerTypeAdapter(Textable.class, new TextableSerializer())
                 .registerTypeAdapter(Executable.class, new ExecuteSerializer())
                 .setPrettyPrinting()
                 .create();

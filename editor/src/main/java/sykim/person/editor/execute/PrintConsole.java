@@ -10,6 +10,7 @@ import butterknife.ButterKnife;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import sykim.person.editor.AbstractHolder;
 import sykim.person.editor.Program;
@@ -21,9 +22,8 @@ import sykim.person.editor.constant.Textable;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-//@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PrintConsole extends ExecuteList<Constant> {
+public class PrintConsole extends ExecuteList<Textable> {
 
     private boolean newLine = false;
 

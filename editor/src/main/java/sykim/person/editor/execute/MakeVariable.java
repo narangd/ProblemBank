@@ -10,6 +10,7 @@ import butterknife.ButterKnife;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import sykim.person.editor.AbstractHolder;
 import sykim.person.editor.Program;
@@ -26,6 +27,11 @@ import sykim.person.editor.constant.ConstantType;
 public class MakeVariable extends Execute {
 
     Variable variable;
+
+    // for json
+//    public MakeVariable() {
+//        super(ExecuteType.MAKE_VARIABLE);
+//    }
 
     public MakeVariable(ConstantType type, String name, String value) {
         super(ExecuteType.MAKE_VARIABLE);

@@ -1,39 +1,36 @@
 package sykim.person.editor;
 
-import java.util.ArrayList;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import sykim.person.editor.execute.Executable;
+import sykim.person.editor.execute.Execute;
+import sykim.person.editor.execute.ExecuteList;
+import sykim.person.editor.execute.ExecuteType;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-//@Builder
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@NoArgsConstructor
-@AllArgsConstructor
-public class Function {
+public class Function extends ExecuteList<Executable> {
     String name;
-//    @Builder.Default
-    ArrayList<Executable> list = new ArrayList<>();
     // parameter
 //    String returnType = "void";
-//    @Builder.Default
-//    List<Variable> variables = new ArrayList<>();
 
-//    public Function(String name) {
-//        this.name = name;
-//    }
-
-//    @Override
-    public void onExecute() {
+    public Function(String name) {
+        super(ExecuteType.FUNCTION);
+        this.name = name;
     }
 
-    public void add(Executable execute) {
-        list.add(execute);
+    @Override
+    public void onExecute() {
+        for (Executable execute : this) {
+            execute.onExecute();
+        }
     }
 }

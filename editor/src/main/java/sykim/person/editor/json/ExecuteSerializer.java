@@ -9,6 +9,7 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
+import sykim.person.editor.Function;
 import sykim.person.editor.execute.Executable;
 import sykim.person.editor.execute.ExecuteType;
 import sykim.person.editor.execute.MakeVariable;
@@ -29,6 +30,8 @@ public class ExecuteSerializer implements JsonDeserializer<Executable>, JsonSeri
                 return context.deserialize(json, MakeVariable.class);
             case PRINT_CONSOLE:
                 return context.deserialize(json, PrintConsole.class);
+            case FUNCTION:
+                return context.deserialize(json, Function.class);
             default:
                 return null;
         }
