@@ -45,7 +45,7 @@ android {
     }
 }
 
-def versionLombok = '1.16.20' // fixed. for bugs.
+def versionLombok = '1.18.10' // fixed. for bugs.
 // stable 1.16.20
 // newest 1.18.10
 
@@ -61,7 +61,7 @@ dependencies {
 //    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
 //    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0-alpha02'
 
-//    implementation project(":editor")
+    implementation project(":editor")
 
     implementation 'com.google.android.material:material:1.1.0-alpha10'
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -72,24 +72,24 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-database:19.1.0'
     implementation 'com.google.firebase:firebase-config:19.0.2'
-//    implementation 'com.google.firebase:firebase-auth:19.1.0'
+    implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
 
     // Firebase-UI
-//    implementation 'com.firebaseui:firebase-ui-auth:4.0.0'
+    implementation 'com.firebaseui:firebase-ui-auth:4.0.0'
 
     // Google
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
     // BindView
-//    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
     implementation 'com.jakewharton:butterknife:10.2.0'
 
     // Lombok
     annotationProcessor "org.projectlombok:lombok:$versionLombok"
     compileOnly "org.projectlombok:lombok:$versionLombok"
 
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'org.jsoup:jsoup:1.12.1'
 
     // Preference

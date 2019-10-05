@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -12,6 +13,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import sykim.person.editor.AbstractHolder;
 import sykim.person.editor.R;
+import sykim.person.editor.R2;
 import sykim.person.editor.constant.Constant;
 import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.Textable;
@@ -51,7 +53,7 @@ public class PrintConsole extends ExecuteList<Constant> {
     }
 
     public static class View extends AbstractHolder<PrintConsole> {
-//        @BindView(R.id.console_text_view)
+        @BindView(R2.id.console_text_view)
         TextView textView;
 
         public View(@NonNull ViewGroup parent) {

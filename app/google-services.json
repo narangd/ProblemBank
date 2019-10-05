@@ -31,8 +31,8 @@
           }
         },
         {
-          "client_id": "875045166448-iqcngvgvbqfn6ipekc7610oa0qr5oqd7.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id__for_build_failed_due_to_default_web_client_id_duplicate_resources": "875045166448-iqcngvgvbqfn6ipekc7610oa0qr5oqd7.apps.googleusercontent.com",
+          "client_type_": 3
         }
       ],
       "api_key": [

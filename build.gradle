@@ -15,7 +15,7 @@ buildscript {
 
         // google-services plugin
         classpath 'com.google.gms:google-services:4.3.2'
-//        classpath 'com.jakewharton:butterknife-gradle-plugin:10.1.0'
+        classpath 'com.jakewharton:butterknife-gradle-plugin:10.2.0'
 
     }
 }

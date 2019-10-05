@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -13,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import sykim.person.editor.AbstractHolder;
 import sykim.person.editor.Program;
 import sykim.person.editor.R;
+import sykim.person.editor.R2;
 import sykim.person.editor.Variable;
 import sykim.person.editor.constant.Constant;
 import sykim.person.editor.constant.ConstantType;
@@ -45,9 +47,9 @@ public class MakeVariable extends Execute {
     }
 
     public static class View extends AbstractHolder<MakeVariable> {
-//        @BindView(R.id.variable_name_text_view)
+        @BindView(R2.id.variable_name_text_view)
         TextView nameTextView;
-//        @BindView(R.id.variable_value_text_view)
+        @BindView(R2.id.variable_value_text_view)
         TextView valueTextView;
 
         public View(@NonNull ViewGroup parent) {
