@@ -15,8 +15,10 @@ public class Program {
     }
 
     public MemoryManager memory = new MemoryManager();
+    public StringBuilder console = new StringBuilder();
 
     public void clear() {
         memory.clear();
+        console = new StringBuilder();
     }
 }

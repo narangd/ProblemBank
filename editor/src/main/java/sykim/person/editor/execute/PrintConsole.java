@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import sykim.person.editor.AbstractHolder;
+import sykim.person.editor.Program;
 import sykim.person.editor.R;
 import sykim.person.editor.R2;
 import sykim.person.editor.constant.Constant;
@@ -37,15 +38,13 @@ public class PrintConsole extends ExecuteList<Constant> {
 
     @Override
     public void onExecute() {
-        // console.print(makePrintText());
-        //
+        makePrintText( Program.getInstance().console );
     }
 
     // todo 데이터 조회시 Variable 처리
     //  Constant는 그대로 가져와도 되나,
     //  Variable은 VariableManager에서 조회하여 반환하여야함.
-    public String makePrintText() {
-        StringBuilder builder = new StringBuilder();
+    public String makePrintText(StringBuilder builder) {
         for (Textable textable : this) {
             builder.append(textable.getText());
         }
@@ -64,7 +63,9 @@ public class PrintConsole extends ExecuteList<Constant> {
 
         @Override
         public void bind(PrintConsole printConsole) {
-            textView.setText(printConsole.makePrintText());
+            StringBuilder builder = new StringBuilder();
+            printConsole.makePrintText(builder);
+            textView.setText(builder);
         }
     }
 }

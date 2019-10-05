@@ -12,9 +12,11 @@ public class PrintConsoleTest {
     @Test
     public void printTest() {
         ConstantText text = new ConstantText("Jack");
-        PrintConsole console = new PrintConsole(text);
-        console.add(new ConstantText(" is awesome"));
+        PrintConsole printConsole = new PrintConsole(text);
+        printConsole.add(new ConstantText(" is awesome"));
 
-        assertEquals(console.makePrintText(), "Jack is awesome");
+        StringBuilder console = Program.getInstance().console;
+        printConsole.makePrintText(console);
+        assertEquals(console.toString(), "Jack is awesome");
     }
 }
