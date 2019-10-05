@@ -1,9 +1,8 @@
-package person.sykim.problembank.source;
+package sykim.person.editor;
 
 import org.junit.Test;
 
-import person.sykim.problembank.data.editor.Variable;
-import person.sykim.problembank.data.editor.constant.ConstantText;
+import sykim.person.editor.constant.ConstantText;
 
 import static org.junit.Assert.assertEquals;
 

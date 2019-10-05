@@ -61,7 +61,7 @@ dependencies {
 //    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
 //    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0-alpha02'
 
-    implementation project(":editor")
+    implementation project(path: ':editor')
 
     implementation 'com.google.android.material:material:1.1.0-alpha10'
     implementation 'androidx.appcompat:appcompat:1.1.0'
