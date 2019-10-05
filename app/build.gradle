@@ -46,47 +46,51 @@ android {
 }
 
 def versionLombok = '1.16.20' // fixed. for bugs.
+// stable 1.16.20
+// newest 1.18.10
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13-beta-3'
 
     androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
     androidTestImplementation 'androidx.test:rules:1.3.0-alpha02'
-    androidTestImplementation 'androidx.test:core:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0-alpha02'
+    androidTestImplementation 'androidx.test:core:1.2.1-alpha02'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
+//    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0-alpha02'
+
+//    implementation project(":editor")
 
     implementation 'com.google.android.material:material:1.1.0-alpha10'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:17.2.0'
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-database:19.1.0'
     implementation 'com.google.firebase:firebase-config:19.0.2'
-    implementation 'com.google.firebase:firebase-auth:19.1.0'
+//    implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
 
     // Firebase-UI
-    implementation 'com.firebaseui:firebase-ui-auth:4.0.0'
+//    implementation 'com.firebaseui:firebase-ui-auth:4.0.0'
 
     // Google
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
     // BindView
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
-    implementation 'com.jakewharton:butterknife:10.1.0'
+//    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
+    implementation 'com.jakewharton:butterknife:10.2.0'
 
     // Lombok
-    compileOnly "org.projectlombok:lombok:1.18.10"
-    annotationProcessor "org.projectlombok:lombok:1.18.10"
+    annotationProcessor "org.projectlombok:lombok:$versionLombok"
+    compileOnly "org.projectlombok:lombok:$versionLombok"
 
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'org.jsoup:jsoup:1.12.1'
 
     // Preference
     implementation 'com.pixplicity.easyprefs:library:1.9.0'

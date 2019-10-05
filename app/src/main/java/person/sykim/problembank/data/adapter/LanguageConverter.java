@@ -1,7 +1,7 @@
 package person.sykim.problembank.data.adapter;
 
 import person.sykim.problembank.data.adapter.java.JavaSourceConverter;
-import person.sykim.problembank.data.editor.Source;
+import sykim.person.editor.Source;
 
 public class LanguageConverter {
     public SourceLineList toJavaSource(Source source) {

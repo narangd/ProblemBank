@@ -1,22 +1,21 @@
-package person.sykim.problembank.data.editor.execute;
+package sykim.person.editor.execute;
 
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
-import person.sykim.problembank.R;
-import person.sykim.problembank.data.editor.AbstractHolder;
-import person.sykim.problembank.data.editor.Program;
-import person.sykim.problembank.data.editor.Variable;
-import person.sykim.problembank.data.editor.constant.Constant;
-import person.sykim.problembank.data.editor.constant.ConstantType;
+import sykim.person.editor.AbstractHolder;
+import sykim.person.editor.Program;
+import sykim.person.editor.R;
+import sykim.person.editor.Variable;
+import sykim.person.editor.constant.Constant;
+import sykim.person.editor.constant.ConstantType;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -46,13 +45,13 @@ public class MakeVariable extends Execute {
     }
 
     public static class View extends AbstractHolder<MakeVariable> {
-        @BindView(R.id.name_text_view)
+//        @BindView(R.id.variable_name_text_view)
         TextView nameTextView;
-        @BindView(R.id.value_text_view)
+//        @BindView(R.id.variable_value_text_view)
         TextView valueTextView;
 
         public View(@NonNull ViewGroup parent) {
-            super(parent, R.layout.holder_editor_variable);
+            super(parent, R.layout.holder_variable);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }

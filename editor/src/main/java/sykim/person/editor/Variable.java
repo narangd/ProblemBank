@@ -1,11 +1,11 @@
-package person.sykim.problembank.data.editor;
+package sykim.person.editor;
 
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
-import person.sykim.problembank.data.editor.constant.Constant;
-import person.sykim.problembank.data.editor.constant.Textable;
+import sykim.person.editor.constant.Constant;
+import sykim.person.editor.constant.Textable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

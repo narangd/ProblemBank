@@ -1,4 +1,4 @@
-package person.sykim.problembank.data.editor;
+package sykim.person.editor;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import person.sykim.problembank.data.editor.execute.Executable;
+import sykim.person.editor.execute.Executable;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

@@ -1,4 +1,4 @@
-package person.sykim.problembank.data.editor.json;
+package sykim.person.editor.json;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -9,10 +9,10 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-import person.sykim.problembank.data.editor.execute.Executable;
-import person.sykim.problembank.data.editor.execute.ExecuteType;
-import person.sykim.problembank.data.editor.execute.MakeVariable;
-import person.sykim.problembank.data.editor.execute.PrintConsole;
+import sykim.person.editor.execute.Executable;
+import sykim.person.editor.execute.ExecuteType;
+import sykim.person.editor.execute.MakeVariable;
+import sykim.person.editor.execute.PrintConsole;
 
 public class ExecuteSerializer implements JsonDeserializer<Executable>, JsonSerializer<Executable> {
 

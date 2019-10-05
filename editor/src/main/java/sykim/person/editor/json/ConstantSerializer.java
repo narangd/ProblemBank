@@ -1,4 +1,4 @@
-package person.sykim.problembank.data.editor.json;
+package sykim.person.editor.json;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -9,9 +9,9 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-import person.sykim.problembank.data.editor.constant.Constant;
-import person.sykim.problembank.data.editor.constant.ConstantText;
-import person.sykim.problembank.data.editor.constant.ConstantType;
+import sykim.person.editor.constant.Constant;
+import sykim.person.editor.constant.ConstantText;
+import sykim.person.editor.constant.ConstantType;
 
 public class ConstantSerializer implements JsonDeserializer<Constant>, JsonSerializer<Constant> {
 

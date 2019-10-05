@@ -1,4 +1,4 @@
-package person.sykim.problembank.data.editor.constant;
+package sykim.person.editor.constant;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

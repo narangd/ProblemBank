@@ -1,21 +1,20 @@
-package person.sykim.problembank.data.editor.execute;
+package sykim.person.editor.execute;
 
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
-import person.sykim.problembank.R;
-import person.sykim.problembank.data.editor.AbstractHolder;
-import person.sykim.problembank.data.editor.constant.Constant;
-import person.sykim.problembank.data.editor.constant.ConstantText;
-import person.sykim.problembank.data.editor.constant.Textable;
+import sykim.person.editor.AbstractHolder;
+import sykim.person.editor.R;
+import sykim.person.editor.constant.Constant;
+import sykim.person.editor.constant.ConstantText;
+import sykim.person.editor.constant.Textable;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -52,11 +51,11 @@ public class PrintConsole extends ExecuteList<Constant> {
     }
 
     public static class View extends AbstractHolder<PrintConsole> {
-        @BindView(R.id.text_view)
+//        @BindView(R.id.console_text_view)
         TextView textView;
 
         public View(@NonNull ViewGroup parent) {
-            super(parent, R.layout.holder_editor_console);
+            super(parent, R.layout.holder_console);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }

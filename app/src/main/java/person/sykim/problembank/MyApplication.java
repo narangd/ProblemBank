@@ -7,17 +7,16 @@ import com.orm.SugarApp;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import person.sykim.problembank.data.User;
 import person.sykim.problembank.data.bank.ProblemBank;
-import person.sykim.problembank.data.editor.Function;
-import person.sykim.problembank.data.editor.Source;
-import person.sykim.problembank.data.editor.constant.ConstantText;
-import person.sykim.problembank.data.editor.constant.ConstantType;
-import person.sykim.problembank.data.editor.execute.MakeVariable;
-import person.sykim.problembank.data.editor.execute.PrintConsole;
+import sykim.person.editor.Function;
+import sykim.person.editor.Source;
+import sykim.person.editor.constant.ConstantText;
+import sykim.person.editor.constant.ConstantType;
+import sykim.person.editor.execute.MakeVariable;
+import sykim.person.editor.execute.PrintConsole;
 
 public class MyApplication extends SugarApp {
     private static final String TAG = MyApplication.class.getSimpleName();
@@ -31,9 +30,9 @@ public class MyApplication extends SugarApp {
         Function function = new Function();
         function.getList().add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
         function.getList().add(new PrintConsole(new ConstantText("console test text")));
-        Log.d(TAG, "create json "+Source.getGson().toJson(function));
-        List<Source> list = Source.listAll(Source.class);
-        Log.d(TAG, "saved sources "+list);
+        Log.d(TAG, "create json "+ Source.getGson().toJson(function));
+//        List<Source> list = Source.listAll(Source.class);
+//        Log.d(TAG, "saved sources "+list);
         /*
         no table 에러시 instance run 설정이 켜져있지 않는지 확인해야함.
          */

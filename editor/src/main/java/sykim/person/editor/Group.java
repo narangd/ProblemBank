@@ -1,4 +1,4 @@
-package person.sykim.problembank.data.editor;
+package sykim.person.editor;
 
 import java.util.ArrayList;
 import java.util.List;

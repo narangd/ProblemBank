@@ -1,4 +1,4 @@
-package person.sykim.problembank.data.editor.execute;
+package sykim.person.editor.execute;
 
 public enum ExecuteType {
     MAKE_VARIABLE,

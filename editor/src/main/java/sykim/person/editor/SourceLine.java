@@ -1,4 +1,4 @@
-package person.sykim.problembank.data.editor;
+package sykim.person.editor;
 
 public class SourceLine {
     private String line;

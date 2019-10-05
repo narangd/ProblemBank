@@ -1,8 +1,7 @@
-package person.sykim.problembank.data.editor;
+package sykim.person.editor;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.orm.SugarRecord;
 
 import java.util.Date;
 
@@ -11,10 +10,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import person.sykim.problembank.data.editor.constant.Constant;
-import person.sykim.problembank.data.editor.execute.Executable;
-import person.sykim.problembank.data.editor.json.ConstantSerializer;
-import person.sykim.problembank.data.editor.json.ExecuteSerializer;
+import sykim.person.editor.constant.Constant;
+import sykim.person.editor.execute.Executable;
+import sykim.person.editor.json.ConstantSerializer;
+import sykim.person.editor.json.ExecuteSerializer;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -22,7 +21,7 @@ import person.sykim.problembank.data.editor.json.ExecuteSerializer;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 //@AllArgsConstructor
-public class Source extends SugarRecord {
+public class Source {
 //    List<Group> groups = new ArrayList<>();
     String name;
 //    @Builder.Default

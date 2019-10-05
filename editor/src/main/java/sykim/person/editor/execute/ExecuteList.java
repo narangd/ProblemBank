@@ -1,4 +1,4 @@
-package person.sykim.problembank.data.editor.execute;
+package sykim.person.editor.execute;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
