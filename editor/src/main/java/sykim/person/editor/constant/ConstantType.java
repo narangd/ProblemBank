@@ -3,17 +3,24 @@ package sykim.person.editor.constant;
 public enum ConstantType {
     TEXT,
     BOOLEAN,
-    FLOAT,
-    NUMBER,
+    DECIMAL,
+    INTEGER,
     ;
 
     public Constant make(String value) throws IllegalArgumentException {
-        switch (this) {
-            case TEXT:
-                return new ConstantText(value);
-            case BOOLEAN:
-            case FLOAT:
-            case NUMBER:
+        try {
+            switch (this) {
+                case TEXT:
+                    return new ConstantText(value);
+                case INTEGER:
+                    return new ConstantInteger(value);
+                case DECIMAL:
+                    return new ConstantDecimal(value);
+                case BOOLEAN:
+                    return new ConstantBoolean(value);
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("invalid format");
         }
         throw new IllegalArgumentException("unknown type");
     }

@@ -38,7 +38,6 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 //    public static final int ViewType_Scanner = 40;
 //    public static final int ViewType_Calculate = 50;
 
-//    private SourceLineList lines = new SourceLineList();
     ArrayList<Executable> list = new ArrayList<>();
 
     @NonNull
