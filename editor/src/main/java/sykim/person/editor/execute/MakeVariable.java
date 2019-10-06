@@ -68,7 +68,9 @@ public class MakeVariable extends Execute {
         public void bind(MakeVariable makeVariable) {
             Variable variable = makeVariable.variable;
             nameTextView.setText(variable.getName());
-            valueTextView.setText(variable.getText());
+            // Program.getInstance().getVariable(name)을 써야되나,
+            // 각 holder 에는 프로그램을 작동시키지 않으므로 사용하지 않음.
+            valueTextView.setText(variable.getConstant().getText());
         }
     }
 }

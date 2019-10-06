@@ -31,6 +31,7 @@ import person.sykim.problembank.adapter.EditorAdapter;
 import sykim.person.editor.Source;
 import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.ConstantType;
+import sykim.person.editor.dialog.ConsoleDialog;
 import sykim.person.editor.execute.MakeVariable;
 import sykim.person.editor.execute.PrintConsole;
 
@@ -102,6 +103,9 @@ public class EditorActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.action_run:
+                new ConsoleDialog(this)
+                        .setSource(adapter.getFunction())
+                        .show();
                 return true;
             case R.id.action_save:
                 Source source = new Source();

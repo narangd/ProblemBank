@@ -1,11 +1,9 @@
-package person.sykim.problembank;
+package sykim.person.editor;
 
 import com.google.gson.Gson;
 
 import org.junit.Test;
 
-import sykim.person.editor.Function;
-import sykim.person.editor.Source;
 import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.ConstantType;
 import sykim.person.editor.execute.MakeVariable;

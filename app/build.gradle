@@ -43,6 +43,7 @@ android {
     dataBinding {
         enabled = true
     }
+    buildToolsVersion = '29.0.1'
 }
 
 def versionLombok = '1.18.10' // fixed. for bugs.
@@ -55,15 +56,16 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13-beta-3'
 
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
     androidTestImplementation 'androidx.test:rules:1.3.0-alpha02'
     androidTestImplementation 'androidx.test:core:1.2.1-alpha02'
-//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
-//    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0-alpha02'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0-alpha02'
 
     implementation project(path: ':editor')
 
-    implementation 'com.google.android.material:material:1.1.0-alpha10'
+    implementation 'com.google.android.material:material:1.1.0-beta01'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
 

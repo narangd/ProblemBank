@@ -21,4 +21,8 @@ public class Program {
         memory.clear();
         console = new StringBuilder();
     }
+
+    public String getConsoleText() {
+        return console.toString();
+    }
 }
