@@ -29,9 +29,6 @@ public class MakeVariable extends Execute {
     Variable variable;
 
     // for json
-//    public MakeVariable() {
-//        super(ExecuteType.MAKE_VARIABLE);
-//    }
 
     public MakeVariable(ConstantType type, String name, String value) {
         super(ExecuteType.MAKE_VARIABLE);

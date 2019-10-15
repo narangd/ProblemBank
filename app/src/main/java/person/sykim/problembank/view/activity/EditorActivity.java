@@ -1,11 +1,15 @@
 package person.sykim.problembank.view.activity;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -28,10 +32,12 @@ import butterknife.OnLongClick;
 import butterknife.OnTouch;
 import person.sykim.problembank.R;
 import person.sykim.problembank.adapter.EditorAdapter;
+import sykim.person.editor.Function;
 import sykim.person.editor.Source;
 import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.ConstantType;
 import sykim.person.editor.dialog.ConsoleDialog;
+import sykim.person.editor.dialog.VariableDialog;
 import sykim.person.editor.execute.MakeVariable;
 import sykim.person.editor.execute.PrintConsole;
 
@@ -52,6 +58,8 @@ public class EditorActivity extends AppCompatActivity
 
     EditorAdapter adapter;
 
+    InputMethodManager inputMethodManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +76,10 @@ public class EditorActivity extends AppCompatActivity
         editorRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         editorRecyclerView.setAdapter(adapter = new EditorAdapter());
 
-        adapter.getList().add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
-        adapter.getList().add(new PrintConsole(new ConstantText("console test text")));
+        Function function = new Function("main");
+        function.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
+        function.add(new PrintConsole(new ConstantText("console test text")));
+        adapter.setList(function.getList());
 
 
         fab.setOnDragListener((view, dragEvent) -> {
@@ -77,6 +87,7 @@ public class EditorActivity extends AppCompatActivity
 //            dragEvent.get
             return false;
         });
+
     }
 
     @Override
@@ -164,6 +175,11 @@ public class EditorActivity extends AppCompatActivity
     @OnClick(R.id.fab)
     public void onFab() {
         Log.d(TAG, "onFab: ");
+        // test
+//        MakeVariable makeVariable = (MakeVariable) adapter.getList().get(1);
+        new VariableDialog(this)
+                .setVariable(new MakeVariable(ConstantType.INTEGER, "abc", "123").getVariable())
+                .show();
     }
 
     @OnLongClick(R.id.fab)
@@ -176,14 +192,14 @@ public class EditorActivity extends AppCompatActivity
 //        });
     }
 
-    @OnTouch(R.id.fab)
-    public void onTouchFab(View fab, MotionEvent event) {
-        Log.d(TAG, "onTouchFab: "+event.getAction());
-    }
-
-    @OnFocusChange(R.id.fab)
-    public void onFocusChangeFab(boolean hasFocus) {
-        Log.d(TAG, "onFocusChangeFab: "+hasFocus);
-    }
+//    @OnTouch(R.id.fab)
+//    public void onTouchFab(View fab, MotionEvent event) {
+//        Log.d(TAG, "onTouchFab: "+event.getAction());
+//    }
+//
+//    @OnFocusChange(R.id.fab)
+//    public void onFocusChangeFab(boolean hasFocus) {
+//        Log.d(TAG, "onFocusChangeFab: "+hasFocus);
+//    }
 
 }

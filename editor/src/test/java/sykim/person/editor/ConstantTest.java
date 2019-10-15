@@ -11,20 +11,11 @@ import sykim.person.editor.constant.ConstantText;
 public class ConstantTest {
     @Test
     public void parseTest() {
-        Constant constant;
 
-        constant = new ConstantText("abcd text test !@34");
-        print(constant);
-
-        constant = new ConstantInteger("123");
-        print(constant);
-
-        constant = new ConstantDecimal("123.456");
-        print(constant);
-
-        constant = new ConstantBoolean("true");
-        print(constant);
-
+        print(new ConstantText("abcd text test !@34"));
+        print(new ConstantInteger("123"));
+        print(new ConstantDecimal("123.456"));
+        print(new ConstantBoolean("true"));
 
         // parse error
         String input;
