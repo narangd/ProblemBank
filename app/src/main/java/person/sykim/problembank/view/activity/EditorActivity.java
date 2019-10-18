@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -38,6 +40,7 @@ import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.ConstantType;
 import sykim.person.editor.dialog.ConsoleDialog;
 import sykim.person.editor.dialog.VariableDialog;
+import sykim.person.editor.execute.Executable;
 import sykim.person.editor.execute.MakeVariable;
 import sykim.person.editor.execute.PrintConsole;
 
@@ -80,6 +83,8 @@ public class EditorActivity extends AppCompatActivity
         function.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
         function.add(new PrintConsole(new ConstantText("console test text")));
         adapter.setList(function.getList());
+        adapter.notifyDataSetChanged();
+
 
 
         fab.setOnDragListener((view, dragEvent) -> {
@@ -176,9 +181,13 @@ public class EditorActivity extends AppCompatActivity
     public void onFab() {
         Log.d(TAG, "onFab: ");
         // test
-//        MakeVariable makeVariable = (MakeVariable) adapter.getList().get(1);
         new VariableDialog(this)
-                .setVariable(new MakeVariable(ConstantType.INTEGER, "abc", "123").getVariable())
+                .setVariable((MakeVariable) adapter.getList().get(0))
+                .setListener((makeVariable -> {
+                    List<Executable> list = adapter.getList();
+                    list.add(makeVariable);
+                    adapter.notifyItemInserted(list.size()-1);
+                }))
                 .show();
     }
 

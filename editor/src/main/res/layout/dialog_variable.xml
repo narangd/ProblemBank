@@ -1,106 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:padding="8dp"
-        android:text="Type" />
+    android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/variable_type_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/variable_type_text_button"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:src="@drawable/constant_type_text"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/material_white"
-            android:tag="TEXT"
-            android:text="abc" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:text="Type" />
 
-        <Button
-            android:id="@+id/variable_type_integer_button"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:src="@drawable/constant_type_integer"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/material_white"
-            android:alpha="0.5"
-            android:tag="INTEGER"
-            android:text="123" />
+        <LinearLayout
+            android:id="@+id/variable_type_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
-        <Button
-            android:id="@+id/variable_type_decimal_button"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:src="@drawable/constant_type_decimal"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/material_white"
-            android:alpha="0.5"
-            android:tag="DECIMAL"
-            android:text="3.14" />
+            <Button
+                android:id="@+id/variable_type_text_button"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:src="@drawable/constant_type_text"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/material_white"
+                android:tag="TEXT"
+                android:text="abc" />
 
-        <Button
-            android:id="@+id/variable_type_boolean_button"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:src="@drawable/constant_type_boolean"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@color/material_white"
-            android:alpha="0.5"
-            android:tag="BOOLEAN"
-            android:text="T/F" />
+            <Button
+                android:id="@+id/variable_type_integer_button"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:src="@drawable/constant_type_integer"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/material_white"
+                android:alpha="0.5"
+                android:tag="INTEGER"
+                android:text="123" />
+
+            <Button
+                android:id="@+id/variable_type_decimal_button"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:src="@drawable/constant_type_decimal"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/material_white"
+                android:alpha="0.5"
+                android:tag="DECIMAL"
+                android:text="3.14" />
+
+            <Button
+                android:id="@+id/variable_type_boolean_button"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:src="@drawable/constant_type_boolean"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/material_white"
+                android:alpha="0.5"
+                android:tag="BOOLEAN"
+                android:text="T/F" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:text="Name" />
+
+        <EditText
+            android:id="@+id/variable_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:inputType="text"
+            android:lines="1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:text="Value" />
+
+        <EditText
+            android:id="@+id/variable_value_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:inputType="text"
+            android:lines="1" />
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:padding="8dp"
-        android:text="Name" />
-
-    <EditText
-        android:id="@+id/variable_name_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:inputType="text"
-        android:lines="1" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:padding="8dp"
-        android:text="Value" />
-
-    <EditText
-        android:id="@+id/variable_value_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:inputType="text"
-        android:lines="1" />
-
-</LinearLayout>
+</ScrollView>
