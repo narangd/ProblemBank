@@ -1,5 +1,7 @@
 package sykim.person.editor.constant;
 
+import android.util.Log;
+
 public enum ConstantType {
     TEXT,
     BOOLEAN,
@@ -7,6 +9,12 @@ public enum ConstantType {
     INTEGER,
     ;
 
+    /**
+     * Constant 생성하면서 에러를 발생하여 처리하도록 수정.
+     * @param value
+     * @return
+     * @throws IllegalArgumentException
+     */
     public Constant make(String value) throws IllegalArgumentException {
         try {
             switch (this) {

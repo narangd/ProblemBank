@@ -35,6 +35,10 @@ public class MakeVariable extends Execute {
         Constant constant = type.make(value);
         variable = new Variable(name, constant);
     }
+    public MakeVariable(String name, Constant constant) {
+        super(ExecuteType.MAKE_VARIABLE);
+        variable = new Variable(name, constant);
+    }
 
     private String nameValidation(String name) {
         if (!name.matches("[a-zA-Z_][a-zA-Z_0-9]*")) {

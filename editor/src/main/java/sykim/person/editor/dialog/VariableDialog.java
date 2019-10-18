@@ -2,12 +2,17 @@ package sykim.person.editor.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,9 +40,11 @@ public class VariableDialog {
     Button typeBooleanButton;
 
     @BindView(R2.id.variable_name_edit_text)
-    EditText nameEditText;
+    TextInputEditText nameEditText;
     @BindView(R2.id.variable_value_edit_text)
-    EditText valueEditText;
+    TextInputEditText valueEditText;
+    @BindView(R2.id.variable_value_layout)
+    TextInputLayout valueLayout;
 
     private OnCommitEventListener listener;
 
@@ -53,6 +60,7 @@ public class VariableDialog {
                 .setTitle("Console")
                 .setView(root)
                 .setPositiveButton(android.R.string.ok, null)
+                .setNegativeButton(android.R.string.cancel, null)
                 .create();
 
         // prevent dismiss, 다른 작업을 위한 닫기 방지
@@ -60,6 +68,7 @@ public class VariableDialog {
             Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             button.setOnClickListener(view -> {
                 if (tryCommit()) {
+                    Log.d(TAG, "VariableDialog: dismiss");
                     onCommit();
                     dialog.dismiss();
                 }
@@ -80,7 +89,7 @@ public class VariableDialog {
             R2.id.variable_type_decimal_button,
             R2.id.variable_type_boolean_button
     })
-    void onClick(Button button) {
+    void onConstantTypeClick(Button button) {
         if (prev != null) {
             prev.setAlpha(0.5f);
         }
@@ -93,20 +102,21 @@ public class VariableDialog {
     /**
      * ConstantType을 변경하게 될시 처리하게되는 기능.
      */
-    private boolean validateValue(ConstantType type) {
-        String value = valueEditText.getText().toString();
-        valueEditText.setError(null);
-        valueEditText.requestFocus();
+    private Constant validateValue(ConstantType type) {
+        Editable editable = valueEditText.getText();
+        String value = editable != null ? editable.toString() : "";
+        valueLayout.setError(null);
+        this.type = type;
         try {
-            // 변수생서에 Exception 발생하는지 확인.
-            type.make(value);
+            // 변수생성에 Exception 발생하는지 확인.
+            return type.make(value);
 
         } catch (IllegalArgumentException e) {
-            valueEditText.setError("error:"+e.getMessage()+", value:"+value);
+            valueLayout.setError(e.getMessage() + " :"+value);
+            valueLayout.requestFocus();
             valueEditText.requestFocus();
-            return false;
+            return null;
         }
-        return true;
     }
 
     /**
@@ -121,20 +131,17 @@ public class VariableDialog {
      * 닫기를 시도하므로 Constant 값 검증을 시도함.
      */
     private boolean tryCommit() {
-        return validateValue(type);
+        return validateValue(type) != null;
     }
 
     /**
      * Dialog 닫기가 실행되기 전에 한번 실행된다.
-     *
      */
     private void onCommit() {
-        // 검증은 tryCommit()에서 완료됨.
-        MakeVariable makeVariable = new MakeVariable(type,
-                valueEditText.getText().toString(),
-                nameEditText.getText().toString()
-        );
-        listener.onCommit(makeVariable);
+        Editable editable = nameEditText.getText();
+        String name = editable != null ? editable.toString() : "";
+        Constant constant = validateValue(type);
+        listener.onCommit( new MakeVariable(name, constant) );
     }
 
     public VariableDialog setListener(OnCommitEventListener listener) {
@@ -150,10 +157,10 @@ public class VariableDialog {
     public VariableDialog setVariable(MakeVariable makeVariable) {
         Variable variable = makeVariable.getVariable();
         switch (type = variable.getConstant().getType()) {
-            case TEXT: onClick(typeTextButton); break;
-            case INTEGER: onClick(typeIntegerButton); break;
-            case DECIMAL: onClick(typeDecimalButton); break;
-            case BOOLEAN: onClick(typeBooleanButton); break;
+            case TEXT: onConstantTypeClick(typeTextButton); break;
+            case INTEGER: onConstantTypeClick(typeIntegerButton); break;
+            case DECIMAL: onConstantTypeClick(typeDecimalButton); break;
+            case BOOLEAN: onConstantTypeClick(typeBooleanButton); break;
         }
         
         nameEditText.setText(variable.getName());
