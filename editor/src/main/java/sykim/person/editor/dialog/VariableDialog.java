@@ -3,16 +3,8 @@ package sykim.person.editor.dialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-
-import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -27,9 +19,8 @@ import sykim.person.editor.constant.Constant;
 import sykim.person.editor.constant.ConstantType;
 import sykim.person.editor.execute.MakeVariable;
 
-public class VariableDialog {
+public class VariableDialog extends ExecutableDialog {
     private static final String TAG = "VariableDialog";
-    AlertDialog dialog;
     ConstantType type = ConstantType.TEXT;
 
     @BindView(R2.id.variable_type_text_button)
@@ -50,32 +41,13 @@ public class VariableDialog {
     @BindView(R2.id.variable_value_layout)
     TextInputLayout valueLayout;
 
-    private OnCommitEventListener listener;
-
 
     @SuppressLint("InflateParams")
     public VariableDialog(Context context) {
-        View root = LayoutInflater.from(context)
-                .inflate(R.layout.dialog_variable, null, false);
+        super(context, R.layout.dialog_variable);
         ButterKnife.bind(this, root);
-        dialog = new AlertDialog.Builder(context)
-                .setTitle("Console")
-                .setView(root)
-                .setPositiveButton(android.R.string.ok, null)
-                .setNegativeButton(android.R.string.cancel, null)
-                .create();
 
-        // prevent dismiss, 다른 작업을 위한 닫기 방지
-        dialog.setOnShowListener(dialogInterface -> {
-            Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            button.setOnClickListener(view -> {
-                if (tryCommit()) {
-                    Log.d(TAG, "VariableDialog: dismiss");
-                    onCommit();
-                    dialog.dismiss();
-                }
-            });
-        });
+        dialog.setTitle("Variable");
 
         // default button
         prev = typeTextButton;
@@ -132,23 +104,20 @@ public class VariableDialog {
     /**
      * 닫기를 시도하므로 Constant 값 검증을 시도함.
      */
-    private boolean tryCommit() {
+    @Override
+    protected boolean tryCommit() {
         return validateValue(type) != null;
     }
 
     /**
      * Dialog 닫기가 실행되기 전에 한번 실행된다.
      */
-    private void onCommit() {
+    @Override
+    protected void onCommit() {
         Editable editable = nameEditText.getText();
         String name = editable != null ? editable.toString() : "";
         Constant constant = validateValue(type);
         listener.onCommit( new MakeVariable(name, constant) );
-    }
-
-    public VariableDialog setListener(OnCommitEventListener listener) {
-        this.listener = listener;
-        return this;
     }
 
     /**
@@ -169,13 +138,5 @@ public class VariableDialog {
         valueEditText.setText(variable.getConstant().getText());
 
         return this;
-    }
-
-    public void show() {
-        dialog.show();
-    }
-
-    public interface OnCommitEventListener {
-        void onCommit(MakeVariable makeVariable);
     }
 }
