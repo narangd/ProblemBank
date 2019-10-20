@@ -20,7 +20,7 @@ public abstract class ExecutableDialog<T extends Executable> {
 
     protected OnCommitEventListener<T> listener;
 
-    public ExecutableDialog(Context context, @LayoutRes final int resource) {
+    protected ExecutableDialog(Context context, @LayoutRes final int resource) {
         dialog = new AlertDialog.Builder(context)
                 .setView(root = LayoutInflater.from(context)
                         .inflate(resource, null, false))
@@ -51,7 +51,9 @@ public abstract class ExecutableDialog<T extends Executable> {
      */
     protected abstract void onCommit();
 
-    public final ExecutableDialog setListener(OnCommitEventListener listener) {
+    protected abstract ExecutableDialog setExecutable(T t);
+
+    public final ExecutableDialog setListener(OnCommitEventListener<T> listener) {
         this.listener = listener;
         return this;
     }

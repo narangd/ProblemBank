@@ -180,7 +180,7 @@ public class EditorActivity extends AppCompatActivity
         Log.d(TAG, "onFab: ");
         // test
         new VariableDialog(this)
-                .setVariable((MakeVariable) adapter.getList().get(0))
+                .setExecutable((MakeVariable) adapter.getList().get(0))
                 .setListener((makeVariable -> {
                     List<Executable> list = adapter.getList();
                     list.add(makeVariable);

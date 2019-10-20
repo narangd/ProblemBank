@@ -21,7 +21,6 @@ import sykim.person.editor.execute.MakeVariable;
 
 public class VariableDialog extends ExecutableDialog<MakeVariable> {
     private static final String TAG = "VariableDialog";
-    ConstantType type = ConstantType.TEXT;
 
     @BindView(R2.id.variable_type_text_button)
     MaterialButton typeTextButton;
@@ -32,8 +31,6 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
     @BindView(R2.id.variable_type_boolean_button)
     MaterialButton typeBooleanButton;
 
-    MaterialButton prev;
-
     @BindView(R2.id.variable_name_edit_text)
     TextInputEditText nameEditText;
     @BindView(R2.id.variable_value_edit_text)
@@ -41,6 +38,8 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
     @BindView(R2.id.variable_value_layout)
     TextInputLayout valueLayout;
 
+    private ConstantType type = ConstantType.TEXT;
+    private MaterialButton prev;
 
     @SuppressLint("InflateParams")
     public VariableDialog(Context context) {
@@ -125,7 +124,8 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
      * @param makeVariable
      * @return
      */
-    public VariableDialog setVariable(MakeVariable makeVariable) {
+    @Override
+    public VariableDialog setExecutable(MakeVariable makeVariable) {
         Variable variable = makeVariable.getVariable();
         switch (type = variable.getConstant().getType()) {
             case TEXT: onConstantTypeClick(typeTextButton); break;
