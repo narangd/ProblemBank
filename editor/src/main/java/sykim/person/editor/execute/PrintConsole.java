@@ -1,5 +1,6 @@
 package sykim.person.editor.execute;
 
+import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -10,13 +11,12 @@ import butterknife.ButterKnife;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import sykim.person.editor.AbstractHolder;
 import sykim.person.editor.Program;
 import sykim.person.editor.R;
 import sykim.person.editor.R2;
-import sykim.person.editor.constant.Constant;
+import sykim.person.editor.base.ListListener;
 import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.Textable;
 
@@ -41,6 +41,11 @@ public class PrintConsole extends ExecuteList<Textable> {
         makePrintText( Program.getInstance().console );
     }
 
+    @Override
+    public void openEditor(Context context, ListListener<Executable> listener, int index) {
+
+    }
+
     // todo 데이터 조회시 Variable 처리
     //  Constant는 그대로 가져와도 되나,
     //  Variable은 VariableManager에서 조회하여 반환하여야함.
@@ -58,7 +63,6 @@ public class PrintConsole extends ExecuteList<Textable> {
         public View(@NonNull ViewGroup parent) {
             super(parent, R.layout.holder_console);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
         }
 
         @Override

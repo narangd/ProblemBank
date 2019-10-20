@@ -1,7 +1,5 @@
 package sykim.person.editor.constant;
 
-import android.util.Log;
-
 public enum ConstantType {
     TEXT,
     BOOLEAN,

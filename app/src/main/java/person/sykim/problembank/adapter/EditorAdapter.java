@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 import sykim.person.editor.AbstractHolder;
 import sykim.person.editor.Function;
 import sykim.person.editor.Source;
+import sykim.person.editor.base.ListListener;
 import sykim.person.editor.execute.Executable;
 import sykim.person.editor.execute.MakeVariable;
 import sykim.person.editor.execute.PrintConsole;
@@ -27,7 +28,7 @@ import sykim.person.editor.execute.PrintConsole;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ListListener<Executable> {
     private static final String TAG = EditorAdapter.class.getSimpleName();
 
 
@@ -69,6 +70,7 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         AbstractHolder<Executable> holder = (AbstractHolder) viewHolder;
         Executable executable = list.get(position);
         holder.bind(executable);
+        holder.itemView.setOnClickListener(v -> holder.onClick(this, position, executable));
 
         Log.i(TAG, "onBindViewHolder line["+position+"]:"+executable);
     }
@@ -87,4 +89,35 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         function.getList().addAll(list);
         return function;
     }
+
+
+    /// start ListListener
+
+    @Override
+    public final void add(Executable executable) {
+        list.add(executable);
+        notifyItemInserted(list.size() -1);
+    }
+
+    @Override
+    public final void insert(int i, Executable executable) {
+        list.add(i, executable);
+        notifyItemInserted(i);
+    }
+
+    @Override
+    public final void update(int i, Executable executable) {
+        list.set(i, executable);
+        notifyItemChanged(i);
+    }
+
+    @Override
+    public final Executable delete(int i) {
+        notifyItemRemoved(i);
+        return list.remove(i);
+    }
+
+    /// end ListListener
+
+
 }

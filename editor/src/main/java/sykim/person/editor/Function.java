@@ -1,5 +1,7 @@
 package sykim.person.editor;
 
+import android.content.Context;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import sykim.person.editor.base.ListListener;
 import sykim.person.editor.execute.Executable;
 import sykim.person.editor.execute.Execute;
 import sykim.person.editor.execute.ExecuteList;
@@ -32,5 +35,10 @@ public class Function extends ExecuteList<Executable> {
         for (Executable execute : this) {
             execute.onExecute();
         }
+    }
+
+    @Override
+    public void openEditor(Context context, ListListener<Executable> listener, int index) {
+
     }
 }

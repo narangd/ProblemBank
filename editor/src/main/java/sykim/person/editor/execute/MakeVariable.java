@@ -1,5 +1,6 @@
 package sykim.person.editor.execute;
 
+import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -10,15 +11,16 @@ import butterknife.ButterKnife;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import sykim.person.editor.AbstractHolder;
 import sykim.person.editor.Program;
 import sykim.person.editor.R;
 import sykim.person.editor.R2;
 import sykim.person.editor.Variable;
+import sykim.person.editor.base.ListListener;
 import sykim.person.editor.constant.Constant;
 import sykim.person.editor.constant.ConstantType;
+import sykim.person.editor.dialog.VariableDialog;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -53,6 +55,20 @@ public class MakeVariable extends Execute {
         Program.getInstance().memory.add(variable);
     }
 
+    @Override
+    public void openEditor(Context context, ListListener<Executable> listener, int index) {
+        new VariableDialog(context)
+                .setExecutable(this)
+                .setListener(makeVariable -> {
+                    if (makeVariable != null) {
+                        listener.update(index, makeVariable);
+                    } else {
+                        listener.delete(index);
+                    }
+                })
+                .show();
+    }
+
     public static class View extends AbstractHolder<MakeVariable> {
         @BindView(R2.id.variable_name_text_view)
         TextView nameTextView;
@@ -62,7 +78,6 @@ public class MakeVariable extends Execute {
         public View(@NonNull ViewGroup parent) {
             super(parent, R.layout.holder_variable);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
         }
 
         @Override

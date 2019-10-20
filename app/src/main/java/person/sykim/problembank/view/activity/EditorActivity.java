@@ -1,13 +1,9 @@
 package person.sykim.problembank.view.activity;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -24,14 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnFocusChange;
 import butterknife.OnLongClick;
-import butterknife.OnTouch;
 import person.sykim.problembank.R;
 import person.sykim.problembank.adapter.EditorAdapter;
 import sykim.person.editor.Function;
@@ -40,7 +32,6 @@ import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.ConstantType;
 import sykim.person.editor.dialog.ConsoleDialog;
 import sykim.person.editor.dialog.VariableDialog;
-import sykim.person.editor.execute.Executable;
 import sykim.person.editor.execute.MakeVariable;
 import sykim.person.editor.execute.PrintConsole;
 
@@ -180,12 +171,7 @@ public class EditorActivity extends AppCompatActivity
         Log.d(TAG, "onFab: ");
         // test
         new VariableDialog(this)
-                .setExecutable((MakeVariable) adapter.getList().get(0))
-                .setListener((makeVariable -> {
-                    List<Executable> list = adapter.getList();
-                    list.add(makeVariable);
-                    adapter.notifyItemInserted(list.size()-1);
-                }))
+                .setListener(makeVariable -> adapter.add(makeVariable))
                 .show();
     }
 
