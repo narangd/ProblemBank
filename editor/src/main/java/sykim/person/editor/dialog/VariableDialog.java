@@ -11,6 +11,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -31,13 +33,15 @@ public class VariableDialog {
     ConstantType type = ConstantType.TEXT;
 
     @BindView(R2.id.variable_type_text_button)
-    Button typeTextButton;
+    MaterialButton typeTextButton;
     @BindView(R2.id.variable_type_integer_button)
-    Button typeIntegerButton;
+    MaterialButton typeIntegerButton;
     @BindView(R2.id.variable_type_decimal_button)
-    Button typeDecimalButton;
+    MaterialButton typeDecimalButton;
     @BindView(R2.id.variable_type_boolean_button)
-    Button typeBooleanButton;
+    MaterialButton typeBooleanButton;
+
+    MaterialButton prev;
 
     @BindView(R2.id.variable_name_edit_text)
     TextInputEditText nameEditText;
@@ -47,8 +51,6 @@ public class VariableDialog {
     TextInputLayout valueLayout;
 
     private OnCommitEventListener listener;
-
-    Button prev;
 
 
     @SuppressLint("InflateParams")
@@ -89,12 +91,12 @@ public class VariableDialog {
             R2.id.variable_type_decimal_button,
             R2.id.variable_type_boolean_button
     })
-    void onConstantTypeClick(Button button) {
+    void onConstantTypeClick(MaterialButton button) {
         if (prev != null) {
-            prev.setAlpha(0.5f);
+            prev.setChecked(false);
         }
         prev = button;
-        button.setAlpha(1f);
+        button.setChecked(true);
 
         validateValue(ConstantType.parse(button.getTag()+""));
     }

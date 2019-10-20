@@ -7,72 +7,117 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:padding="16dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            style="?attr/materialButtonToggleGroupStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:text="Type" />
+            android:id="@+id/variable_type_button_group"
+            app:singleSelection="true">
 
-        <LinearLayout
-            android:id="@+id/variable_type_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/variable_type_text_button"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:src="@drawable/constant_type_text"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/material_white"
+                android:checkable="true"
                 android:tag="TEXT"
-                android:text="abc" />
+                android:text="abc"/>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/variable_type_integer_button"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:src="@drawable/constant_type_integer"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/material_white"
-                android:alpha="0.5"
                 android:tag="INTEGER"
-                android:text="123" />
+                android:text="123"/>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/variable_type_decimal_button"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:src="@drawable/constant_type_decimal"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/material_white"
-                android:alpha="0.5"
                 android:tag="DECIMAL"
-                android:text="3.14" />
+                android:text="3.14"/>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/variable_type_boolean_button"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:src="@drawable/constant_type_boolean"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/material_white"
-                android:alpha="0.5"
                 android:tag="BOOLEAN"
-                android:text="T/F" />
+                android:text="T/F"/>
 
-        </LinearLayout>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:padding="8dp"-->
+<!--            android:text="Type" />-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/variable_type_group"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:padding="8dp">-->
+
+<!--            <Button-->
+<!--                android:id="@+id/variable_type_text_button"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:src="@drawable/constant_type_text"-->
+<!--                android:backgroundTint="@color/colorPrimary"-->
+<!--                android:textColor="@color/material_white"-->
+<!--                android:tag="TEXT"-->
+<!--                android:text="abc" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/variable_type_integer_button"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:src="@drawable/constant_type_integer"-->
+<!--                android:backgroundTint="@color/colorPrimary"-->
+<!--                android:textColor="@color/material_white"-->
+<!--                android:alpha="0.5"-->
+<!--                android:tag="INTEGER"-->
+<!--                android:text="123" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/variable_type_decimal_button"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:src="@drawable/constant_type_decimal"-->
+<!--                android:backgroundTint="@color/colorPrimary"-->
+<!--                android:textColor="@color/material_white"-->
+<!--                android:alpha="0.5"-->
+<!--                android:tag="DECIMAL"-->
+<!--                android:text="3.14" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/variable_type_boolean_button"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:src="@drawable/constant_type_boolean"-->
+<!--                android:backgroundTint="@color/colorPrimary"-->
+<!--                android:textColor="@color/material_white"-->
+<!--                android:alpha="0.5"-->
+<!--                android:tag="BOOLEAN"-->
+<!--                android:text="T/F" />-->
+
+<!--        </LinearLayout>-->
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -87,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:lines="1" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -104,6 +150,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:lines="1"/>
+
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
