@@ -80,12 +80,10 @@ public class EditorActivity extends AppCompatActivity
         editorRecyclerView.setAdapter(adapter = new EditorAdapter());
 
         Function function = new Function("main");
-        function.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
+        function.add(new MakeVariable(ConstantType.INTEGER, "abc", "111"));
         function.add(new PrintConsole(new ConstantText("console test text")));
         adapter.setList(function.getList());
         adapter.notifyDataSetChanged();
-
-
 
         fab.setOnDragListener((view, dragEvent) -> {
             Log.d(TAG, "onDrag: "+view+", event:"+dragEvent);

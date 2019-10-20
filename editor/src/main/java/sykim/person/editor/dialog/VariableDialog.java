@@ -19,7 +19,7 @@ import sykim.person.editor.constant.Constant;
 import sykim.person.editor.constant.ConstantType;
 import sykim.person.editor.execute.MakeVariable;
 
-public class VariableDialog extends ExecutableDialog {
+public class VariableDialog extends ExecutableDialog<MakeVariable> {
     private static final String TAG = "VariableDialog";
     ConstantType type = ConstantType.TEXT;
 

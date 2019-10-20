@@ -12,13 +12,13 @@ import androidx.appcompat.app.AlertDialog;
 
 import sykim.person.editor.execute.Executable;
 
-public abstract class ExecutableDialog {
+public abstract class ExecutableDialog<T extends Executable> {
     private static final String TAG = "ExecutableDialog";
 
     protected final AlertDialog dialog;
     protected final View root;
 
-    protected OnCommitEventListener listener;
+    protected OnCommitEventListener<T> listener;
 
     public ExecutableDialog(Context context, @LayoutRes final int resource) {
         dialog = new AlertDialog.Builder(context)
@@ -60,7 +60,7 @@ public abstract class ExecutableDialog {
         dialog.show();
     }
 
-    public interface OnCommitEventListener {
-        void onCommit(Executable t);
+    public interface OnCommitEventListener<T extends Executable> {
+        void onCommit(T t);
     }
 }
