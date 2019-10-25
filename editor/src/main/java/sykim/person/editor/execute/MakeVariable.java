@@ -42,13 +42,6 @@ public class MakeVariable extends Execute {
         variable = new Variable(name, constant);
     }
 
-    private String nameValidation(String name) {
-        if (!name.matches("[a-zA-Z_][a-zA-Z_0-9]*")) {
-            throw new IllegalArgumentException("name이 다르게 입력되었습니다");
-        }
-        return null;
-    }
-
     @Override
     public void onExecute() {
         // add variable to memory

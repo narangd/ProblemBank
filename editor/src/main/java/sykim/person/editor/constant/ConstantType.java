@@ -26,9 +26,9 @@ public enum ConstantType {
                     return new ConstantBoolean(value);
             }
         } catch (Exception e) {
-            throw new IllegalArgumentException("invalid format");
+            throw new IllegalArgumentException("형식에 맞지 않습니다.");
         }
-        throw new IllegalArgumentException("unknown type");
+        throw new IllegalArgumentException("알 수 없는 형식입니다.");
     }
 
     public static ConstantType parse(String typeString) {

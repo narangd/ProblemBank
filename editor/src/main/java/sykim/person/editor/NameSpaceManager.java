@@ -32,6 +32,13 @@ public class NameSpaceManager {
         nameMap.add(name);
     }
 
+    public void change(String from, String to) {
+        if (nameMap.remove(from)) {
+            nameMap.add(to);
+        }
+
+    }
+
     public boolean contains(String name) {
         return nameMap.contains(name);
     }

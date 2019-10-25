@@ -12,6 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import sykim.person.editor.NameSpaceManager;
 import sykim.person.editor.R;
 import sykim.person.editor.R2;
 import sykim.person.editor.Variable;
@@ -37,11 +38,14 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
     TextInputEditText nameEditText;
     @BindView(R2.id.variable_value_edit_text)
     TextInputEditText valueEditText;
+    @BindView(R2.id.variable_name_layout)
+    TextInputLayout nameLayout;
     @BindView(R2.id.variable_value_layout)
     TextInputLayout valueLayout;
 
     private ConstantType type = ConstantType.TEXT;
     private MaterialButton prev;
+    private String prevName;
 
     @SuppressLint("InflateParams")
     public VariableDialog(Context context, ListListener<Executable> listener) {
@@ -50,12 +54,23 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
 
         dialog.setTitle("Variable");
 
+        typeTextButton.setChecked(true);
+
         // default button
         prev = typeTextButton;
     }
 
+    private String getValueFromEditText() {
+        Editable editable = valueEditText.getText();
+        return editable != null ? editable.toString() : "";
+    }
+    private String getNameFromEditText() {
+        Editable editable = nameEditText.getText();
+        return editable != null ? editable.toString() : "";
+    }
+
     /**
-     * Variable 추가,수정할 때 해당 버튼클릭 처리
+     * Variable Type 변경시 value 검증을 다시해야함.
      * @param button
      */
     @OnClick({
@@ -75,15 +90,34 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
     }
 
     /**
+     * 이름 검증.
+     * @return
+     */
+    private String validateName() {
+        final String name = getNameFromEditText();
+        nameLayout.setError(null);
+        if (!name.matches("[a-zA-Z_][a-zA-Z_0-9]*")) {
+            nameLayout.setError("형식에 맞지 않습니다.");
+            return null;
+        }
+        if (getMode() == Mode.NEW && NameSpaceManager.getInstance().contains(name)) {
+            nameLayout.setError("이미 같은 이름이 존재합니다.");
+            return null;
+        }
+        return name;
+    }
+
+    /**
      * ConstantType을 변경하게 될시 처리하게되는 기능.
+     * @param type
+     * @return
      */
     private Constant validateValue(ConstantType type) {
-        Editable editable = valueEditText.getText();
-        String value = editable != null ? editable.toString() : "";
+        final String value = getValueFromEditText();
         valueLayout.setError(null);
         this.type = type;
         try {
-            // 변수생성에 Exception 발생하는지 확인.
+            // Constant 생성에 Exception 발생하는지 확인.
             return type.make(value);
 
         } catch (IllegalArgumentException e) {
@@ -94,9 +128,11 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
         }
     }
 
-    /**
-     * Variable Type 변경시 value 검증을 다시해야함.
-     */
+    @OnTextChanged(R2.id.variable_name_edit_text)
+    void onChangeName() {
+        validateName();
+    }
+
     @OnTextChanged(R2.id.variable_value_edit_text)
     void onChangeValue() {
         validateValue(type);
@@ -107,7 +143,8 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
      */
     @Override
     protected boolean tryCommit() {
-        return validateValue(type) != null;
+        return validateName() != null &&
+                validateValue(type) != null;
     }
 
     /**
@@ -115,10 +152,12 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
      */
     @Override
     protected MakeVariable onCommit() {
-        Editable editable = nameEditText.getText();
-        String name = editable != null ? editable.toString() : "";
-        Constant constant = validateValue(type);
-        return new MakeVariable(name, constant);
+        String name = validateName();
+        MakeVariable makeVariable = new MakeVariable(name, validateValue(type));
+        if (getMode() == Mode.EDIT) {
+            NameSpaceManager.getInstance().change(prevName, name);
+        }
+        return makeVariable;
     }
 
     /**
@@ -129,14 +168,15 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
     @Override
     public void onLoad(MakeVariable makeVariable) {
         Variable variable = makeVariable.getVariable();
+
+        nameEditText.setText(prevName = variable.getName());
+        valueEditText.setText(variable.getConstant().getText());
+
         switch (type = variable.getConstant().getType()) {
             case TEXT: onConstantTypeClick(typeTextButton); break;
             case INTEGER: onConstantTypeClick(typeIntegerButton); break;
             case DECIMAL: onConstantTypeClick(typeDecimalButton); break;
             case BOOLEAN: onConstantTypeClick(typeBooleanButton); break;
         }
-        
-        nameEditText.setText(variable.getName());
-        valueEditText.setText(variable.getConstant().getText());
     }
 }

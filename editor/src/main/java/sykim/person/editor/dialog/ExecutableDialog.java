@@ -16,7 +16,7 @@ import sykim.person.editor.execute.Executable;
 public abstract class ExecutableDialog<T extends Executable> {
     private static final String TAG = "ExecutableDialog";
 
-    private enum Mode {
+    protected enum Mode {
         NEW, EDIT
     }
 
@@ -49,6 +49,10 @@ public abstract class ExecutableDialog<T extends Executable> {
                 }
             });
         });
+    }
+
+    protected Mode getMode() {
+        return mode;
     }
 
     /**
