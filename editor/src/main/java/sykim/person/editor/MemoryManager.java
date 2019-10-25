@@ -13,7 +13,6 @@ import sykim.person.editor.constant.Constant;
 public class MemoryManager {
     /**
      * key: variable
-     * 이름으로 조회되도록 개발되어야함.(변수 이름)
      */
     HashMap<String, Constant> variableMap = new HashMap<>();
     /**
