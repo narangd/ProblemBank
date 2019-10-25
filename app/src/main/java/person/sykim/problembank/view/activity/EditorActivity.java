@@ -27,6 +27,7 @@ import butterknife.OnLongClick;
 import person.sykim.problembank.R;
 import person.sykim.problembank.adapter.EditorAdapter;
 import sykim.person.editor.Function;
+import sykim.person.editor.NameSpaceManager;
 import sykim.person.editor.Source;
 import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.ConstantType;
@@ -70,11 +71,16 @@ public class EditorActivity extends AppCompatActivity
         editorRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         editorRecyclerView.setAdapter(adapter = new EditorAdapter());
 
+        // load from database
+        // (temp) custom function
         Function function = new Function("main");
         function.add(new MakeVariable(ConstantType.INTEGER, "abc", "111"));
         function.add(new PrintConsole(new ConstantText("console test text")));
         adapter.setList(function.getList());
         adapter.notifyDataSetChanged();
+
+        // name to manager
+        NameSpaceManager.getInstance().load(function);
 
         fab.setOnDragListener((view, dragEvent) -> {
             Log.d(TAG, "onDrag: "+view+", event:"+dragEvent);
@@ -169,10 +175,8 @@ public class EditorActivity extends AppCompatActivity
     @OnClick(R.id.fab)
     public void onFab() {
         Log.d(TAG, "onFab: ");
-        // test
-        new VariableDialog(this)
-                .setListener(makeVariable -> adapter.add(makeVariable))
-                .show();
+        // (temp)
+        new VariableDialog(this, adapter).show();
     }
 
     @OnLongClick(R.id.fab)

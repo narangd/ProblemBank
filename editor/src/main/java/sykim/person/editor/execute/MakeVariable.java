@@ -57,15 +57,8 @@ public class MakeVariable extends Execute {
 
     @Override
     public void openEditor(Context context, ListListener<Executable> listener, int index) {
-        new VariableDialog(context)
-                .setExecutable(this)
-                .setListener(makeVariable -> {
-                    if (makeVariable != null) {
-                        listener.update(index, makeVariable);
-                    } else {
-                        listener.delete(index);
-                    }
-                })
+        new VariableDialog(context, listener)
+                .setExecutable(index, this)
                 .show();
     }
 

@@ -15,8 +15,10 @@ import butterknife.OnTextChanged;
 import sykim.person.editor.R;
 import sykim.person.editor.R2;
 import sykim.person.editor.Variable;
+import sykim.person.editor.base.ListListener;
 import sykim.person.editor.constant.Constant;
 import sykim.person.editor.constant.ConstantType;
+import sykim.person.editor.execute.Executable;
 import sykim.person.editor.execute.MakeVariable;
 
 public class VariableDialog extends ExecutableDialog<MakeVariable> {
@@ -42,8 +44,8 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
     private MaterialButton prev;
 
     @SuppressLint("InflateParams")
-    public VariableDialog(Context context) {
-        super(context, R.layout.dialog_variable);
+    public VariableDialog(Context context, ListListener<Executable> listener) {
+        super(context, R.layout.dialog_variable, listener);
         ButterKnife.bind(this, root);
 
         dialog.setTitle("Variable");
@@ -112,11 +114,11 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
      * Dialog 닫기가 실행되기 전에 한번 실행된다.
      */
     @Override
-    protected void onCommit() {
+    protected MakeVariable onCommit() {
         Editable editable = nameEditText.getText();
         String name = editable != null ? editable.toString() : "";
         Constant constant = validateValue(type);
-        listener.onCommit( new MakeVariable(name, constant) );
+        return new MakeVariable(name, constant);
     }
 
     /**
@@ -125,7 +127,7 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
      * @return
      */
     @Override
-    public VariableDialog setExecutable(MakeVariable makeVariable) {
+    public void onLoad(MakeVariable makeVariable) {
         Variable variable = makeVariable.getVariable();
         switch (type = variable.getConstant().getType()) {
             case TEXT: onConstantTypeClick(typeTextButton); break;
@@ -136,7 +138,5 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
         
         nameEditText.setText(variable.getName());
         valueEditText.setText(variable.getConstant().getText());
-
-        return this;
     }
 }

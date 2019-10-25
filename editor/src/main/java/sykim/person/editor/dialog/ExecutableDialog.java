@@ -10,17 +10,23 @@ import android.widget.Button;
 import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AlertDialog;
 
+import sykim.person.editor.base.ListListener;
 import sykim.person.editor.execute.Executable;
 
 public abstract class ExecutableDialog<T extends Executable> {
     private static final String TAG = "ExecutableDialog";
 
+    private enum Mode {
+        NEW, EDIT
+    }
+
     protected final AlertDialog dialog;
     protected final View root;
 
-    protected OnCommitEventListener<T> listener;
+    private Mode mode = Mode.NEW;
+    private int index;
 
-    protected ExecutableDialog(Context context, @LayoutRes final int resource) {
+    protected ExecutableDialog(Context context, @LayoutRes final int resource, ListListener<Executable> listener) {
         dialog = new AlertDialog.Builder(context)
                 .setView(root = LayoutInflater.from(context)
                         .inflate(resource, null, false))
@@ -28,13 +34,17 @@ public abstract class ExecutableDialog<T extends Executable> {
                 .setNegativeButton(android.R.string.cancel, null)
                 .create();
 
-        // prevent dismiss, 다른 작업을 위한 닫기 방지
+        // [Prevent Dialog dismiss], 다른 작업(Executable 검증)을 위한 Dialog 닫기 방지.
         dialog.setOnShowListener(dialogInterface -> {
             Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             button.setOnClickListener(view -> {
                 if (tryCommit()) {
                     Log.d(TAG, "VariableDialog: dismiss");
-                    onCommit();
+
+                    switch (mode) {
+                        case NEW: listener.add(onCommit()); break;
+                        case EDIT: listener.update(index, onCommit()); break;
+                    }
                     dialog.dismiss();
                 }
             });
@@ -49,20 +59,22 @@ public abstract class ExecutableDialog<T extends Executable> {
     /**
      * Dialog 닫기가 실행되기 전에 한번 실행된다.
      */
-    protected abstract void onCommit();
+    protected abstract T onCommit();
 
-    protected abstract ExecutableDialog setExecutable(T t);
+    /**
+     * ExecutableDialog 에서 먼저 모드와 index 저장후 호출되는 함수.
+     * @param t 수정시 사용.
+     */
+    protected abstract void onLoad(T t);
 
-    public final ExecutableDialog setListener(OnCommitEventListener<T> listener) {
-        this.listener = listener;
+    public final ExecutableDialog setExecutable(int index, T t) {
+        this.index = index;
+        mode = Mode.EDIT;
+        onLoad(t);
         return this;
     }
 
     public final void show() {
         dialog.show();
-    }
-
-    public interface OnCommitEventListener<T extends Executable> {
-        void onCommit(T t);
     }
 }
