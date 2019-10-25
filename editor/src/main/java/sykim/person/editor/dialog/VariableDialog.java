@@ -54,8 +54,6 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
 
         dialog.setTitle("Variable");
 
-        typeTextButton.setChecked(true);
-
         // default button
         prev = typeTextButton;
     }
