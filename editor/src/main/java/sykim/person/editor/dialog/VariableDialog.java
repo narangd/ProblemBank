@@ -100,6 +100,20 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
             nameLayout.setError("형식에 맞지 않습니다.");
             return null;
         }
+        switch (getMode()) {
+            case NEW:
+                if (NameSpaceManager.getInstance().contains(name)) {
+                    nameLayout.setError("이미 같은 이름이 존재합니다.");
+                    return null;
+                }
+                break;
+            case EDIT:
+                if (!name.equals(prevName) && NameSpaceManager.getInstance().contains(name)) {
+                    nameLayout.setError("이미 같은 이름이 존재합니다.");
+                    return null;
+                }
+                break;
+        }
         if (getMode() == Mode.NEW && NameSpaceManager.getInstance().contains(name)) {
             nameLayout.setError("이미 같은 이름이 존재합니다.");
             return null;
@@ -154,9 +168,13 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
     protected MakeVariable onCommit() {
         String name = validateName();
         MakeVariable makeVariable = new MakeVariable(name, validateValue(type));
-        if (getMode() == Mode.EDIT) {
-            NameSpaceManager.getInstance().change(prevName, name);
+
+        // NameSpace 에 이름 등록.
+        switch (getMode()) {
+            case NEW: NameSpaceManager.getInstance().add(name); break;
+            case EDIT: NameSpaceManager.getInstance().change(prevName, name); break;
         }
+
         return makeVariable;
     }
 
