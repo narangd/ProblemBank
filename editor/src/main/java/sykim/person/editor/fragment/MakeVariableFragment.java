@@ -51,7 +51,7 @@ public class MakeVariableFragment extends ExecutableFragment<MakeVariable> {
     private MaterialButton prev;
     private String prevName;
 
-    public MakeVariableFragment(Context context, ListListener<Executable> listener) {
+    public MakeVariableFragment(ListListener<Executable> listener) {
         super("Variable", R.layout.dialog_variable, listener);
 
 //        builder.setTitle("Variable");
@@ -202,5 +202,10 @@ public class MakeVariableFragment extends ExecutableFragment<MakeVariable> {
             case DECIMAL: onConstantTypeClick(typeDecimalButton); break;
             case BOOLEAN: onConstantTypeClick(typeBooleanButton); break;
         }
+    }
+
+    @Override
+    public boolean requireAdvance() {
+        return false;
     }
 }

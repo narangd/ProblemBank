@@ -64,6 +64,8 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(v -> dismiss());
         toolbar.setTitle(title);
+        toolbar.inflateMenu(R.menu.make);
+        toolbar.inflateMenu(R.menu.make);
         toolbar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.action_create) {
@@ -122,10 +124,9 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
 
     public final void show(FragmentManager fragmentManager) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         transaction.addToBackStack(null);
-//        super.show(transaction, "dialog");
+
 //        transaction.add(android.R.id.content, this).addToBackStack(null).commit();
         this.show(transaction, "dialog");
     }

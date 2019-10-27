@@ -9,7 +9,6 @@ import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -33,9 +32,9 @@ import sykim.person.editor.Source;
 import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.ConstantType;
 import sykim.person.editor.dialog.ConsoleDialog;
+import sykim.person.editor.dialog.VariableDialog;
 import sykim.person.editor.execute.MakeVariable;
 import sykim.person.editor.execute.PrintConsole;
-import sykim.person.editor.fragment.MakeVariableFragment;
 
 public class EditorActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -177,10 +176,7 @@ public class EditorActivity extends AppCompatActivity
     public void onFab() {
         Log.d(TAG, "onFab: ");
         // (temp)
-//        new VariableDialog(this, adapter).show();
-        new MakeVariableFragment(this, adapter)
-                .setAdvance()
-                .show(getSupportFragmentManager());
+        new VariableDialog(this, adapter).show();
     }
 
     @OnLongClick(R.id.fab)

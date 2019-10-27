@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -194,5 +197,10 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
             case DECIMAL: onConstantTypeClick(typeDecimalButton); break;
             case BOOLEAN: onConstantTypeClick(typeBooleanButton); break;
         }
+    }
+
+    @Override
+    public boolean requireAdvance() {
+        return true;
     }
 }

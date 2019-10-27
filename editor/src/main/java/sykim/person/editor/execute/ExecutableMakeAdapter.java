@@ -21,4 +21,9 @@ public interface ExecutableMakeAdapter<T extends Executable> {
      * @param t 수정시 사용.
      */
     void onLoad(T t);
+
+    /**
+     * Dialog 로 실행할시 너무 많은 정보를 수정하게 되는 경우 FullDialog 로 이동하게 처리하는 여부
+     */
+    boolean requireAdvance();
 }
