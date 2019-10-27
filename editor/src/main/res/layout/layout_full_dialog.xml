@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:fitsSystemWindows="false"
     android:background="@color/android_default_background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -15,9 +14,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:foregroundTint="@color/material_white"
             app:navigationIcon="@drawable/ic_close"
             app:titleTextColor="@color/material_white"
             app:menu="@menu/make"
+            app:theme="@style/ActionBarTheme"
             android:background="?attr/colorPrimary">
 
 <!--            <LinearLayout-->

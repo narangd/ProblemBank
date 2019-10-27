@@ -28,4 +28,15 @@
         <item name="android:textColor">@android:color/holo_red_light</item>
         <!--        <item name="android:textSize">14sp</item>-->
     </style>
+
+    <style name="ActionBarTheme" _parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/material_white</item>
+    </style>
+
+    <style name="FullDialogTheme" _parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

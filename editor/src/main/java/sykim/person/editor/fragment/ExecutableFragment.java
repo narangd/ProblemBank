@@ -2,11 +2,17 @@ package sykim.person.editor.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -84,6 +90,13 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
 //            });
 //        });
 //        return dialog;
+        // creating the fullscreen dialog
+//        final Dialog dialog = new Dialog(getActivity());
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setContentView(root);
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//        return dialog;
     }
 
     @Nullable
@@ -91,7 +104,6 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: ");
         View root = inflater.inflate(R.layout.layout_full_dialog, container, false);
-//        builder.setView(root);
         ViewGroup layout = root.findViewById(R.id.dialog_scroll_view);
         layout.addView(this.root = inflater.inflate(resource, container, false));
         return root;
@@ -103,24 +115,38 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(this::onClose);
         toolbar.setTitle(title);
-//        toolbar.inflateMenu(R.menu.make);
         toolbar.setOnMenuItemClickListener(item -> {
-            dismiss();
+            int itemId = item.getItemId();
+            if (itemId == R.id.action_create) {
+                if (tryCommit()) {
+                    listener.add(onCommit());
+                    dismiss();
+                }
+            } else if (itemId == R.id.action_update) {
+                if (tryCommit()) {
+                    listener.update(index, onCommit());
+                    dismiss();
+                }
+            }
+//            else if (itemId == R.id.)
             return true;
         });
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            dialog.getWindow().setLayout(width, height);
-        }
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.FullDialogTheme);
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (mode == Mode.EDIT) {
+            menu.findItem(R.id.action_create).setVisible(false);
+            menu.findItem(R.id.action_update).setVisible(true);
+        }
+    }
 
     void onClose(View view) {
         Log.d(TAG, "onClose: ");
@@ -152,9 +178,10 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
     public final void show(FragmentManager fragmentManager) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         transaction.addToBackStack(null);
 //        super.show(transaction, "dialog");
-        transaction.add(android.R.id.content, this).addToBackStack(null).commit();
+//        transaction.add(android.R.id.content, this).addToBackStack(null).commit();
+        this.show(transaction, "dialog");
     }
 }
