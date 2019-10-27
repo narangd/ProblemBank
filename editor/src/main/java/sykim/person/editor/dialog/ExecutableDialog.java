@@ -10,10 +10,14 @@ import android.widget.Button;
 import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import sykim.person.editor.R;
 import sykim.person.editor.base.ListListener;
 import sykim.person.editor.execute.Executable;
+import sykim.person.editor.execute.ExecutableMakeAdapter;
 
-public abstract class ExecutableDialog<T extends Executable> {
+public abstract class ExecutableDialog<T extends Executable> implements ExecutableMakeAdapter<T> {
     private static final String TAG = "ExecutableDialog";
 
     protected enum Mode {
@@ -27,11 +31,21 @@ public abstract class ExecutableDialog<T extends Executable> {
     private int index;
 
     protected ExecutableDialog(Context context, @LayoutRes final int resource, ListListener<Executable> listener) {
-        dialog = new AlertDialog.Builder(context)
+        dialog = new MaterialAlertDialogBuilder(context, R.style.ExecutableDialogTheme)
                 .setView(root = LayoutInflater.from(context)
                         .inflate(resource, null, false))
                 .setPositiveButton(android.R.string.ok, null)
                 .setNegativeButton(android.R.string.cancel, null)
+                .setNeutralButton(R.string.delete, (dialog, which) -> {
+                    new MaterialAlertDialogBuilder(context)
+                            .setTitle("Confirm")
+                            .setMessage("삭제하시겠습니까?")
+                            .setPositiveButton(android.R.string.ok, ((dialog1, which1) -> {
+                                listener.delete(index);
+                            }))
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .show();
+                })
                 .create();
 
         // [Prevent Dialog dismiss], 다른 작업(Executable 검증)을 위한 Dialog 닫기 방지.
@@ -54,22 +68,6 @@ public abstract class ExecutableDialog<T extends Executable> {
     protected Mode getMode() {
         return mode;
     }
-
-    /**
-     * 닫기를 시도하므로 Constant 값 검증을 시도함.
-     */
-    protected abstract boolean tryCommit();
-
-    /**
-     * Dialog 닫기가 실행되기 전에 한번 실행된다.
-     */
-    protected abstract T onCommit();
-
-    /**
-     * ExecutableDialog 에서 먼저 모드와 index 저장후 호출되는 함수.
-     * @param t 수정시 사용.
-     */
-    protected abstract void onLoad(T t);
 
     public final ExecutableDialog setExecutable(int index, T t) {
         this.index = index;
