@@ -17,6 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -123,7 +124,7 @@ public class EditorActivity extends AppCompatActivity
                 source.setName("Preview");
                 String json = Source.getGsonPretty().toJson(adapter.getFunction());
                 source.setJson(json);
-                new AlertDialog.Builder(this)
+                new MaterialAlertDialogBuilder(this)
                         .setTitle("Save source?")
                         .setMessage(json)
                         .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {

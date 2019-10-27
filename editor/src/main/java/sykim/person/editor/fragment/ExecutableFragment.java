@@ -22,6 +22,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import sykim.person.editor.R;
 import sykim.person.editor.base.ListListener;
 import sykim.person.editor.execute.Executable;
@@ -44,59 +46,6 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
         this.title = title;
         this.resource = resource;
         this.listener = listener;
-//        builder = new MaterialAlertDialogBuilder(context)
-//                .setView(root = LayoutInflater.from(context)
-//                        .inflate(resource, null, false))
-//                .setPositiveButton(android.R.string.ok, null)
-//                .setNegativeButton(android.R.string.cancel, null);
-//        new MaterialAlertDialogBuilder(context)
-//                .setTitle("Confirm")
-//                .setMessage("삭제하시겠습니까?")
-//                .setPositiveButton(android.R.string.ok, ((dialog1, which1) -> {
-//                    listener.delete(index);
-//                }))
-//                .setNegativeButton(android.R.string.cancel, null)
-//                .show();
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateDialog: ");
-
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        return dialog;
-
-//        if (builder == null) {
-//            return dialog;
-//        }
-
-//        AlertDialog dialog = builder.create();
-//
-//        // [Prevent Dialog dismiss], 다른 작업(Executable 검증)을 위한 Dialog 닫기 방지.
-//        dialog.setOnShowListener(dialogInterface -> {
-//            Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-//            button.setOnClickListener(view -> {
-//                if (tryCommit()) {
-//                    Log.d(TAG, "VariableDialog: dismiss");
-//
-//                    switch (mode) {
-//                        case NEW: listener.add(onCommit()); break;
-//                        case EDIT: listener.update(index, onCommit()); break;
-//                    }
-//                    dialog.dismiss();
-//                }
-//            });
-//        });
-//        return dialog;
-        // creating the fullscreen dialog
-//        final Dialog dialog = new Dialog(getActivity());
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setContentView(root);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        return dialog;
     }
 
     @Nullable
@@ -113,7 +62,7 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(this::onClose);
+        toolbar.setNavigationOnClickListener(v -> dismiss());
         toolbar.setTitle(title);
         toolbar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
@@ -122,13 +71,23 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
                     listener.add(onCommit());
                     dismiss();
                 }
-            } else if (itemId == R.id.action_update) {
+            }
+            else if (itemId == R.id.action_update) {
                 if (tryCommit()) {
                     listener.update(index, onCommit());
                     dismiss();
                 }
             }
-//            else if (itemId == R.id.)
+            else if (itemId == R.id.action_delete) {
+                new MaterialAlertDialogBuilder(view.getContext())
+                        .setMessage("삭제하시겠습니까?")
+                        .setPositiveButton(android.R.string.ok, ((dialog, which) -> {
+                            listener.delete(index);
+                            dismiss();
+                        }))
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+            }
             return true;
         });
     }
@@ -145,33 +104,19 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
         if (mode == Mode.EDIT) {
             menu.findItem(R.id.action_create).setVisible(false);
             menu.findItem(R.id.action_update).setVisible(true);
+            menu.findItem(R.id.action_delete).setVisible(true);
         }
     }
 
-    void onClose(View view) {
-        Log.d(TAG, "onClose: ");
-        dismiss();
-    }
-
-    protected Mode getMode() {
+    protected final Mode getMode() {
         return mode;
     }
-    protected ListListener<Executable> getListener() { return listener; }
-
-    public void onAdvance() {
-
-    }
+    protected final ListListener<Executable> getListener() { return listener; }
 
     public final ExecutableFragment<T> setExecutable(int index, T t) {
         this.index = index;
         mode = Mode.EDIT;
         onLoad(t);
-        return this;
-    }
-
-    public ExecutableFragment<T> setAdvance() {
-//        builder.setNeutralButton(R.string.advance, (dialog, which) -> onAdvance());
-//        android.R.style.Theme_Black_NoTitleBar_Fullscreen
         return this;
     }
 

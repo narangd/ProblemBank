@@ -203,11 +203,4 @@ public class MakeVariableFragment extends ExecutableFragment<MakeVariable> {
             case BOOLEAN: onConstantTypeClick(typeBooleanButton); break;
         }
     }
-
-    @Override
-    public void onAdvance() {
-        new MakeVariableFragment(getContext(), getListener())
-                .setAdvance()
-                .show(getFragmentManager());
-    }
 }

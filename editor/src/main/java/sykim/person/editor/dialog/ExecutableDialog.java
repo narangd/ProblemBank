@@ -31,20 +31,12 @@ public abstract class ExecutableDialog<T extends Executable> implements Executab
     private int index;
 
     protected ExecutableDialog(Context context, @LayoutRes final int resource, ListListener<Executable> listener) {
-        dialog = new MaterialAlertDialogBuilder(context, R.style.ExecutableDialogTheme)
+        dialog = new MaterialAlertDialogBuilder(context)
                 .setView(root = LayoutInflater.from(context)
                         .inflate(resource, null, false))
                 .setPositiveButton(android.R.string.ok, null)
                 .setNegativeButton(android.R.string.cancel, null)
-                .setNeutralButton(R.string.delete, (dialog, which) -> {
-                    new MaterialAlertDialogBuilder(context)
-                            .setTitle("Confirm")
-                            .setMessage("삭제하시겠습니까?")
-                            .setPositiveButton(android.R.string.ok, ((dialog1, which1) -> {
-                                listener.delete(index);
-                            }))
-                            .setNegativeButton(android.R.string.cancel, null)
-                            .show();
+                .setNeutralButton(R.string.advance, (dialog, which) -> {
                 })
                 .create();
 
