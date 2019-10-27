@@ -32,9 +32,9 @@ import sykim.person.editor.Source;
 import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.ConstantType;
 import sykim.person.editor.dialog.ConsoleDialog;
-import sykim.person.editor.dialog.VariableDialog;
 import sykim.person.editor.execute.MakeVariable;
 import sykim.person.editor.execute.PrintConsole;
+import sykim.person.editor.fragment.MakeVariableFragment;
 
 public class EditorActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -176,7 +176,10 @@ public class EditorActivity extends AppCompatActivity
     public void onFab() {
         Log.d(TAG, "onFab: ");
         // (temp)
-        new VariableDialog(this, adapter).show();
+//        new VariableDialog(this, adapter).show();
+        new MakeVariableFragment(this, adapter)
+                .setAdvance()
+                .show(getSupportFragmentManager());
     }
 
     @OnLongClick(R.id.fab)

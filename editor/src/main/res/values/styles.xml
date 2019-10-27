@@ -16,4 +16,27 @@
     <style name="AppBorderless" parent="AppTheme">
         <item name="android:colorControlHighlight">#33ffffff</item>
     </style>
+
+    <style name="ExecutableDialogTheme">
+        <!--        <item name="buttonBarPositiveButtonStyle">@style/Alert.Button.Positive</item>-->
+        <item name="buttonBarNeutralButtonStyle">@style/ExecutableDialog.Button.Delete</item>
+    </style>
+
+    <style name="ExecutableDialog.Button.Delete" parent="Widget.MaterialComponents.Button.TextButton">
+        <!--        <item name="backgroundTint">@android:color/transparent</item>-->
+        <item name="rippleColor">@android:color/holo_red_dark</item>
+        <item name="android:textColor">@android:color/holo_red_light</item>
+        <!--        <item name="android:textSize">14sp</item>-->
+    </style>
+
+    <style name="ActionBarTheme" _parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/material_white</item>
+    </style>
+
+    <style name="FullDialogTheme" _parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

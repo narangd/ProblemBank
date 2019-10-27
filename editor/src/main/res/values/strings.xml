@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Editor</string>
+    <string name="delete">Delete</string>
+    <string name="advance">Advance</string>
 </resources>

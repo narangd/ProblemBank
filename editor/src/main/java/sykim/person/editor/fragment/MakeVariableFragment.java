@@ -1,8 +1,12 @@
-package sykim.person.editor.dialog;
+package sykim.person.editor.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Bundle;
 import android.text.Editable;
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -22,8 +26,8 @@ import sykim.person.editor.constant.ConstantType;
 import sykim.person.editor.execute.Executable;
 import sykim.person.editor.execute.MakeVariable;
 
-public class VariableDialog extends ExecutableDialog<MakeVariable> {
-    private static final String TAG = "VariableDialog";
+public class MakeVariableFragment extends ExecutableFragment<MakeVariable> {
+    private static final String TAG = "MakeVariableFragment";
 
     @BindView(R2.id.variable_type_text_button)
     MaterialButton typeTextButton;
@@ -47,15 +51,19 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
     private MaterialButton prev;
     private String prevName;
 
-    @SuppressLint("InflateParams")
-    public VariableDialog(Context context, ListListener<Executable> listener) {
-        super(context, R.layout.dialog_variable, listener);
-        ButterKnife.bind(this, root);
+    public MakeVariableFragment(Context context, ListListener<Executable> listener) {
+        super("Variable", R.layout.dialog_variable, listener);
 
-        dialog.setTitle("Variable");
+//        builder.setTitle("Variable");
 
         // default button
         prev = typeTextButton;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, root);
     }
 
     private String getValueFromEditText() {
@@ -194,5 +202,12 @@ public class VariableDialog extends ExecutableDialog<MakeVariable> {
             case DECIMAL: onConstantTypeClick(typeDecimalButton); break;
             case BOOLEAN: onConstantTypeClick(typeBooleanButton); break;
         }
+    }
+
+    @Override
+    public void onAdvance() {
+        new MakeVariableFragment(getContext(), getListener())
+                .setAdvance()
+                .show(getFragmentManager());
     }
 }
