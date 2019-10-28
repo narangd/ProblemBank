@@ -30,6 +30,10 @@ public abstract class ExecutableMakeAdapter<T extends Executable> {
         onLoad(t);
     }
 
+    /**
+     * ButterKnife 처리를 위한 함수 호출 처리
+     * @param root
+     */
     public abstract void bind(View root);
 
     /**

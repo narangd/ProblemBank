@@ -65,7 +65,6 @@ public class ExecutableFragment<T extends Executable> extends DialogFragment {
         toolbar.setNavigationOnClickListener(v -> dismiss());
         toolbar.setTitle(adapter.getTitle());
         toolbar.inflateMenu(R.menu.make);
-        toolbar.inflateMenu(R.menu.make);
         toolbar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.action_create) {
@@ -110,7 +109,7 @@ public class ExecutableFragment<T extends Executable> extends DialogFragment {
         }
     }
 
-    public final void show(FragmentManager fragmentManager) {
+    private void show(FragmentManager fragmentManager) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         transaction.addToBackStack(null);

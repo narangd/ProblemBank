@@ -2,7 +2,6 @@ package sykim.person.editor.execute;
 
 import android.content.Context;
 import android.text.Editable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -258,7 +257,7 @@ public class MakeVariable extends Execute {
 
         @Override
         public boolean requireAdvance() {
-            return false;
+            return true;
         }
     }
 }

@@ -83,7 +83,7 @@ public class ExecutableDialog <T extends Executable> {
         });
     }
 
-    public final void show() {
+    private void show() {
         dialog.show();
     }
 }
