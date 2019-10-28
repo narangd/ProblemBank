@@ -1,20 +1,13 @@
 package sykim.person.editor.fragment;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -29,22 +22,27 @@ import sykim.person.editor.base.ListListener;
 import sykim.person.editor.execute.Executable;
 import sykim.person.editor.execute.ExecutableMakeAdapter;
 
-public abstract class ExecutableFragment<T extends Executable> extends DialogFragment implements ExecutableMakeAdapter<T> {
+public class ExecutableFragment<T extends Executable> extends DialogFragment {
     private static final String TAG = "ExecutableFragment";
 
-//    MaterialAlertDialogBuilder builder;
+    public static <T extends Executable> void create(FragmentManager fragmentManager, ExecutableMakeAdapter<T> adapter, ListListener<Executable> listener) {
+        new ExecutableFragment<>(adapter, listener)
+                .show(fragmentManager);
+    }
 
-    private int resource;
-    private ListListener<Executable> listener;
-    protected View root;
+    public static <T extends Executable> void edit(
+            FragmentManager fragmentManager, ExecutableMakeAdapter<T> adapter, ListListener<Executable> listener,
+            int index, T executable) {
+        ExecutableFragment<T> dialog = new ExecutableFragment<>(adapter, listener);
+        dialog.adapter.setExecutable(index, executable);
+        dialog.show(fragmentManager);
+    }
 
-    private final String title;
-    private Mode mode = Mode.NEW;
-    private int index;
+    private final ExecutableMakeAdapter<T> adapter;
+    private final ListListener<Executable> listener;
 
-    protected ExecutableFragment(String title, @LayoutRes final int resource, ListListener<Executable> listener) {
-        this.title = title;
-        this.resource = resource;
+    private ExecutableFragment(ExecutableMakeAdapter<T> adapter, ListListener<Executable> listener) {
+        this.adapter = adapter;
         this.listener = listener;
     }
 
@@ -53,8 +51,10 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: ");
         View root = inflater.inflate(R.layout.layout_full_dialog, container, false);
-        ViewGroup layout = root.findViewById(R.id.dialog_scroll_view);
-        layout.addView(this.root = inflater.inflate(resource, container, false));
+        View content = inflater.inflate(adapter.getResource(), container, false);
+        ViewGroup layout = root.findViewById(R.id.dialog_content_layout);
+        layout.addView(content);
+        adapter.bind(content);
         return root;
     }
 
@@ -63,20 +63,20 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
         super.onViewCreated(view, savedInstanceState);
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(v -> dismiss());
-        toolbar.setTitle(title);
+        toolbar.setTitle(adapter.getTitle());
         toolbar.inflateMenu(R.menu.make);
         toolbar.inflateMenu(R.menu.make);
         toolbar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.action_create) {
-                if (tryCommit()) {
-                    listener.add(onCommit());
+                if (adapter.tryCommit()) {
+                    listener.add(adapter.onCommit());
                     dismiss();
                 }
             }
             else if (itemId == R.id.action_update) {
-                if (tryCommit()) {
-                    listener.update(index, onCommit());
+                if (adapter.tryCommit()) {
+                    listener.update(adapter.getIndex(), adapter.onCommit());
                     dismiss();
                 }
             }
@@ -84,7 +84,7 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
                 new MaterialAlertDialogBuilder(view.getContext())
                         .setMessage("삭제하시겠습니까?")
                         .setPositiveButton(android.R.string.ok, ((dialog, which) -> {
-                            listener.delete(index);
+                            listener.delete(adapter.getIndex());
                             dismiss();
                         }))
                         .setNegativeButton(android.R.string.cancel, null)
@@ -103,23 +103,11 @@ public abstract class ExecutableFragment<T extends Executable> extends DialogFra
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if (mode == Mode.EDIT) {
+        if (adapter.getMode() == ExecutableMakeAdapter.Mode.EDIT) {
             menu.findItem(R.id.action_create).setVisible(false);
             menu.findItem(R.id.action_update).setVisible(true);
             menu.findItem(R.id.action_delete).setVisible(true);
         }
-    }
-
-    protected final Mode getMode() {
-        return mode;
-    }
-    protected final ListListener<Executable> getListener() { return listener; }
-
-    public final ExecutableFragment<T> setExecutable(int index, T t) {
-        this.index = index;
-        mode = Mode.EDIT;
-        onLoad(t);
-        return this;
     }
 
     public final void show(FragmentManager fragmentManager) {

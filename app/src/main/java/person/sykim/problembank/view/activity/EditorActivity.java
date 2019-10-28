@@ -32,7 +32,7 @@ import sykim.person.editor.Source;
 import sykim.person.editor.constant.ConstantText;
 import sykim.person.editor.constant.ConstantType;
 import sykim.person.editor.dialog.ConsoleDialog;
-import sykim.person.editor.dialog.VariableDialog;
+import sykim.person.editor.dialog.ExecutableDialog;
 import sykim.person.editor.execute.MakeVariable;
 import sykim.person.editor.execute.PrintConsole;
 
@@ -176,7 +176,7 @@ public class EditorActivity extends AppCompatActivity
     public void onFab() {
         Log.d(TAG, "onFab: ");
         // (temp)
-        new VariableDialog(this, adapter).show();
+        ExecutableDialog.create(this, new MakeVariable.Adapter(), adapter);
     }
 
     @OnLongClick(R.id.fab)

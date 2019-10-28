@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -18,71 +17,70 @@ import sykim.person.editor.R;
 import sykim.person.editor.base.ListListener;
 import sykim.person.editor.execute.Executable;
 import sykim.person.editor.execute.ExecutableMakeAdapter;
-import sykim.person.editor.fragment.MakeVariableFragment;
+import sykim.person.editor.fragment.ExecutableFragment;
 
-public abstract class ExecutableDialog<T extends Executable> implements ExecutableMakeAdapter<T> {
+public class ExecutableDialog <T extends Executable> {
     private static final String TAG = "ExecutableDialog";
 
-    protected enum Mode {
-        NEW, EDIT
+    public static <T extends Executable> void create(Context context, ExecutableMakeAdapter<T> adapter, ListListener<Executable> listener) {
+        new ExecutableDialog<>(context, adapter, listener).show();
+    }
+
+    public static <T extends Executable> void edit(
+            Context context, ExecutableMakeAdapter<T> adapter, ListListener<Executable> listener,
+            int index, T executable) {
+        ExecutableDialog<T> dialog = new ExecutableDialog<>(context, adapter, listener);
+        dialog.adapter.setExecutable(index, executable);
+        dialog.show();
     }
 
     protected final AlertDialog dialog;
-    protected final View root;
 
-    private Mode mode = Mode.NEW;
-    private int index;
+    private final ExecutableMakeAdapter<T> adapter;
 
-    protected ExecutableDialog(Context context, @LayoutRes final int resource, ListListener<Executable> listener) {
+
+    private ExecutableDialog(Context context, ExecutableMakeAdapter<T> adapter, ListListener<Executable> listener) {
+        this.adapter = adapter;
+        View root;
         dialog = new MaterialAlertDialogBuilder(context)
                 .setView(root = LayoutInflater.from(context)
-                        .inflate(resource, null, false))
+                        .inflate(adapter.getResource(), null, false))
                 .setPositiveButton(android.R.string.ok, null)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setNeutralButton(R.string.advance, (dialog, which) -> {
-//                    context.get
                     if (context instanceof FragmentActivity) {
                         FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
                         FragmentTransaction transaction = fragmentManager.beginTransaction();
                         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                         transaction.addToBackStack(null);
-                        new MakeVariableFragment(listener)
-                                .show(transaction, "dialog");
-                        dialog.dismiss();
+                        ExecutableFragment.create(fragmentManager, adapter, listener);
                     } else {
                         Log.e(TAG, "ExecutableDialog: context not instanceof FragmentActivity");
                     }
+                    dialog.dismiss();
                 })
                 .create();
+
+        adapter.bind(root);
 
         // [Prevent Dialog dismiss], 다른 작업(Executable 검증)을 위한 Dialog 닫기 방지.
         dialog.setOnShowListener(dialogInterface -> {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
-                if (tryCommit()) {
+                if (adapter.tryCommit()) {
                     Log.d(TAG, "VariableDialog: dismiss");
 
-                    switch (mode) {
-                        case NEW: listener.add(onCommit()); break;
-                        case EDIT: listener.update(index, onCommit()); break;
+                    switch (adapter.getMode()) {
+                        case NEW: listener.add(adapter.onCommit()); break;
+                        case EDIT: listener.update(adapter.getIndex(), adapter.onCommit()); break;
                     }
                     dialog.dismiss();
                 }
             });
-            if (!requireAdvance()) {
+            // Builder 에서 Neutral 버튼을 생성하고, 이곳에서 필요하지 않을시 보이지 않게 처리함.
+            if (!adapter.requireAdvance()) {
                 dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setVisibility(View.GONE);
             }
         });
-    }
-
-    protected final Mode getMode() {
-        return mode;
-    }
-
-    public final ExecutableDialog setExecutable(int index, T t) {
-        this.index = index;
-        mode = Mode.EDIT;
-        onLoad(t);
-        return this;
     }
 
     public final void show() {

@@ -56,11 +56,11 @@ public class PrintConsole extends ExecuteList<Textable> {
         return builder.toString();
     }
 
-    public static class View extends AbstractHolder<PrintConsole> {
+    public static class Holder extends AbstractHolder<PrintConsole> {
         @BindView(R2.id.console_text_view)
         TextView textView;
 
-        public View(@NonNull ViewGroup parent) {
+        public Holder(@NonNull ViewGroup parent) {
             super(parent, R.layout.holder_console);
             ButterKnife.bind(this, itemView);
         }

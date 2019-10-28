@@ -46,9 +46,9 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType) {
             case ViewType_PrintConsole:
-                return new PrintConsole.View(parent);
+                return new PrintConsole.Holder(parent);
             case ViewType_MakeVariable:
-                return new MakeVariable.View(parent);
+                return new MakeVariable.Holder(parent);
         }
         throw new Resources.NotFoundException();
     }
@@ -72,7 +72,7 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         holder.bind(executable);
         holder.itemView.setOnClickListener(v -> holder.onClick(this, position, executable));
 
-        Log.i(TAG, "onBindViewHolder line["+position+"]:"+executable);
+        Log.i(TAG, "onBindViewHolder line[" + position + "]:" + executable);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public final void add(Executable executable) {
         list.add(executable);
-        notifyItemInserted(list.size() -1);
+        notifyItemInserted(list.size() - 1);
     }
 
     @Override
