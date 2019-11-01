@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import person.sykim.problembank.R;
-import sykim.person.editor.Source;
+import sykim.person.editor.SourceJson;
 
 
 /**
@@ -24,10 +24,10 @@ import sykim.person.editor.Source;
 public class SourceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = SourceAdapter.class.getSimpleName();
 
-    private ArrayList<Source> sources = new ArrayList<>();
+    private ArrayList<SourceJson> sources = new ArrayList<>();
 
     public SourceAdapter () {
-        Source source = new Source();
+        SourceJson source = new SourceJson();
 //        source.setPrev("public class Test {\n" +
 //                "  public static void main(String[] args) {\n" +
 //                "    System.out.println(\"Hello Programing World\");\n" +
@@ -55,7 +55,7 @@ public class SourceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         SourceHolder sourceHolder  = (SourceHolder) holder;
-        Source source = sources.get(position);
+        SourceJson source = sources.get(position);
 //        sourceHolder.sourcePreviewTextView.setText(source.getPrev());
         sourceHolder.setOnClickListener((view) -> {});
         Log.i(TAG, "onBindViewHolder "+position);

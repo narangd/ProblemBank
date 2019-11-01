@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 import sykim.person.editor.AbstractHolder;
 import sykim.person.editor.Function;
-import sykim.person.editor.Source;
+import sykim.person.editor.SourceJson;
 import sykim.person.editor.base.ListListener;
 import sykim.person.editor.execute.Executable;
 import sykim.person.editor.execute.MakeVariable;
@@ -80,7 +80,7 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return list.size();
     }
 
-    public void setSource(Source source) {
+    public void setSource(SourceJson source) {
 //        list.addAll();
     }
 

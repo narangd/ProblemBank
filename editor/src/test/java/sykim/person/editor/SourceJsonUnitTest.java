@@ -20,7 +20,7 @@ public class SourceJsonUnitTest {
         function.add(new MakeVariable(ConstantType.TEXT, "abc", "test"));
         function.add(new PrintConsole(new ConstantText("console test text")));
 
-        Gson gson = Source.getGsonPretty();
+        Gson gson = SourceJson.getGsonPretty();
         String json = gson.toJson(function);
         System.out.println(function.toString());
         System.out.println(json);

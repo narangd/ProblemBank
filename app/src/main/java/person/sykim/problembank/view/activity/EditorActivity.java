@@ -26,15 +26,13 @@ import butterknife.OnClick;
 import butterknife.OnLongClick;
 import person.sykim.problembank.R;
 import person.sykim.problembank.adapter.EditorAdapter;
+import person.sykim.problembank.data.Source;
 import sykim.person.editor.Function;
 import sykim.person.editor.NameSpaceManager;
-import sykim.person.editor.Source;
-import sykim.person.editor.constant.ConstantText;
-import sykim.person.editor.constant.ConstantType;
+import sykim.person.editor.SourceJson;
 import sykim.person.editor.dialog.ConsoleDialog;
 import sykim.person.editor.dialog.ExecutableDialog;
 import sykim.person.editor.execute.MakeVariable;
-import sykim.person.editor.execute.PrintConsole;
 
 public class EditorActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -71,23 +69,13 @@ public class EditorActivity extends AppCompatActivity
         editorRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         editorRecyclerView.setAdapter(adapter = new EditorAdapter());
 
-        // load from database
-        // (temp) custom function
-        Function function = new Function("main");
-        function.add(new MakeVariable(ConstantType.INTEGER, "abc", "111"));
-        function.add(new PrintConsole(new ConstantText("console test text")));
-        adapter.setList(function.getList());
-        adapter.notifyDataSetChanged();
-
-        // name to manager
-        NameSpaceManager.getInstance().load(function);
-
         fab.setOnDragListener((view, dragEvent) -> {
             Log.d(TAG, "onDrag: "+view+", event:"+dragEvent);
 //            dragEvent.get
             return false;
         });
 
+        loadSource();
     }
 
     @Override
@@ -119,10 +107,10 @@ public class EditorActivity extends AppCompatActivity
                         .show();
                 return true;
             case R.id.action_save:
-                Source source = new Source();
-                source.setName("Preview");
-                String json = Source.getGsonPretty().toJson(adapter.getFunction());
-                source.setJson(json);
+//                SourceJson source = new SourceJson();
+//                source.setName("Preview");
+                String json = SourceJson.getGsonPretty().toJson(adapter.getFunction());
+//                source.setJson(json);
                 new MaterialAlertDialogBuilder(this)
                         .setTitle("Save source?")
                         .setMessage(json)
@@ -198,5 +186,27 @@ public class EditorActivity extends AppCompatActivity
 //    public void onFocusChangeFab(boolean hasFocus) {
 //        Log.d(TAG, "onFocusChangeFab: "+hasFocus);
 //    }
+
+    private void loadSource() {
+        // load from database
+        Source source = Source.findDefault();
+        if (source == null) {
+            source = Source.saveDefault();
+        }
+        Log.d(TAG, "loadSource: "+source.getJson());
+
+        Function function = SourceJson.getGson().fromJson(source.getJson(), Function.class);
+
+        Log.d(TAG, "loadSource: "+function);
+
+//        Function function = new Function("main");
+//        function.add(new MakeVariable(ConstantType.INTEGER, "abc", "111"));
+//        function.add(new PrintConsole(new ConstantText("console test text")));
+        adapter.setList(function.getList());
+        adapter.notifyDataSetChanged();
+
+        // name to manager
+        NameSpaceManager.getInstance().load(function);
+    }
 
 }
