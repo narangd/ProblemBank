@@ -84,7 +84,7 @@ public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 //        list.addAll();
     }
 
-    public Function getFunction() {
+    public Function toFunction() {
         Function function = new Function("main");
         function.getList().addAll(list);
         return function;

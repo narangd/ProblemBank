@@ -53,6 +53,8 @@ public class EditorActivity extends AppCompatActivity
 
     InputMethodManager inputMethodManager;
 
+    Source source;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,13 +105,13 @@ public class EditorActivity extends AppCompatActivity
         switch (item.getItemId()) {
             case R.id.action_run:
                 new ConsoleDialog(this)
-                        .setSource(adapter.getFunction())
+                        .setSource(adapter.toFunction())
                         .show();
                 return true;
             case R.id.action_save:
 //                SourceJson source = new SourceJson();
 //                source.setName("Preview");
-                String json = SourceJson.getGsonPretty().toJson(adapter.getFunction());
+                String json = SourceJson.getGsonPretty().toJson(adapter.toFunction());
 //                source.setJson(json);
                 new MaterialAlertDialogBuilder(this)
                         .setTitle("Save source?")
@@ -158,6 +160,15 @@ public class EditorActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Function function = adapter.toFunction();
+        source.setJson( SourceJson.getGson().toJson(function) );
+        source.save();
+        Log.d(TAG, "onStop: saved: "+source.getJson());
+    }
+
     // click event
 
     @OnClick(R.id.fab)
@@ -189,7 +200,7 @@ public class EditorActivity extends AppCompatActivity
 
     private void loadSource() {
         // load from database
-        Source source = Source.findDefault();
+        source = Source.findDefault();
         if (source == null) {
             source = Source.saveDefault();
         }
@@ -199,9 +210,8 @@ public class EditorActivity extends AppCompatActivity
 
         Log.d(TAG, "loadSource: "+function);
 
-//        Function function = new Function("main");
-//        function.add(new MakeVariable(ConstantType.INTEGER, "abc", "111"));
-//        function.add(new PrintConsole(new ConstantText("console test text")));
+        toolbar.setTitle(function.getName());
+
         adapter.setList(function.getList());
         adapter.notifyDataSetChanged();
 
