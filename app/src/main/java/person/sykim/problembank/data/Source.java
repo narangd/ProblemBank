@@ -1,10 +1,11 @@
 package person.sykim.problembank.data;
 
-import android.os.Debug;
 import android.util.Log;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Unique;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -26,21 +27,31 @@ import sykim.person.editor.execute.PrintConsole;
 @AllArgsConstructor
 public class Source extends SugarRecord {
     private static final String TAG = "Source";
+    @Unique
     String name;
     String json;
     Date createTime = new Date();
     Date updateTime;
     boolean sync = false;
 
-    public static Source findDefault() {
-        List<Source> list = Source.find(Source.class, "name=?", new String[]{"first"},
+    /**
+     * 마지막에 수정한 소스 로드.
+     * @return 마지막에 수정한 소스
+     */
+    public static Source findLastUpdated() {
+        List<Source> list = Source.find(Source.class, null, null,
                 null, "update_time DESC", "1");
-        Log.d(TAG, "findDefault: "+list.size());
+        Log.d(TAG, "findLastUpdated: "+list.size());
         if (list.size() > 0) {
             return list.get(0);
         }
         return null;
     }
+
+    /**
+     * 초기 소스 데이터 생성
+     * @return 초기 소스 데이터
+     */
     public static Source saveDefault() {
         Source source = new Source();
         source.setName("first");
@@ -55,5 +66,9 @@ public class Source extends SugarRecord {
 
         source.setId(source.save());
         return source;
+    }
+
+    public static boolean existName(String name) {
+        return count(Source.class, "name = ?", new String[]{name}) > 0;
     }
 }

@@ -22,16 +22,20 @@
             android:title="Tools" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Source Settings">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_save_other"
+                android:icon="@drawable/ic_save"
+                android:iconTint="@color/material_black"
+                android:title="Save Other"
+                tools:targetApi="o" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_load"
+                android:icon="@drawable/ic_folder_open"
+                android:iconTint="@color/material_black"
+                android:title="Load"
+                tools:targetApi="o" />
         </menu>
     </item>
 

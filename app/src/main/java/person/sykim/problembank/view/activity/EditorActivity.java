@@ -1,5 +1,6 @@
 package person.sykim.problembank.view.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +21,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,6 +34,7 @@ import butterknife.OnLongClick;
 import person.sykim.problembank.R;
 import person.sykim.problembank.adapter.EditorAdapter;
 import person.sykim.problembank.data.Source;
+import person.sykim.problembank.dialog.SaveSourceDialog;
 import sykim.person.editor.Function;
 import sykim.person.editor.NameSpaceManager;
 import sykim.person.editor.SourceJson;
@@ -67,6 +75,7 @@ public class EditorActivity extends AppCompatActivity
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getHeaderView(0);
 
         editorRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         editorRecyclerView.setAdapter(adapter = new EditorAdapter());
@@ -109,25 +118,6 @@ public class EditorActivity extends AppCompatActivity
                         .show();
                 return true;
             case R.id.action_save:
-//                SourceJson source = new SourceJson();
-//                source.setName("Preview");
-                String json = SourceJson.getGsonPretty().toJson(adapter.toFunction());
-//                source.setJson(json);
-                new MaterialAlertDialogBuilder(this)
-                        .setTitle("Save source?")
-                        .setMessage(json)
-                        .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-//                            List<Source> list = Source.find(Source.class, "name = ?", source.getName());
-//                            if (list.size() <= 0) {
-//                                source.save();
-//                            } else {
-//                                Source dbSource = list.get(0);
-//                                dbSource.setUpdateTime(new Date());
-//                                dbSource.setJson(json);
-//                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .show();
                 return true;
             case R.id.action_settings:
                 return true;
@@ -150,10 +140,30 @@ public class EditorActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_save_other) {
+            new SaveSourceDialog(this)
+                    .setSource(source.getName(), adapter.toFunction(), source1 -> {
+                        toolbar.setTitle(source1.getName());
+                        Function function = SourceJson.getGson().fromJson(source1.getJson(), Function.class);
+                        adapter.setList(function.getList());
+                    })
+                    .show();
+        } else if (id == R.id.nav_load) {
+            List<Source> list = Source.find(Source.class, null, null, null,
+                    "update_time DESC, create_time DESC", "10");
+            CharSequence[] names = new CharSequence[list.size()];
+            for (int i=0; i<names.length; i++) {
+                names[i] = list.get(i).getName();
+            }
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle("불러올 소스코드 선택")
+                    .setSingleChoiceItems(names, 0, (dialog, which) -> {
+                        Source source = list.get(which);
+                        Function function = SourceJson.getGson().fromJson(source.getJson(), Function.class);
+                        adapter.setList(function.getList());
+                        adapter.notifyDataSetChanged();
+                    })
+                    .show();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -165,6 +175,7 @@ public class EditorActivity extends AppCompatActivity
         super.onStop();
         Function function = adapter.toFunction();
         source.setJson( SourceJson.getGson().toJson(function) );
+        source.setUpdateTime(new Date());
         source.save();
         Log.d(TAG, "onStop: saved: "+source.getJson());
     }
@@ -200,7 +211,7 @@ public class EditorActivity extends AppCompatActivity
 
     private void loadSource() {
         // load from database
-        source = Source.findDefault();
+        source = Source.findLastUpdated();
         if (source == null) {
             source = Source.saveDefault();
         }

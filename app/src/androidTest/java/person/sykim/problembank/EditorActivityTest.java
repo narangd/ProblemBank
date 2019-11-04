@@ -25,7 +25,7 @@ public class EditorActivityTest {
 
     @Test
     public void loadSourceList() {
-        Source source = Source.findDefault();
+        Source source = Source.findLastUpdated();
         System.out.println("source :"+ source);
     }
 }
